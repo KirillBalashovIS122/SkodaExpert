@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>Вход</h1>
+    <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Email:</label>
+        <input type="email" name="email" required>
+        <br>
+        <label>Пароль:</label>
+        <input type="password" name="password" required>
+        <br>
+        <button type="submit">Войти</button>
+    </form>
+    <a href="{{ url_for('main.register') }}" class="register-link">Нет аккаунта? Зарегистрироваться</a>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</div>
+{% endblock %}
