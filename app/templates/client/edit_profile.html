@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Редактировать профиль{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>Редактировать профиль</h1>
+    <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Имя:</label>
+        <input type="text" name="name" value="{{ user.name }}" required>
+        <br>
+        <label>Email:</label>
+        <input type="email" name="email" value="{{ user.email }}" required>
+        <br>
+        <label>Телефон:</label>
+        <input type="text" name="phone" value="{{ user.phone }}" required>
+        <br>
+        <button type="submit">Сохранить</button>
+    </form>
+</div>
+{% endblock %}

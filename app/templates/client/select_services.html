@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Выбор услуг{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>Выбор услуг</h1>
+    <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <ul>
+            {% for service in services %}
+                <li>
+                    <input type="checkbox" name="services" value="{{ service.id }}">
+                    {{ service.service_name }} - {{ service.price }} руб.
+                </li>
+            {% endfor %}
+        </ul>
+        <button type="submit">Выбрать</button>
+    </form>
+</div>
+{% endblock %}

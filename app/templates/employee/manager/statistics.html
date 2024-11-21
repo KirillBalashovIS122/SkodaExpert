@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Статистика{% endblock %}
+
+{% block content %}
+<div class="statistics-container">
+    <h1>Статистика</h1>
+    <h2>Общая статистика:</h2>
+    <p>Всего заказов: {{ total_orders }}</p>
+    <p>Общий доход: {{ total_revenue }} руб.</p>
+    <h2>Статистика по услугам:</h2>
+    <ul>
+        {% for service in service_statistics %}
+            <li>{{ service.service_name }} - {{ service.count }} заказов, {{ service.total_price }} руб.</li>
+        {% endfor %}
+    </ul>
+    <h2>Статистика по сотрудникам:</h2>
+    <ul>
+        {% for employee in employee_statistics %}
+            <li>{{ employee.name }} - {{ employee.task_count }} задач, {{ employee.report_count }} отчетов</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

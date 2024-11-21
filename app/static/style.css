@@ -1,0 +1,115 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+header nav a {
+    color: #fff;
+    margin: 0 15px;
+    text-decoration: none;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.form-container {
+    width: 50%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.form-container label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-container input, .form-container textarea, .form-container select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-container button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.form-container button:hover {
+    background-color: #555;
+}
+
+.success-container {
+    text-align: center;
+    padding: 50px;
+}
+
+.success-container h1 {
+    color: #4CAF50;
+}
+
+.success-container p {
+    margin-bottom: 20px;
+}
+
+.success-container .button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.success-container .button:hover {
+    background-color: #555;
+}
+
+.tasks-container, .manage-employees-container, .manage-services-container, .manage-appointments-container, .statistics-container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.tasks-container ul, .manage-employees-container ul, .manage-services-container ul, .manage-appointments-container ul, .statistics-container ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.tasks-container ul li, .manage-employees-container ul li, .manage-services-container ul li, .manage-appointments-container ul li, .statistics-container ul li {
+    margin-bottom: 10px;
+}
+
+.tasks-container ul li a, .manage-employees-container ul li a, .manage-services-container ul li a, .manage-appointments-container ul li a, .statistics-container ul li a {
+    color: #333;
+    text-decoration: none;
+}
+
+.tasks-container ul li a:hover, .manage-employees-container ul li a:hover, .manage-services-container ul li a:hover, .manage-appointments-container ul li a:hover, .statistics-container ul li a:hover {
+    text-decoration: underline;
+}

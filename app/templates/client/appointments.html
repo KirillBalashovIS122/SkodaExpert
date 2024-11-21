@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Запись на сервис{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>Запись на ремонт</h1>
+    <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>ФИО:</label>
+        <input type="text" name="full_name" required>
+        <br>
+        <label>VIN номер:</label>
+        <input type="text" name="car_vin" required>
+        <br>
+        <label>Гос номер:</label>
+        <input type="text" name="car_plate" required>
+        <br>
+        <label>Телефон:</label>
+        <input type="text" name="phone" required>
+        <br>
+        <label>Год выпуска:</label>
+        <input type="number" name="car_year" required>
+        <br>
+        <label>Дата записи:</label>
+        <input type="date" name="appointment_date" required>
+        <br>
+        <button type="submit">Записаться</button>
+    </form>
+    <h2>Доступные слоты:</h2>
+    <ul>
+        {% for slot in available_slots %}
+            <li>{{ slot.appointment_date }} - {{ slot.start_time }} - {{ slot.end_time }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

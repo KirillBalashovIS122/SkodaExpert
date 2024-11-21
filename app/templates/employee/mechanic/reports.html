@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Создать отчет{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>Создать отчет</h1>
+    <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Описание:</label>
+        <textarea name="description" required></textarea>
+        <br>
+        <button type="submit">Сохранить отчет</button>
+    </form>
+</div>
+{% endblock %}

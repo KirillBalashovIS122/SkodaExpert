@@ -1,0 +1,36 @@
+2024-11-22 01:39:10,607 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 01:39:11,048 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 01:39:11,050 - werkzeug - INFO -  * Debugger PIN: 586-770-893
+2024-11-22 01:39:11,155 - werkzeug - INFO -  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2024-11-22 01:39:16,515 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:39:16] "GET / HTTP/1.1" 200 -
+2024-11-22 01:39:16,587 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:39:16] "GET /static/style.css HTTP/1.1" 200 -
+2024-11-22 01:39:16,593 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:39:16] "GET /static/script.js HTTP/1.1" 200 -
+2024-11-22 01:39:16,594 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:39:16] "GET /static/csrf.js HTTP/1.1" 200 -
+2024-11-22 01:39:18,918 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:39:18] "GET /login HTTP/1.1" 200 -
+2024-11-22 01:39:18,943 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:39:18] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 01:39:18,944 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:39:18] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 01:39:18,944 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:39:18] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 01:39:20,454 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:39:20] "[35m[1mPOST /login HTTP/1.1[0m" 500 -
+2024-11-22 01:39:20,482 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:39:20] "GET /login?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2024-11-22 01:39:20,494 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:39:20] "GET /login?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2024-11-22 01:39:20,528 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:39:20] "GET /login?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2024-11-22 01:39:20,529 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:39:20] "GET /login?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2024-11-22 01:39:20,544 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:39:20] "GET /login?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2024-11-22 01:41:40,041 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 01:41:40,391 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 01:41:40,395 - werkzeug - INFO -  * Debugger PIN: 586-770-893
+2024-11-22 01:41:40,497 - werkzeug - INFO -  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2024-11-22 01:41:43,303 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:41:43] "GET / HTTP/1.1" 200 -
+2024-11-22 01:41:43,371 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:41:43] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 01:41:43,372 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:41:43] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 01:41:43,373 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:41:43] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 01:41:45,955 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:41:45] "GET /login HTTP/1.1" 200 -
+2024-11-22 01:41:45,976 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:41:45] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 01:41:45,978 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:41:45] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 01:41:45,979 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:41:45] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 01:41:47,386 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:41:47] "[35m[1mPOST /login HTTP/1.1[0m" 500 -
+2024-11-22 01:41:47,402 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:41:47] "GET /login?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2024-11-22 01:41:47,403 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:41:47] "GET /login?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2024-11-22 01:41:47,429 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:41:47] "GET /login?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+2024-11-22 01:41:47,432 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:41:47] "GET /login?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2024-11-22 01:41:47,452 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:41:47] "GET /login?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
