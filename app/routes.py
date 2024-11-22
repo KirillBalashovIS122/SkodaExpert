@@ -5,6 +5,8 @@ from .models import User, Car, Service, Order, Task, Report, AppointmentSlot, Cl
 from . import db, csrf
 from .utils import get_current_user, generate_pdf, calculate_statistics
 import logging
+from flask_wtf import FlaskForm
+from wtforms import SubmitField
 
 main = Blueprint('main', __name__)
 
@@ -15,6 +17,9 @@ logging.basicConfig(level=logging.DEBUG,
                         logging.FileHandler("app.log"),
                         logging.StreamHandler()
                     ])
+
+class SelectServicesForm(FlaskForm):
+    submit = SubmitField('Далее')
 
 @main.route('/')
 def index():
@@ -96,14 +101,16 @@ def appointments():
     if 'role' in session and session['role'] == 'client':
         if request.method == 'POST':
             full_name = request.form.get('full_name')
+            car_model = request.form.get('car_model')
             vin_number = request.form.get('car_vin')
             car_plate = request.form.get('car_plate')
             phone = request.form.get('phone')
             car_year = request.form.get('car_year')
             appointment_date = request.form.get('appointment_date')
+            appointment_time = request.form.get('appointment_time')
 
             # Логирование для отладки
-            current_app.logger.info(f"Form data: {full_name}, {vin_number}, {car_plate}, {phone}, {car_year}, {appointment_date}")
+            current_app.logger.info(f"Form data: {full_name}, {car_model}, {vin_number}, {car_plate}, {phone}, {car_year}, {appointment_date}, {appointment_time}")
 
             # Проверка наличия user_id в сессии
             if 'user_id' not in session:
@@ -118,7 +125,7 @@ def appointments():
 
             try:
                 # Создаем новый автомобиль
-                car = create_car(client.id, full_name, vin_number, car_plate, car_year)
+                car = create_car(client.id, car_model, vin_number, car_plate, car_year)
 
                 # Создаем новый заказ
                 new_order = create_order(client.id, car.id)
@@ -127,7 +134,7 @@ def appointments():
                 save_order_history(new_order.id, client.id, car.id)
 
                 current_app.logger.info(f"Order created successfully: {new_order.id}")
-                return jsonify({'success': True})
+                return redirect(url_for('main.appointment_success', order_id=new_order.id))
             except ValueError as e:
                 current_app.logger.error(f"Error creating car: {e}")
                 db.session.rollback()
@@ -277,22 +284,23 @@ def book_service():
     if 'role' in session and session['role'] == 'client':
         service_id = request.form.get('service_id')
         if service_id:
-            # Здесь можно добавить логику для создания записи на услугу
-            flash("Вы успешно записались на услугу!", "success")
+            # Здесь можно добавить логику для создания записи на ремонт
+            flash("Вы успешно записались на ремонт!", "success")
         else:
-            flash("Ошибка при записи на услугу.", "error")
+            flash("Ошибка при записи на ремонт.", "error")
         return redirect(url_for('main.client_dashboard'))
     return redirect(url_for('main.index'))
 
 @main.route('/select_services', methods=['GET', 'POST'])
 def select_services():
+    form = SelectServicesForm()
     if 'role' in session and session['role'] == 'client':
-        if request.method == 'POST':
+        if form.validate_on_submit():
             selected_services = request.form.getlist('services')
             session['selected_services'] = selected_services
             return redirect(url_for('main.appointments'))
         services = Service.query.all()
-        return render_template('client/select_services.html', services=services)
+        return render_template('client/select_services.html', services=services, form=form)
     return redirect(url_for('main.index'))
 
 @main.route('/appointment_success')

@@ -1,4 +1,3 @@
-<!-- templates/client/select_services.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +7,7 @@
 <body>
     <h1>Выберите услуги</h1>
     <form method="POST" action="{{ url_for('main.select_services') }}">
+        {{ form.csrf_token }}
         {% for service in services %}
             <input type="checkbox" name="services" value="{{ service.id }}"> {{ service.service_name }} - {{ service.price }} руб.<br>
         {% endfor %}

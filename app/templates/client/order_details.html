@@ -1,4 +1,3 @@
-<!-- templates/client/order_details.html -->
 {% extends "base.html" %}
 
 {% block content %}
@@ -10,4 +9,5 @@
     <p>Год выпуска: {{ order.car.car_year }}</p>
     <p>Гос номер: {{ order.car.license_plate }}</p>
     <p>VIN код: {{ order.car.vin }}</p>
+    <a href="{{ url_for('main.generate_order_pdf', order_id=order.id) }}" class="button">Скачать заказ-наряд</a>
 {% endblock %}

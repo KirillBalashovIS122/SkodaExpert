@@ -49,6 +49,9 @@ class Order(db.Model):
     # Добавляем отношение к модели Car
     car = db.relationship('Car', backref='orders')
 
+    # Добавляем отношение к модели User (клиент)
+    user = db.relationship('User', backref='orders', foreign_keys=[client_id])
+
 class Task(db.Model):
     __tablename__ = 'tasks'
     id = db.Column(Integer, primary_key=True)
