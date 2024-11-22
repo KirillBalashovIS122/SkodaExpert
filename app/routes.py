@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, make_response, flash, jsonify, current_app
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta, datetime
-from .models import User, Car, Service, Order, Task, Report, AppointmentSlot
+from .models import User, Car, Service, Order, Task, Report, AppointmentSlot, Client
 from . import db, csrf
 from .utils import get_current_user, generate_pdf, calculate_statistics
 import logging
@@ -116,19 +116,20 @@ def appointments():
                 current_app.logger.error("Client not found")
                 return jsonify({'success': False, 'error': 'Client not found'}), 400
 
-            # Проверка существования автомобиля
-            car = Car.query.filter_by(vin=vin_number, client_id=client.id).first()
-            if not car:
-                current_app.logger.info("Car not found, creating new car")
+            try:
+                # Создаем новый автомобиль
                 car = create_car(client.id, full_name, vin_number, car_plate, car_year)
 
-            try:
                 # Создаем новый заказ
                 new_order = Order(client_id=client.id, car_id=car.id)
                 db.session.add(new_order)
                 db.session.commit()
                 current_app.logger.info(f"Order created successfully: {new_order.id}")
                 return jsonify({'success': True})
+            except ValueError as e:
+                current_app.logger.error(f"Error creating car: {e}")
+                db.session.rollback()
+                return jsonify({'success': False, 'error': str(e)}), 400
             except Exception as e:
                 current_app.logger.error(f"Error creating order: {e}")
                 db.session.rollback()
@@ -149,6 +150,11 @@ def appointments():
     return redirect(url_for('main.index'))
 
 def create_car(client_id, model, vin, license_plate, car_year):
+    # Проверка существования client_id в таблице CLIENTS
+    client = Client.query.get(client_id)
+    if not client:
+        raise ValueError(f"Client with id {client_id} does not exist")
+
     new_car = Car(
         client_id=client_id,
         model=model,
@@ -275,3 +281,4 @@ def select_services():
 @main.route('/appointment_success')
 def appointment_success():
     return render_template('client/appointment_success.html')
+    
