@@ -113,3 +113,30 @@ header nav a {
 .tasks-container ul li a:hover, .manage-employees-container ul li a:hover, .manage-services-container ul li a:hover, .manage-appointments-container ul li a:hover, .statistics-container ul li a:hover {
     text-decoration: underline;
 }
+
+.order-history-container, .order-details-container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.order-history-container ul, .order-details-container ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.order-history-container ul li, .order-details-container ul li {
+    margin-bottom: 10px;
+}
+
+.order-history-container ul li a, .order-details-container ul li a {
+    color: #333;
+    text-decoration: none;
+}
+
+.order-history-container ul li a:hover, .order-details-container ul li a:hover {
+    text-decoration: underline;
+}

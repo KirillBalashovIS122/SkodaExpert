@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, make_response, flash, jsonify, current_app
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta, datetime
-from .models import User, Car, Service, Order, Task, Report, AppointmentSlot, Client
+from .models import User, Car, Service, Order, Task, Report, AppointmentSlot, Client, OrderHistory
 from . import db, csrf
 from .utils import get_current_user, generate_pdf, calculate_statistics
 import logging
@@ -124,6 +124,10 @@ def appointments():
                 new_order = Order(client_id=client.id, car_id=car.id)
                 db.session.add(new_order)
                 db.session.commit()
+
+                # Сохраняем историю заказа
+                save_order_history(new_order.id, client.id, car.id)
+
                 current_app.logger.info(f"Order created successfully: {new_order.id}")
                 return jsonify({'success': True})
             except ValueError as e:
@@ -155,6 +159,10 @@ def create_car(client_id, model, vin, license_plate, car_year):
     if not client:
         raise ValueError(f"Client with id {client_id} does not exist")
 
+    # Проверка корректности данных
+    if not model or not vin or not license_plate or not car_year:
+        raise ValueError("All fields are required")
+
     new_car = Car(
         client_id=client_id,
         model=model,
@@ -165,6 +173,11 @@ def create_car(client_id, model, vin, license_plate, car_year):
     db.session.add(new_car)
     db.session.commit()
     return new_car
+
+def save_order_history(order_id, client_id, car_id):
+    new_order_history = OrderHistory(order_id=order_id, client_id=client_id, car_id=car_id)
+    db.session.add(new_order_history)
+    db.session.commit()
 
 @main.route('/generate_order_pdf/<int:order_id>')
 def generate_order_pdf(order_id):
@@ -281,4 +294,21 @@ def select_services():
 @main.route('/appointment_success')
 def appointment_success():
     return render_template('client/appointment_success.html')
-    
+
+@main.route('/order_history')
+def order_history():
+    if 'role' in session and session['role'] == 'client':
+        user = User.query.get(session['user_id'])
+        order_history = OrderHistory.query.filter_by(client_id=user.id).all()
+        return render_template('client/order_history.html', user=user, order_history=order_history)
+    return redirect(url_for('main.index'))
+
+@main.route('/order_details/<int:order_id>')
+def order_details(order_id):
+    if 'role' in session and session['role'] == 'client':
+        user = User.query.get(session['user_id'])
+        order = Order.query.get(order_id)
+        if not order or order.client_id != user.id:
+            return "Заказ не найден", 404
+        return render_template('client/order_details.html', user=user, order=order)
+    return redirect(url_for('main.index'))

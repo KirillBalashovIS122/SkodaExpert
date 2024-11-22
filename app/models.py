@@ -13,7 +13,7 @@ class User(db.Model):
     created_at = db.Column(DateTime, default=datetime.utcnow)
 
 class Client(db.Model):
-    __tablename__ = 'CLIENTS'
+    __tablename__ = 'clients'
     id = db.Column(Integer, primary_key=True)
     name = db.Column(String(100), nullable=False)
     email = db.Column(String(100), nullable=False, unique=True)
@@ -24,7 +24,7 @@ class Client(db.Model):
 class Car(db.Model):
     __tablename__ = 'cars'
     id = db.Column(Integer, primary_key=True)
-    client_id = db.Column(Integer, db.ForeignKey('CLIENTS.id'), nullable=False)
+    client_id = db.Column(Integer, db.ForeignKey('clients.id'), nullable=False)
     model = db.Column(String(100), nullable=False)
     car_year = db.Column(Integer, nullable=False)
     vin = db.Column(String(17), nullable=False)
@@ -42,7 +42,7 @@ class Service(db.Model):
 class Order(db.Model):
     __tablename__ = 'orders'
     id = db.Column(Integer, primary_key=True)
-    client_id = db.Column(Integer, db.ForeignKey('CLIENTS.ID'), nullable=False)
+    client_id = db.Column(Integer, db.ForeignKey('clients.id'), nullable=False)
     car_id = db.Column(Integer, db.ForeignKey('cars.id'), nullable=False)
     created_at = db.Column(DateTime, default=db.func.current_timestamp())
 
@@ -68,3 +68,11 @@ class AppointmentSlot(db.Model):
     start_time = db.Column(DateTime, nullable=False)
     end_time = db.Column(DateTime, nullable=False)
     is_available = db.Column(Boolean, default=True)
+
+class OrderHistory(db.Model):
+    __tablename__ = 'order_history'
+    id = db.Column(Integer, primary_key=True)
+    order_id = db.Column(Integer, db.ForeignKey('orders.id'), nullable=False)
+    client_id = db.Column(Integer, db.ForeignKey('clients.id'), nullable=False)
+    car_id = db.Column(Integer, db.ForeignKey('cars.id'), nullable=False)
+    created_at = db.Column(DateTime, default=db.func.current_timestamp())

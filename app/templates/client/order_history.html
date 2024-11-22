@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}История заказов{% endblock %}
+
+{% block content %}
+<div class="order-history-container">
+    <h1>История заказов</h1>
+    <ul>
+        {% for order in order_history %}
+            <li>
+                <a href="{{ url_for('main.order_details', order_id=order.id) }}">
+                    Заказ №{{ order.id }} - {{ order.created_at }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
