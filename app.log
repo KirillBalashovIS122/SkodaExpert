@@ -34,3 +34,23 @@
 2024-11-22 01:41:47,429 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:41:47] "GET /login?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
 2024-11-22 01:41:47,432 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:41:47] "GET /login?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
 2024-11-22 01:41:47,452 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 01:41:47] "GET /login?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2024-11-22 03:11:40,318 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-22 03:11:40,319 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-22 03:11:40,320 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 03:11:40,788 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 03:11:40,791 - werkzeug - INFO -  * Debugger PIN: 107-474-725
+2024-11-22 03:12:02,797 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 03:12:02] "GET / HTTP/1.1" 200 -
+2024-11-22 03:12:02,873 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 03:12:02] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 03:12:02,875 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 03:12:02] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 03:12:02,876 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 03:12:02] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 03:12:02,902 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 03:12:02] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2024-11-22 03:12:05,525 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 03:12:05] "GET /login HTTP/1.1" 200 -
+2024-11-22 03:12:05,550 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 03:12:05] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 03:12:05,554 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 03:12:05] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 03:12:05,555 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 03:12:05] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 03:12:11,493 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 03:12:11] "[35m[1mPOST /login HTTP/1.1[0m" 500 -
+2024-11-22 03:12:11,524 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 03:12:11] "GET /login?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2024-11-22 03:12:11,530 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 03:12:11] "GET /login?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2024-11-22 03:12:11,566 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 03:12:11] "GET /login?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2024-11-22 03:12:11,595 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 03:12:11] "[36mGET /login?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
