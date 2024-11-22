@@ -127,3 +127,6 @@
 2024-11-22 03:33:13,944 - app - ERROR - Error creating car: Client with id 4 does not exist
 2024-11-22 03:33:13,945 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 03:33:13] "[31m[1mPOST /appointments HTTP/1.1[0m" 400 -
 2024-11-22 03:34:07,150 - werkzeug - INFO -  * Detected change in 'D:\\SkodaExpert\\app\\models.py', reloading
+2024-11-22 03:34:07,349 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 03:34:08,007 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 03:34:08,009 - werkzeug - INFO -  * Debugger PIN: 107-474-725
