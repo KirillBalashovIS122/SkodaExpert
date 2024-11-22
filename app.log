@@ -441,3 +441,394 @@
 [parameters: (9, 1, 9)]
 (Background on this error at: https://sqlalche.me/e/20/4xp6)
 2024-11-22 04:21:41,691 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:21:41] "[35m[1mPOST /appointments HTTP/1.1[0m" 500 -
+2024-11-22 04:31:46,754 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-22 04:31:46,754 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-22 04:31:46,755 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 04:31:47,245 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 04:31:47,247 - werkzeug - INFO -  * Debugger PIN: 107-474-725
+2024-11-22 04:31:49,101 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:49] "GET / HTTP/1.1" 200 -
+2024-11-22 04:31:49,180 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:49] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 04:31:49,182 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:49] "GET /static/style.css HTTP/1.1" 200 -
+2024-11-22 04:31:49,182 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:49] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 04:31:50,491 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:50] "GET /login HTTP/1.1" 200 -
+2024-11-22 04:31:50,516 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:50] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 04:31:50,522 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:50] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 04:31:50,523 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:50] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 04:31:52,311 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:52] "GET /register HTTP/1.1" 200 -
+2024-11-22 04:31:52,333 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:52] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 04:31:52,337 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:52] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 04:31:52,337 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:52] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 04:31:55,974 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:55] "[32mPOST /register HTTP/1.1[0m" 302 -
+2024-11-22 04:31:55,978 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:55] "GET /login HTTP/1.1" 200 -
+2024-11-22 04:31:56,010 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:56] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 04:31:56,011 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:56] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 04:31:56,011 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:56] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 04:31:57,507 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:57] "[32mPOST /login HTTP/1.1[0m" 302 -
+2024-11-22 04:31:57,521 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:57] "GET /client_dashboard HTTP/1.1" 200 -
+2024-11-22 04:31:57,553 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:57] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 04:31:57,554 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:57] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 04:31:57,554 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:31:57] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 04:32:27,933 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:32:27] "GET /appointments HTTP/1.1" 200 -
+2024-11-22 04:32:27,958 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:32:27] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 04:32:27,961 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:32:27] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 04:32:27,961 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:32:27] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 04:32:39,401 - app - INFO - Form data: Балашов Кирилл Алексеевич, TMBJJ7NE4J0000001, М922ТМ33, +79042550556, 2021, 2024-11-23
+2024-11-22 04:32:39,406 - app - ERROR - Error creating car: Client with id 1 does not exist
+2024-11-22 04:32:39,407 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:32:39] "[31m[1mPOST /appointments HTTP/1.1[0m" 400 -
+2024-11-22 04:35:14,890 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 04:35:14] "GET /appointments HTTP/1.1" 200 -
+2024-11-22 11:22:47,330 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-22 11:22:47,331 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-22 11:22:47,333 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 11:22:47,982 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 11:22:47,985 - werkzeug - INFO -  * Debugger PIN: 107-474-725
+2024-11-22 11:22:49,541 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:22:49] "GET / HTTP/1.1" 200 -
+2024-11-22 11:22:49,665 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:22:49] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:22:49,666 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:22:49] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:22:49,666 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:22:49] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:22:49,876 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:22:49] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2024-11-22 11:22:50,902 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:22:50] "GET /login HTTP/1.1" 200 -
+2024-11-22 11:22:50,934 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:22:50] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:22:50,939 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:22:50] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:22:50,940 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:22:50] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:23:00,768 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:23:00] "[35m[1mPOST /login HTTP/1.1[0m" 500 -
+2024-11-22 11:23:00,800 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:23:00] "[36mGET /login?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:23:00,803 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:23:00] "[36mGET /login?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2024-11-22 11:23:00,860 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:23:00] "[36mGET /login?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2024-11-22 11:23:00,915 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:23:00] "[36mGET /login?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2024-11-22 11:23:05,510 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:23:05] "GET /login HTTP/1.1" 200 -
+2024-11-22 11:23:06,911 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:23:06] "GET /register HTTP/1.1" 200 -
+2024-11-22 11:23:06,947 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:23:06] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:23:06,949 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:23:06] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:23:06,952 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:23:06] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:23:10,568 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:23:10] "[35m[1mPOST /register HTTP/1.1[0m" 500 -
+2024-11-22 11:23:10,610 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:23:10] "GET /register?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2024-11-22 11:23:10,612 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:23:10] "GET /register?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2024-11-22 11:23:10,647 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:23:10] "GET /register?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2024-11-22 11:23:10,712 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:23:10] "[36mGET /register?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2024-11-22 11:23:55,242 - werkzeug - INFO -  * Detected change in 'D:\\SkodaExpert\\config.py', reloading
+2024-11-22 11:23:55,443 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 11:23:56,155 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 11:23:56,159 - werkzeug - INFO -  * Debugger PIN: 107-474-725
+2024-11-22 11:24:19,605 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-22 11:24:19,607 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-22 11:24:19,609 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 11:24:20,359 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 11:24:20,362 - werkzeug - INFO -  * Debugger PIN: 107-474-725
+2024-11-22 11:24:28,329 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:28] "GET / HTTP/1.1" 200 -
+2024-11-22 11:24:28,429 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:28] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:24:28,430 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:28] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:24:28,431 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:28] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:24:30,184 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:30] "GET /login HTTP/1.1" 200 -
+2024-11-22 11:24:30,225 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:30] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:24:30,226 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:30] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:24:30,227 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:30] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:24:31,384 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:31] "POST /login HTTP/1.1" 200 -
+2024-11-22 11:24:31,410 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:31] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:24:31,412 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:31] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:24:31,413 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:31] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:24:34,835 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:34] "GET /register HTTP/1.1" 200 -
+2024-11-22 11:24:34,868 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:34] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:24:34,870 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:34] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:24:34,870 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:34] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:24:37,894 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:37] "[35m[1mPOST /register HTTP/1.1[0m" 500 -
+2024-11-22 11:24:37,939 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:37] "[36mGET /register?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:24:37,942 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:37] "[36mGET /register?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2024-11-22 11:24:37,995 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:37] "[36mGET /register?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2024-11-22 11:24:38,036 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:24:38] "[36mGET /register?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2024-11-22 11:25:32,339 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-22 11:25:32,340 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-22 11:25:32,343 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 11:25:33,151 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 11:25:33,154 - werkzeug - INFO -  * Debugger PIN: 107-474-725
+2024-11-22 11:25:37,036 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:37] "GET / HTTP/1.1" 200 -
+2024-11-22 11:25:37,159 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:37] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:25:37,160 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:37] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:25:37,162 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:37] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:25:39,137 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:39] "GET /login HTTP/1.1" 200 -
+2024-11-22 11:25:39,174 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:39] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:25:39,178 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:39] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:25:39,178 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:39] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:25:40,503 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:40] "POST /login HTTP/1.1" 200 -
+2024-11-22 11:25:40,526 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:40] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:25:40,528 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:40] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:25:40,530 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:40] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:25:42,405 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:42] "GET /register HTTP/1.1" 200 -
+2024-11-22 11:25:42,435 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:42] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:25:42,437 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:42] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:25:42,438 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:42] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:25:45,173 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:45] "[32mPOST /register HTTP/1.1[0m" 302 -
+2024-11-22 11:25:45,181 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:45] "GET /login HTTP/1.1" 200 -
+2024-11-22 11:25:45,244 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:45] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:25:45,246 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:45] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:25:45,246 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:45] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:25:47,842 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:47] "[32mPOST /login HTTP/1.1[0m" 302 -
+2024-11-22 11:25:47,868 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:47] "GET /client_dashboard HTTP/1.1" 200 -
+2024-11-22 11:25:47,918 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:47] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:25:47,922 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:47] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:25:47,923 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:47] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:25:49,766 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:49] "[32mGET /appointments HTTP/1.1[0m" 302 -
+2024-11-22 11:25:49,779 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:49] "GET /select_services HTTP/1.1" 200 -
+2024-11-22 11:25:49,823 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:49] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:25:49,825 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:49] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:25:49,826 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:49] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:25:50,979 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:50] "[32mPOST /select_services HTTP/1.1[0m" 302 -
+2024-11-22 11:25:50,999 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:50] "GET /appointments HTTP/1.1" 200 -
+2024-11-22 11:25:51,045 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:51] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:25:51,049 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:51] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:25:51,050 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:25:51] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:28:19,795 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:28:19] "GET /select_services HTTP/1.1" 200 -
+2024-11-22 11:28:19,814 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:28:19] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:28:19,816 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:28:19] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:28:19,817 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:28:19] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:28:22,857 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:28:22] "[32mPOST /select_services HTTP/1.1[0m" 302 -
+2024-11-22 11:28:22,868 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:28:22] "GET /appointments HTTP/1.1" 200 -
+2024-11-22 11:28:22,913 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:28:22] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:28:22,915 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:28:22] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:28:22,915 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:28:22] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:28:34,597 - app - INFO - Form data: Балашов Кирилл Алексеевич, TMBJJ7NE4J0000001, М922ТМ33, +79042550556, 2021, 2024-11-23
+2024-11-22 11:28:34,605 - app - ERROR - Error creating car: Client with id 1 does not exist
+2024-11-22 11:28:34,607 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:28:34] "[31m[1mPOST /appointments HTTP/1.1[0m" 400 -
+2024-11-22 11:30:41,480 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-22 11:30:41,481 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-22 11:30:41,483 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 11:30:42,209 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 11:30:42,213 - werkzeug - INFO -  * Debugger PIN: 107-474-725
+2024-11-22 11:30:43,513 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:30:43] "GET / HTTP/1.1" 200 -
+2024-11-22 11:30:43,613 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:30:43] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:30:43,613 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:30:43] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:30:43,614 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:30:43] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:30:46,224 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:30:46] "GET /login HTTP/1.1" 200 -
+2024-11-22 11:30:46,263 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:30:46] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:30:46,265 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:30:46] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:30:46,266 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:30:46] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:30:48,051 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:30:48] "[32mPOST /login HTTP/1.1[0m" 302 -
+2024-11-22 11:30:48,075 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:30:48] "GET /client_dashboard HTTP/1.1" 200 -
+2024-11-22 11:30:48,112 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:30:48] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:30:48,113 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:30:48] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:30:48,114 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:30:48] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:30:56,128 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:30:56] "GET /edit_profile HTTP/1.1" 200 -
+2024-11-22 11:30:56,166 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:30:56] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:30:56,168 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:30:56] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:30:56,169 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:30:56] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:31:05,050 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:31:05] "[32mPOST /edit_profile HTTP/1.1[0m" 302 -
+2024-11-22 11:31:05,067 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:31:05] "GET /client_dashboard HTTP/1.1" 200 -
+2024-11-22 11:31:05,116 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:31:05] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:31:05,118 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:31:05] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:31:05,119 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:31:05] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:31:18,860 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:31:18] "GET /order_history HTTP/1.1" 200 -
+2024-11-22 11:31:18,897 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:31:18] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:31:18,898 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:31:18] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:31:18,900 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:31:18] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:31:24,886 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:31:24] "GET /appointments HTTP/1.1" 200 -
+2024-11-22 11:31:24,923 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:31:24] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:31:24,925 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:31:24] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:31:24,926 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:31:24] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:31:32,985 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:31:32] "GET /client_dashboard HTTP/1.1" 200 -
+2024-11-22 11:31:33,024 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:31:33] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:31:33,026 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:31:33] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:31:33,027 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:31:33] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:33:21,507 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-22 11:33:21,508 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-22 11:33:21,509 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 11:33:22,204 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 11:33:22,207 - werkzeug - INFO -  * Debugger PIN: 107-474-725
+2024-11-22 11:33:26,489 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:33:26] "GET / HTTP/1.1" 200 -
+2024-11-22 11:33:26,587 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:33:26] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:33:26,588 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:33:26] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:33:26,588 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:33:26] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:33:27,773 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:33:27] "GET /login HTTP/1.1" 200 -
+2024-11-22 11:33:27,811 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:33:27] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:33:27,813 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:33:27] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:33:27,814 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:33:27] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:33:30,458 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:33:30] "[32mPOST /login HTTP/1.1[0m" 302 -
+2024-11-22 11:33:30,485 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:33:30] "GET /client_dashboard HTTP/1.1" 200 -
+2024-11-22 11:33:30,532 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:33:30] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:33:30,534 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:33:30] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:33:30,534 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:33:30] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:33:32,291 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:33:32] "GET /appointments HTTP/1.1" 200 -
+2024-11-22 11:33:32,328 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:33:32] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:33:32,330 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:33:32] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:33:32,330 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:33:32] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:33:43,912 - app - INFO - Form data: Балашов Кирилл Алексеевич, TMBJJ7NE4J0000001, М922ТМ33, +79042550556, 2021, 2024-11-23
+2024-11-22 11:33:43,926 - app - ERROR - Error creating order: (fdb.fbcore.DatabaseError) ('Error while executing Stored Procedure:\n- SQLCODE: -625\n- validation error for column "CARS"."ID", value "*** null ***"', -625, 335544347)
+[SQL: INSERT INTO cars (client_id, model, car_year, vin, license_plate, created_at) VALUES (CAST(? AS INTEGER), CAST(? AS VARCHAR(100)), CAST(? AS INTEGER), CAST(? AS VARCHAR(17)), CAST(? AS VARCHAR(12)), CURRENT_TIMESTAMP) RETURNING cars.id]
+[parameters: (1, 'Балашов Кирилл Алексеевич', '2021', 'TMBJJ7NE4J0000001', 'М922ТМ33')]
+(Background on this error at: https://sqlalche.me/e/20/4xp6)
+2024-11-22 11:33:43,928 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:33:43] "[35m[1mPOST /appointments HTTP/1.1[0m" 500 -
+2024-11-22 11:34:57,615 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-22 11:34:57,616 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-22 11:34:57,617 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 11:34:58,287 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 11:34:58,290 - werkzeug - INFO -  * Debugger PIN: 107-474-725
+2024-11-22 11:34:59,352 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:34:59] "GET / HTTP/1.1" 200 -
+2024-11-22 11:34:59,453 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:34:59] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:34:59,455 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:34:59] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:34:59,456 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:34:59] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:35:03,378 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:35:03] "GET /login HTTP/1.1" 200 -
+2024-11-22 11:35:03,416 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:35:03] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:35:03,419 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:35:03] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:35:03,420 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:35:03] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:35:05,298 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:35:05] "[32mPOST /login HTTP/1.1[0m" 302 -
+2024-11-22 11:35:05,325 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:35:05] "GET /client_dashboard HTTP/1.1" 200 -
+2024-11-22 11:35:05,376 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:35:05] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:35:05,377 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:35:05] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:35:05,379 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:35:05] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:35:07,000 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:35:07] "GET /appointments HTTP/1.1" 200 -
+2024-11-22 11:35:07,040 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:35:07] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:35:07,040 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:35:07] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:35:07,041 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:35:07] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:35:18,069 - app - INFO - Form data: Балашов Кирилл Алексеевич, TMBJJ7NE4J0000001, М922ТМ33, +79042550556, 2021, 2024-11-23
+2024-11-22 11:35:18,092 - app - ERROR - Error creating order: (fdb.fbcore.DatabaseError) ('Error while executing Stored Procedure:\n- SQLCODE: -625\n- validation error for column "ORDERS"."ID", value "*** null ***"', -625, 335544347)
+[SQL: INSERT INTO orders (client_id, car_id, created_at) VALUES (CAST(? AS INTEGER), CAST(? AS INTEGER), CURRENT_TIMESTAMP) RETURNING orders.id]
+[parameters: (1, 1)]
+(Background on this error at: https://sqlalche.me/e/20/4xp6)
+2024-11-22 11:35:18,093 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:35:18] "[35m[1mPOST /appointments HTTP/1.1[0m" 500 -
+2024-11-22 11:53:05,368 - werkzeug - INFO -  * Detected change in 'D:\\SkodaExpert\\app\\routes.py', reloading
+2024-11-22 11:53:05,520 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 11:53:06,278 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 11:53:06,281 - werkzeug - INFO -  * Debugger PIN: 107-474-725
+2024-11-22 11:53:07,292 - werkzeug - INFO -  * Detected change in 'D:\\SkodaExpert\\app\\routes.py', reloading
+2024-11-22 11:53:07,375 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 11:53:08,055 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 11:53:08,058 - werkzeug - INFO -  * Debugger PIN: 107-474-725
+2024-11-22 11:53:27,130 - werkzeug - INFO -  * Detected change in 'D:\\SkodaExpert\\app\\routes.py', reloading
+2024-11-22 11:53:27,284 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 11:53:28,040 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 11:53:28,044 - werkzeug - INFO -  * Debugger PIN: 107-474-725
+2024-11-22 11:54:08,850 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-22 11:54:08,850 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-22 11:54:08,852 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 11:54:09,580 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 11:54:09,583 - werkzeug - INFO -  * Debugger PIN: 107-474-725
+2024-11-22 11:54:10,965 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:54:10] "GET / HTTP/1.1" 200 -
+2024-11-22 11:54:11,064 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:54:11] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:54:11,066 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:54:11] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:54:11,066 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:54:11] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:54:15,438 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:54:15] "GET /login HTTP/1.1" 200 -
+2024-11-22 11:54:15,477 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:54:15] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:54:15,482 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:54:15] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:54:15,483 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:54:15] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:54:16,960 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:54:16] "[32mPOST /login HTTP/1.1[0m" 302 -
+2024-11-22 11:54:16,986 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:54:16] "GET /client_dashboard HTTP/1.1" 200 -
+2024-11-22 11:54:17,037 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:54:17] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:54:17,039 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:54:17] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:54:17,040 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:54:17] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:54:19,046 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:54:19] "GET /appointments HTTP/1.1" 200 -
+2024-11-22 11:54:19,081 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:54:19] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 11:54:19,084 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:54:19] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 11:54:19,085 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:54:19] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 11:54:31,787 - app - INFO - Form data: Балашов Кирилл Алексеевич, TMBJJ7NE4J0000001, М922ТМ33, +79042550556, 2021, 2024-11-23
+2024-11-22 11:54:31,820 - app - ERROR - Error creating order: (fdb.fbcore.DatabaseError) ('Error while executing Stored Procedure:\n- SQLCODE: -625\n- validation error for column "ORDER_HISTORY"."ID", value "*** null ***"', -625, 335544347)
+[SQL: INSERT INTO order_history (order_id, client_id, car_id, created_at) VALUES (CAST(? AS INTEGER), CAST(? AS INTEGER), CAST(? AS INTEGER), CURRENT_TIMESTAMP) RETURNING order_history.id]
+[parameters: (1, 1, 2)]
+(Background on this error at: https://sqlalche.me/e/20/4xp6)
+2024-11-22 11:54:31,822 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 11:54:31] "[35m[1mPOST /appointments HTTP/1.1[0m" 500 -
+2024-11-22 12:09:29,850 - werkzeug - INFO -  * Detected change in 'D:\\SkodaExpert\\app\\routes.py', reloading
+2024-11-22 12:09:30,046 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 12:09:30,820 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 12:09:30,824 - werkzeug - INFO -  * Debugger PIN: 107-474-725
+2024-11-22 12:09:31,837 - werkzeug - INFO -  * Detected change in 'D:\\SkodaExpert\\app\\routes.py', reloading
+2024-11-22 12:09:32,062 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 12:09:32,810 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 12:09:32,813 - werkzeug - INFO -  * Debugger PIN: 107-474-725
+2024-11-22 12:09:35,817 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-22 12:09:35,818 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-22 12:09:35,820 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 12:09:36,565 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 12:09:36,569 - werkzeug - INFO -  * Debugger PIN: 107-474-725
+2024-11-22 12:09:37,799 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:09:37] "GET / HTTP/1.1" 200 -
+2024-11-22 12:09:37,893 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:09:37] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 12:09:37,894 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:09:37] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 12:09:37,896 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:09:37] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 12:09:40,362 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:09:40] "GET /login HTTP/1.1" 200 -
+2024-11-22 12:09:40,400 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:09:40] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 12:09:40,402 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:09:40] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 12:09:40,403 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:09:40] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 12:09:42,292 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:09:42] "[32mPOST /login HTTP/1.1[0m" 302 -
+2024-11-22 12:09:42,318 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:09:42] "GET /client_dashboard HTTP/1.1" 200 -
+2024-11-22 12:09:42,360 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:09:42] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 12:09:42,361 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:09:42] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 12:09:42,363 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:09:42] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 12:09:44,909 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:09:44] "GET /appointments HTTP/1.1" 200 -
+2024-11-22 12:09:44,947 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:09:44] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 12:09:44,948 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:09:44] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 12:09:44,950 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:09:44] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 12:10:03,258 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:03] "GET /order_history HTTP/1.1" 200 -
+2024-11-22 12:10:03,292 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:03] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 12:10:03,296 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:03] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 12:10:03,297 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:03] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 12:10:05,349 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:05] "GET /order_history HTTP/1.1" 200 -
+2024-11-22 12:10:05,375 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:05] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 12:10:05,376 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:05] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 12:10:05,378 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:05] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 12:10:06,777 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:06] "GET /order_history HTTP/1.1" 200 -
+2024-11-22 12:10:06,803 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:06] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 12:10:06,803 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:06] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 12:10:06,804 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:06] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 12:10:10,154 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:10] "GET /appointments HTTP/1.1" 200 -
+2024-11-22 12:10:10,187 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:10] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 12:10:10,192 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:10] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 12:10:10,192 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:10] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 12:10:32,120 - app - INFO - Form data: Балашов Кирилл Алексеевич, TMBJJ7NE4J0000001, М922ТМ33, +79042550556, 2021, 2024-11-24
+2024-11-22 12:10:32,154 - app - INFO - Order created successfully: 2
+2024-11-22 12:10:32,156 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:32] "POST /appointments HTTP/1.1" 200 -
+2024-11-22 12:10:40,974 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:40] "GET /appointments HTTP/1.1" 200 -
+2024-11-22 12:10:44,979 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:44] "GET /client_dashboard HTTP/1.1" 200 -
+2024-11-22 12:10:45,018 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:45] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 12:10:45,020 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:45] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 12:10:45,021 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:45] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 12:10:53,126 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:53] "GET /order_history HTTP/1.1" 200 -
+2024-11-22 12:10:53,169 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:53] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 12:10:53,171 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:53] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 12:10:53,172 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:53] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 12:10:55,031 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:55] "[35m[1mGET /order_details/1 HTTP/1.1[0m" 500 -
+2024-11-22 12:10:55,070 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:55] "GET /order_details/1?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2024-11-22 12:10:55,075 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:55] "GET /order_details/1?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2024-11-22 12:10:55,085 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:55] "GET /order_details/1?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2024-11-22 12:10:55,134 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:10:55] "[36mGET /order_details/1?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2024-11-22 12:12:03,015 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:12:03] "GET /order_history HTTP/1.1" 200 -
+2024-11-22 12:12:03,833 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:12:03] "GET /client_dashboard HTTP/1.1" 200 -
+2024-11-22 12:14:57,768 - werkzeug - INFO -  * Detected change in 'D:\\SkodaExpert\\app\\models.py', reloading
+2024-11-22 12:14:57,988 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 12:14:58,684 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 12:14:58,687 - werkzeug - INFO -  * Debugger PIN: 107-474-725
+2024-11-22 12:20:35,465 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-22 12:20:35,466 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-22 12:20:35,467 - werkzeug - INFO -  * Restarting with stat
+2024-11-22 12:20:36,188 - werkzeug - WARNING -  * Debugger is active!
+2024-11-22 12:20:36,191 - werkzeug - INFO -  * Debugger PIN: 107-474-725
+2024-11-22 12:20:37,645 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:37] "GET / HTTP/1.1" 200 -
+2024-11-22 12:20:37,751 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:37] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 12:20:37,752 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:37] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 12:20:37,753 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:37] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 12:20:41,060 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:41] "GET /login HTTP/1.1" 200 -
+2024-11-22 12:20:41,099 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:41] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 12:20:41,107 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:41] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 12:20:41,108 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:41] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 12:20:42,369 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:42] "[32mPOST /login HTTP/1.1[0m" 302 -
+2024-11-22 12:20:42,407 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:42] "GET /client_dashboard HTTP/1.1" 200 -
+2024-11-22 12:20:42,451 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:42] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 12:20:42,452 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:42] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 12:20:42,453 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:42] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 12:20:44,237 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:44] "GET /order_details/1 HTTP/1.1" 200 -
+2024-11-22 12:20:44,274 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:44] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 12:20:44,276 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:44] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 12:20:44,278 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:44] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 12:20:48,453 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:48] "GET /client_dashboard HTTP/1.1" 200 -
+2024-11-22 12:20:49,938 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:49] "GET /order_details/2 HTTP/1.1" 200 -
+2024-11-22 12:20:49,975 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:49] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-22 12:20:49,979 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:49] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-22 12:20:49,980 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:20:49] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-22 12:21:38,336 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:21:38] "GET /select_services HTTP/1.1" 200 -
+2024-11-22 12:21:43,477 - flask_wtf.csrf - INFO - The CSRF token is missing.
+2024-11-22 12:21:43,478 - werkzeug - INFO - 127.0.0.1 - - [22/Nov/2024 12:21:43] "[31m[1mPOST /select_services HTTP/1.1[0m" 400 -

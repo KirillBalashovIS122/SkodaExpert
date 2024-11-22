@@ -46,6 +46,9 @@ class Order(db.Model):
     car_id = db.Column(Integer, db.ForeignKey('cars.id'), nullable=False)
     created_at = db.Column(DateTime, default=db.func.current_timestamp())
 
+    # Добавляем отношение к модели Car
+    car = db.relationship('Car', backref='orders')
+
 class Task(db.Model):
     __tablename__ = 'tasks'
     id = db.Column(Integer, primary_key=True)

@@ -1,21 +1,17 @@
-{% extends "base.html" %}
-
-{% block title %}Выбор услуг{% endblock %}
-
-{% block content %}
-<div class="form-container">
-    <h1>Выбор услуг</h1>
-    <form method="post">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <ul>
-            {% for service in services %}
-                <li>
-                    <input type="checkbox" name="services" value="{{ service.id }}">
-                    {{ service.service_name }} - {{ service.price }} руб.
-                </li>
-            {% endfor %}
-        </ul>
-        <button type="submit">Выбрать</button>
+<!-- templates/client/select_services.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Выбор услуг</title>
+</head>
+<body>
+    <h1>Выберите услуги</h1>
+    <form method="POST" action="{{ url_for('main.select_services') }}">
+        {% for service in services %}
+            <input type="checkbox" name="services" value="{{ service.id }}"> {{ service.service_name }} - {{ service.price }} руб.<br>
+        {% endfor %}
+        <button type="submit">Далее</button>
     </form>
-</div>
-{% endblock %}
+</body>
+</html>

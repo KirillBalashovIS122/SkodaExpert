@@ -121,9 +121,7 @@ def appointments():
                 car = create_car(client.id, full_name, vin_number, car_plate, car_year)
 
                 # Создаем новый заказ
-                new_order = Order(client_id=client.id, car_id=car.id)
-                db.session.add(new_order)
-                db.session.commit()
+                new_order = create_order(client.id, car.id)
 
                 # Сохраняем историю заказа
                 save_order_history(new_order.id, client.id, car.id)
@@ -173,6 +171,12 @@ def create_car(client_id, model, vin, license_plate, car_year):
     db.session.add(new_car)
     db.session.commit()
     return new_car
+
+def create_order(client_id, car_id):
+    new_order = Order(client_id=client_id, car_id=car_id)
+    db.session.add(new_order)
+    db.session.commit()
+    return new_order
 
 def save_order_history(order_id, client_id, car_id):
     new_order_history = OrderHistory(order_id=order_id, client_id=client_id, car_id=car_id)

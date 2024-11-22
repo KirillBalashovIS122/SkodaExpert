@@ -1,26 +1,13 @@
+<!-- templates/client/order_details.html -->
 {% extends "base.html" %}
 
-{% block title %}Детали заказа{% endblock %}
-
 {% block content %}
-<div class="order-details-container">
-    <h1>Детали заказа №{{ order.id }}</h1>
-    <p>Дата создания: {{ order.created_at }}</p>
-    <p>Клиент: {{ user.name }}</p>
+    <h1>Детали заказа</h1>
+    <p>Номер заказ-наряда: {{ order.id }}</p>
+    <p>Имя заказчика: {{ user.name }}</p>
     <p>Телефон: {{ user.phone }}</p>
     <p>Марка и модель авто: {{ order.car.model }}</p>
     <p>Год выпуска: {{ order.car.car_year }}</p>
     <p>Гос номер: {{ order.car.license_plate }}</p>
     <p>VIN код: {{ order.car.vin }}</p>
-
-    <h2>Услуги:</h2>
-    <ul>
-        {% for service in order.services %}
-            <li>{{ service.service_name }} - {{ service.price }} руб.</li>
-        {% endfor %}
-    </ul>
-
-    <a href="{{ url_for('main.generate_order_pdf', order_id=order.id) }}" class="button">Скачать заказ-наряд</a>
-    <a href="{{ url_for('main.order_history') }}" class="button">Вернуться к истории заказов</a>
-</div>
 {% endblock %}

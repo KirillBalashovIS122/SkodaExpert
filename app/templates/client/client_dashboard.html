@@ -1,24 +1,14 @@
+<!-- templates/client/client_dashboard.html -->
 {% extends "base.html" %}
 
-{% block title %}Личный кабинет{% endblock %}
-
 {% block content %}
-<div class="dashboard-container">
-    <h1>Добро пожаловать, {{ user.name }}!</h1>
-    <h2>Ваши заказы:</h2>
+    <h1>Панель клиента</h1>
+    <p>Добро пожаловать, {{ user.name }}!</p>
+    <a href="{{ url_for('main.select_services') }}">Записаться на ремонт</a>
+    <h2>Ваши заказы</h2>
     <ul>
         {% for order in orders %}
-            <li>Заказ №{{ order.id }} - {{ order.created_at }}</li>
+            <li><a href="{{ url_for('main.order_details', order_id=order.id) }}">Заказ №{{ order.id }}</a></li>
         {% endfor %}
     </ul>
-    <h2>Доступные услуги:</h2>
-    <ul>
-        {% for service in services %}
-            <li>{{ service.service_name }} - {{ service.price }} руб.</li>
-        {% endfor %}
-    </ul>
-    <a href="{{ url_for('main.edit_profile') }}" class="button">Редактировать профиль</a>
-    <a href="{{ url_for('main.appointments') }}" class="button">Записаться на сервис</a>
-    <a href="{{ url_for('main.order_history') }}" class="button">История заказов</a>
-</div>
 {% endblock %}
