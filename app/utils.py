@@ -11,11 +11,16 @@ def get_current_user():
         return User.query.get(user_id)
     return None
 
-def generate_pdf(order):
+def generate_pdf(order, appointment_time):
     from reportlab.lib.pagesizes import letter
     from reportlab.pdfgen import canvas
     from reportlab.lib.units import inch
     from io import BytesIO
+    from reportlab.pdfbase import pdfmetrics
+    from reportlab.pdfbase.ttfonts import TTFont
+
+    # Регистрация русского шрифта
+    pdfmetrics.registerFont(TTFont('Times-Roman', 'times.ttf'))
 
     buffer = BytesIO()
     pdf = canvas.Canvas(buffer, pagesize=letter)
@@ -30,12 +35,17 @@ def generate_pdf(order):
     pdf.drawString(1 * inch, 7 * inch, f"Гос номер: {order.car.license_plate}")
     pdf.drawString(1 * inch, 6.5 * inch, f"VIN код: {order.car.vin}")
 
-    y = 6 * inch
+    # Добавляем время записи
+    pdf.drawString(1 * inch, 6 * inch, f"Время записи: {appointment_time}")
+
+    y = 5.5 * inch
+    total_price = 0
     for i, service in enumerate(order.services):
         pdf.drawString(1 * inch, y, f"{i + 1}. {service.service_name} - {service.price} руб.")
+        total_price += service.price
         y -= 0.5 * inch
 
-    total_price = sum(service.price for service in order.services)
+    # Добавляем итоговую стоимость ремонта
     pdf.drawString(1 * inch, y - 0.5 * inch, f"Итого: {total_price} руб.")
     pdf.save()
 

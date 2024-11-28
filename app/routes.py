@@ -23,7 +23,11 @@ class SelectServicesForm(FlaskForm):
 
 @main.route('/')
 def index():
-    return render_template('index.html')
+    # Если пользователь авторизован, перенаправляем в личный кабинет
+    if 'user_id' in session:
+        return redirect(url_for('main.client_dashboard'))
+    # Иначе перенаправляем на страницу регистрации
+    return redirect(url_for('main.register'))
 
 @main.route('/login', methods=['GET', 'POST'])
 @csrf.exempt  # Исключение из CSRF-защиты для входа, если это безопасно
@@ -96,6 +100,10 @@ def edit_profile():
 
     return redirect(url_for('main.index'))  # Перенаправление на главную, если не клиент
 
+@main.route('/appointment_success/<int:order_id>')
+def appointment_success(order_id):
+    return render_template('client/appointment_success.html', order_id=order_id)
+
 @main.route('/appointments', methods=['GET', 'POST'])
 def appointments():
     if 'role' in session and session['role'] == 'client':
@@ -132,6 +140,9 @@ def appointments():
 
                 # Сохраняем историю заказа
                 save_order_history(new_order.id, client.id, car.id)
+
+                # Сохраняем время записи в сессию
+                session['appointment_time'] = appointment_time
 
                 current_app.logger.info(f"Order created successfully: {new_order.id}")
                 return redirect(url_for('main.appointment_success', order_id=new_order.id))
@@ -196,7 +207,10 @@ def generate_order_pdf(order_id):
     if not order:
         return "Заказ не найден", 404
 
-    buffer = generate_pdf(order)
+    # Получаем время записи из сессии
+    appointment_time = session.get('appointment_time')
+
+    buffer = generate_pdf(order, appointment_time)
 
     response = make_response(buffer.getvalue())
     response.headers["Content-Type"] = "application/pdf"
@@ -209,6 +223,7 @@ def logout():
     session.pop('user_id', None)
     session.pop('role', None)
     session.pop('selected_services', None)
+    session.pop('appointment_time', None)
     return redirect(url_for('main.index'))
 
 @main.route('/tasks')
@@ -302,10 +317,6 @@ def select_services():
         services = Service.query.all()
         return render_template('client/select_services.html', services=services, form=form)
     return redirect(url_for('main.index'))
-
-@main.route('/appointment_success')
-def appointment_success():
-    return render_template('client/appointment_success.html')
 
 @main.route('/order_history')
 def order_history():
