@@ -20,7 +20,6 @@ def generate_pdf(order, appointment_time, appointment_date):
     from reportlab.pdfbase import pdfmetrics
     from reportlab.pdfbase.ttfonts import TTFont
 
-    # Регистрация русского шрифта
     pdfmetrics.registerFont(TTFont('Times-Roman', 'times.ttf'))
 
     buffer = BytesIO()
@@ -36,7 +35,6 @@ def generate_pdf(order, appointment_time, appointment_date):
     pdf.drawString(1 * inch, 7 * inch, f"Гос номер: {order.car.license_plate}")
     pdf.drawString(1 * inch, 6.5 * inch, f"VIN код: {order.car.vin}")
 
-    # Форматируем дату и время записи
     formatted_date = datetime.strptime(appointment_date, "%Y-%m-%d").strftime("%d.%m.%Y")
     pdf.drawString(1 * inch, 6 * inch, f"Время записи: {formatted_date} {appointment_time}")
 
@@ -49,7 +47,6 @@ def generate_pdf(order, appointment_time, appointment_date):
         total_price += service.price
         y -= 0.5 * inch
 
-    # Добавляем итоговую стоимость ремонта
     pdf.drawString(1 * inch, y - 0.5 * inch, f"Итого: {total_price} руб.")
     pdf.save()
 

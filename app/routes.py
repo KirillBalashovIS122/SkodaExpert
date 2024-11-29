@@ -4,33 +4,22 @@ from datetime import timedelta, datetime
 from .models import User, Car, Service, Order, Task, Report, AppointmentSlot, Client, OrderHistory
 from . import db, csrf
 from .utils import get_current_user, generate_pdf, calculate_statistics
-import logging
 from flask_wtf import FlaskForm
 from wtforms import SubmitField
 
 main = Blueprint('main', __name__)
-
-# Настройка логирования
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    handlers=[
-                        logging.FileHandler("app.log"),
-                        logging.StreamHandler()
-                    ])
 
 class SelectServicesForm(FlaskForm):
     submit = SubmitField('Далее')
 
 @main.route('/')
 def index():
-    # Если пользователь авторизован, перенаправляем в личный кабинет
     if 'user_id' in session:
         return redirect(url_for('main.client_dashboard'))
-    # Иначе перенаправляем на страницу регистрации
     return redirect(url_for('main.register'))
 
 @main.route('/login', methods=['GET', 'POST'])
-@csrf.exempt  # Исключение из CSRF-защиты для входа, если это безопасно
+@csrf.exempt
 def login():
     if request.method == 'POST':
         email = request.form.get('email')
@@ -45,7 +34,7 @@ def login():
     return render_template('login.html')
 
 @main.route('/register', methods=['GET', 'POST'])
-@csrf.exempt  # Исключение из CSRF-защиты для регистрации
+@csrf.exempt
 def register():
     if request.method == 'POST':
         name = request.form.get('name')
@@ -63,42 +52,26 @@ def register():
 
 @main.route('/client_dashboard')
 def client_dashboard():
-    # Проверка, что пользователь авторизован и его роль - 'client'
     if 'role' in session and session['role'] == 'client':
-        # Получаем данные клиента
         user = User.query.get(session['user_id'])
-
-        # Получаем заказы клиента
-        user_orders = Order.query.filter_by(client_id=session['user_id']).all()  # Используем client_id вместо user_id
-
-        # Получаем список доступных услуг (если нужно)
+        user_orders = Order.query.filter_by(client_id=session['user_id']).all()
         services = Service.query.all()
-
         return render_template('client/client_dashboard.html', user=user, orders=user_orders, services=services)
-
-    return redirect(url_for('main.index'))  # Перенаправление на главную, если не клиент
+    return redirect(url_for('main.index'))
 
 @main.route('/edit_profile', methods=['GET', 'POST'])
 def edit_profile():
-    # Проверяем, что пользователь авторизован и его роль - 'client'
     if 'role' in session and session['role'] == 'client':
-        user = User.query.get(session['user_id'])  # Получаем данные пользователя
-
-        # Если метод запроса POST (то есть форма отправлена)
+        user = User.query.get(session['user_id'])
         if request.method == 'POST':
             user.name = request.form['name']
             user.email = request.form['email']
             user.phone = request.form['phone']
-
-            db.session.commit()  # Сохраняем изменения в базе данных
-
+            db.session.commit()
             flash("Профиль обновлен!", "success")
-            return redirect(url_for('main.client_dashboard'))  # Перенаправляем обратно на панель клиента
-
-        # Если GET - просто отображаем форму с текущими данными
+            return redirect(url_for('main.client_dashboard'))
         return render_template('client/edit_profile.html', user=user)
-
-    return redirect(url_for('main.index'))  # Перенаправление на главную, если не клиент
+    return redirect(url_for('main.index'))
 
 @main.route('/appointment_success/<int:order_id>')
 def appointment_success(order_id):
@@ -117,46 +90,27 @@ def appointments():
             appointment_date = request.form.get('appointment_date')
             appointment_time = request.form.get('appointment_time')
 
-            # Логирование для отладки
-            current_app.logger.info(f"Form data: {full_name}, {car_model}, {vin_number}, {car_plate}, {phone}, {car_year}, {appointment_date}, {appointment_time}")
-
-            # Проверка наличия user_id в сессии
             if 'user_id' not in session:
-                current_app.logger.error("User ID not found in session")
                 return jsonify({'success': False, 'error': 'User ID not found in session'}), 400
 
-            # Проверка существования клиента
             client = User.query.get(session['user_id'])
             if not client:
-                current_app.logger.error("Client not found")
                 return jsonify({'success': False, 'error': 'Client not found'}), 400
 
             try:
-                # Создаем новый автомобиль
                 car = create_car(client.id, car_model, vin_number, car_plate, car_year)
-
-                # Создаем новый заказ
                 new_order = create_order(client.id, car.id)
-
-                # Сохраняем историю заказа
                 save_order_history(new_order.id, client.id, car.id)
-
-                # Сохраняем время записи в сессию
                 session['appointment_time'] = appointment_time
                 session['appointment_date'] = appointment_date
-
-                current_app.logger.info(f"Order created successfully: {new_order.id}")
                 return redirect(url_for('main.appointment_success', order_id=new_order.id))
             except ValueError as e:
-                current_app.logger.error(f"Error creating car: {e}")
                 db.session.rollback()
                 return jsonify({'success': False, 'error': str(e)}), 400
             except Exception as e:
-                current_app.logger.error(f"Error creating order: {e}")
                 db.session.rollback()
                 return jsonify({'success': False, 'error': 'Error creating order'}), 500
 
-        # Проверка наличия выбранных услуг в сессии
         if 'selected_services' not in session:
             return redirect(url_for('main.select_services'))
 
@@ -171,12 +125,10 @@ def appointments():
     return redirect(url_for('main.index'))
 
 def create_car(client_id, model, vin, license_plate, car_year):
-    # Проверка существования client_id в таблице CLIENTS
     client = Client.query.get(client_id)
     if not client:
         raise ValueError(f"Client with id {client_id} does not exist")
 
-    # Проверка корректности данных
     if not model or not vin or not license_plate or not car_year:
         raise ValueError("All fields are required")
 
@@ -196,7 +148,6 @@ def create_order(client_id, car_id):
     db.session.add(new_order)
     db.session.commit()
 
-    # Добавляем выбранные услуги в заказ
     selected_services = session.get('selected_services', [])
     for service_id in selected_services:
         service = Service.query.get(service_id)
@@ -217,7 +168,6 @@ def generate_order_pdf(order_id):
     if not order:
         return "Заказ не найден", 404
 
-    # Получаем время записи из сессии
     appointment_time = session.get('appointment_time')
     appointment_date = session.get('appointment_date')
 
@@ -311,7 +261,6 @@ def book_service():
     if 'role' in session and session['role'] == 'client':
         service_id = request.form.get('service_id')
         if service_id:
-            # Здесь можно добавить логику для создания записи на ремонт
             flash("Вы успешно записались на ремонт!", "success")
         else:
             flash("Ошибка при записи на ремонт.", "error")
