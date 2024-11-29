@@ -5,35 +5,12 @@
 {% block content %}
 <div class="form-container">
     <h1>Выберите услуги</h1>
-    <form method="POST" action="{{ url_for('main.select_services') }}" onsubmit="return validateForm()">
+    <form method="POST" action="{{ url_for('main.select_services') }}">
         {{ form.csrf_token }}
-        <div class="service-list">
-            {% for service in services %}
-                <div class="service-item">
-                    <span>{{ service.service_name }} - {{ service.price }} руб.</span>
-                    <input type="checkbox" name="services" value="{{ service.id }}">
-                </div>
-            {% endfor %}
-        </div>
+        {% for service in services %}
+            <input type="checkbox" name="services" value="{{ service.id }}"> {{ service.service_name }} - {{ service.price }} руб.<br>
+        {% endfor %}
         <button type="submit">Далее</button>
     </form>
 </div>
-
-<script>
-    function validateForm() {
-        var checkboxes = document.getElementsByName('services');
-        var checked = false;
-        for (var i = 0; i < checkboxes.length; i++) {
-            if (checkboxes[i].checked) {
-                checked = true;
-                break;
-            }
-        }
-        if (!checked) {
-            alert("Пожалуйста, выберите хотя бы одну услугу.");
-            return false;
-        }
-        return true;
-    }
-</script>
 {% endblock %}
