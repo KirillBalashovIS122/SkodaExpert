@@ -34,3 +34,12 @@
 2024-11-30 02:03:41,769 - werkzeug - INFO -  * Restarting with stat
 2024-11-30 02:03:42,260 - werkzeug - WARNING -  * Debugger is active!
 2024-11-30 02:03:42,262 - werkzeug - INFO -  * Debugger PIN: 919-580-330
+2024-11-30 02:03:45,117 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 02:03:45] "[32mGET / HTTP/1.1[0m" 302 -
+2024-11-30 02:03:45,289 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 02:03:45] "GET /client_dashboard HTTP/1.1" 200 -
+2024-11-30 02:03:45,411 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 02:03:45] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-30 02:03:45,415 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 02:03:45] "GET /static/style.css HTTP/1.1" 200 -
+2024-11-30 02:03:45,415 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 02:03:45] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-30 02:03:47,210 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 02:03:47] "GET /select_services HTTP/1.1" 200 -
+2024-11-30 02:03:47,239 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 02:03:47] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-30 02:03:47,242 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 02:03:47] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-30 02:03:47,242 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 02:03:47] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
