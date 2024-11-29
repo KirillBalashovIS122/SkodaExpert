@@ -1902,3 +1902,18 @@
 2024-11-30 00:41:42,478 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 00:41:42] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
 2024-11-30 00:41:42,479 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 00:41:42] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
 2024-11-30 00:41:42,479 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 00:41:42] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-30 00:42:09,362 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-30 00:42:09,363 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-30 00:42:09,364 - werkzeug - INFO -  * Restarting with stat
+2024-11-30 00:42:09,843 - werkzeug - WARNING -  * Debugger is active!
+2024-11-30 00:42:09,846 - werkzeug - INFO -  * Debugger PIN: 919-580-330
+2024-11-30 00:42:10,904 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 00:42:10] "[32mGET / HTTP/1.1[0m" 302 -
+2024-11-30 00:42:11,072 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 00:42:11] "GET /client_dashboard HTTP/1.1" 200 -
+2024-11-30 00:42:11,153 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 00:42:11] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-30 00:42:11,156 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 00:42:11] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-30 00:42:11,156 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 00:42:11] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
+2024-11-30 00:42:12,289 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 00:42:12] "GET /select_services HTTP/1.1" 200 -
+2024-11-30 00:42:12,315 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 00:42:12] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2024-11-30 00:42:12,319 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 00:42:12] "[36mGET /static/csrf.js HTTP/1.1[0m" 304 -
+2024-11-30 00:42:12,319 - werkzeug - INFO - 127.0.0.1 - - [30/Nov/2024 00:42:12] "[36mGET /static/script.js HTTP/1.1[0m" 304 -
