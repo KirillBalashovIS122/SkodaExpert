@@ -140,3 +140,32 @@ header nav a {
 .order-history-container ul li a:hover, .order-details-container ul li a:hover {
     text-decoration: underline;
 }
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.service-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.service-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.service-item span {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 10px;
+}
+
+.service-item input[type="checkbox"] {
+    margin-left: 10px;
+}

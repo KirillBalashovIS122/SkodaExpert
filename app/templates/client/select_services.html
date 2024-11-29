@@ -1,17 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Выбор услуг</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Выбор услуг{% endblock %}
+
+{% block content %}
+<div class="form-container">
     <h1>Выберите услуги</h1>
-    <form method="POST" action="{{ url_for('main.select_services') }}">
+    <form method="POST" action="{{ url_for('main.select_services') }}" onsubmit="return validateForm()">
         {{ form.csrf_token }}
-        {% for service in services %}
-            <input type="checkbox" name="services" value="{{ service.id }}"> {{ service.service_name }} - {{ service.price }} руб.<br>
-        {% endfor %}
+        <div class="service-list">
+            {% for service in services %}
+                <div class="service-item">
+                    <span>{{ service.service_name }} - {{ service.price }} руб.</span>
+                    <input type="checkbox" name="services" value="{{ service.id }}">
+                </div>
+            {% endfor %}
+        </div>
         <button type="submit">Далее</button>
     </form>
-</body>
-</html>
+</div>
+
+<script>
+    function validateForm() {
+        var checkboxes = document.getElementsByName('services');
+        var checked = false;
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                checked = true;
+                break;
+            }
+        }
+        if (!checked) {
+            alert("Пожалуйста, выберите хотя бы одну услугу.");
+            return false;
+        }
+        return true;
+    }
+</script>
+{% endblock %}

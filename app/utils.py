@@ -1,6 +1,7 @@
 from flask import session
 from .models import User, Order, Service, Task, Report
 from . import db
+from datetime import datetime
 
 def get_current_user():
     user_id = session.get('user_id')
@@ -11,7 +12,7 @@ def get_current_user():
         return User.query.get(user_id)
     return None
 
-def generate_pdf(order, appointment_time):
+def generate_pdf(order, appointment_time, appointment_date):
     from reportlab.lib.pagesizes import letter
     from reportlab.pdfgen import canvas
     from reportlab.lib.units import inch
@@ -35,11 +36,14 @@ def generate_pdf(order, appointment_time):
     pdf.drawString(1 * inch, 7 * inch, f"Гос номер: {order.car.license_plate}")
     pdf.drawString(1 * inch, 6.5 * inch, f"VIN код: {order.car.vin}")
 
-    # Добавляем время записи
-    pdf.drawString(1 * inch, 6 * inch, f"Время записи: {appointment_time}")
+    # Форматируем дату и время записи
+    formatted_date = datetime.strptime(appointment_date, "%Y-%m-%d").strftime("%d.%m.%Y")
+    pdf.drawString(1 * inch, 6 * inch, f"Время записи: {formatted_date} {appointment_time}")
 
     y = 5.5 * inch
     total_price = 0
+    pdf.drawString(1 * inch, y, "Выбранные услуги:")
+    y -= 0.5 * inch
     for i, service in enumerate(order.services):
         pdf.drawString(1 * inch, y, f"{i + 1}. {service.service_name} - {service.price} руб.")
         total_price += service.price

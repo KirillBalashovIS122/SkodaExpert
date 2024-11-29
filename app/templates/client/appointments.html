@@ -1,7 +1,9 @@
-<!-- templates/client/appointments.html -->
 {% extends "base.html" %}
 
+{% block title %}Запись на ремонт{% endblock %}
+
 {% block content %}
+<div class="form-container">
     <h1>Запись на ремонт</h1>
     <form method="POST" action="{{ url_for('main.appointments') }}">
         <label for="full_name">ФИО:</label>
@@ -30,4 +32,13 @@
 
         <button type="submit">Записаться</button>
     </form>
+</div>
+
+<style>
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
 {% endblock %}

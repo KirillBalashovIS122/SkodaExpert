@@ -143,6 +143,7 @@ def appointments():
 
                 # Сохраняем время записи в сессию
                 session['appointment_time'] = appointment_time
+                session['appointment_date'] = appointment_date
 
                 current_app.logger.info(f"Order created successfully: {new_order.id}")
                 return redirect(url_for('main.appointment_success', order_id=new_order.id))
@@ -194,6 +195,15 @@ def create_order(client_id, car_id):
     new_order = Order(client_id=client_id, car_id=car_id)
     db.session.add(new_order)
     db.session.commit()
+
+    # Добавляем выбранные услуги в заказ
+    selected_services = session.get('selected_services', [])
+    for service_id in selected_services:
+        service = Service.query.get(service_id)
+        if service:
+            new_order.services.append(service)
+
+    db.session.commit()
     return new_order
 
 def save_order_history(order_id, client_id, car_id):
@@ -209,8 +219,9 @@ def generate_order_pdf(order_id):
 
     # Получаем время записи из сессии
     appointment_time = session.get('appointment_time')
+    appointment_date = session.get('appointment_date')
 
-    buffer = generate_pdf(order, appointment_time)
+    buffer = generate_pdf(order, appointment_time, appointment_date)
 
     response = make_response(buffer.getvalue())
     response.headers["Content-Type"] = "application/pdf"
@@ -224,6 +235,7 @@ def logout():
     session.pop('role', None)
     session.pop('selected_services', None)
     session.pop('appointment_time', None)
+    session.pop('appointment_date', None)
     return redirect(url_for('main.index'))
 
 @main.route('/tasks')
