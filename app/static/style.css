@@ -2,27 +2,37 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #e0f7e0; /* Светло-зеленый фон */
+    color: #4caf50; /* Светло-зеленый текст */
 }
 
 header {
-    background-color: #333;
-    color: #fff;
-    padding: 10px 0;
+    background-color: #4caf50; /* Светло-зеленый фон для верхней панели */
+    color: #ffffff; /* Белый текст */
+    padding: 20px 0; /* Увеличиваем отступы для верхней панели */
     text-align: center;
+    display: flex; /* Используем flexbox для выравнивания элементов */
+    align-items: center; /* Выравнивание по вертикали */
+    justify-content: space-between; /* Распределение пространства между элементами */
+}
+
+header nav {
+    display: flex; /* Используем flexbox для выравнивания ссылок */
+    align-items: center; /* Выравнивание по вертикали */
 }
 
 header nav a {
-    color: #fff;
-    margin: 0 15px;
+    color: #ffffff; /* Белый текст для ссылок */
+    margin: 0 20px; /* Увеличиваем отступы между ссылками */
     text-decoration: none;
+    font-size: 18px; /* Увеличиваем размер текста */
 }
 
 .container {
     width: 80%;
     margin: 0 auto;
     padding: 20px;
-    background-color: #fff;
+    background-color: #ffffff; /* Белый фон для контейнера */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
 }
@@ -31,7 +41,7 @@ header nav a {
     width: 50%;
     margin: 0 auto;
     padding: 20px;
-    background-color: #fff;
+    background-color: #ffffff; /* Белый фон для форм */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
 }
@@ -39,61 +49,67 @@ header nav a {
 .form-container label {
     display: block;
     margin-bottom: 5px;
+    color: #4caf50; /* Светло-зеленый текст для меток */
 }
 
 .form-container input, .form-container textarea, .form-container select {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #4caf50; /* Светло-зеленая рамка для полей ввода */
     border-radius: 4px;
+    color: #4caf50; /* Светло-зеленый текст для полей ввода */
 }
 
 .form-container button {
     padding: 10px 20px;
-    background-color: #333;
-    color: #fff;
+    background-color: #4caf50; /* Светло-зеленый фон для кнопок */
+    color: #ffffff; /* Белый текст для кнопок */
     border: none;
     border-radius: 4px;
     cursor: pointer;
 }
 
 .form-container button:hover {
-    background-color: #555;
+    background-color: #388e3c; /* Темно-зеленый фон для кнопок при наведении */
 }
 
 .success-container {
     text-align: center;
     padding: 50px;
+    background-color: #ffffff; /* Белый фон для сообщений об успехе */
+    color: #4caf50; /* Светло-зеленый текст для сообщений об успехе */
 }
 
 .success-container h1 {
-    color: #4CAF50;
+    color: #4caf50; /* Светло-зеленый текст для заголовков */
 }
 
 .success-container p {
     margin-bottom: 20px;
+    color: #4caf50; /* Светло-зеленый текст для параграфов */
 }
 
 .success-container .button {
     padding: 10px 20px;
-    background-color: #333;
-    color: #fff;
+    background-color: #4caf50; /* Светло-зеленый фон для кнопок */
+    color: #ffffff; /* Белый текст для кнопок */
     text-decoration: none;
     border-radius: 4px;
 }
 
 .success-container .button:hover {
-    background-color: #555;
+    background-color: #388e3c; /* Темно-зеленый фон для кнопок при наведении */
 }
 
 .tasks-container, .manage-employees-container, .manage-services-container, .manage-appointments-container, .statistics-container {
     width: 80%;
     margin: 0 auto;
     padding: 20px;
-    background-color: #fff;
+    background-color: #ffffff; /* Белый фон для контейнеров */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
+    color: #4caf50; /* Светло-зеленый текст для контейнеров */
 }
 
 .tasks-container ul, .manage-employees-container ul, .manage-services-container ul, .manage-appointments-container ul, .statistics-container ul {
@@ -103,10 +119,11 @@ header nav a {
 
 .tasks-container ul li, .manage-employees-container ul li, .manage-services-container ul li, .manage-appointments-container ul li, .statistics-container ul li {
     margin-bottom: 10px;
+    color: #4caf50; /* Светло-зеленый текст для элементов списка */
 }
 
 .tasks-container ul li a, .manage-employees-container ul li a, .manage-services-container ul li a, .manage-appointments-container ul li a, .statistics-container ul li a {
-    color: #333;
+    color: #4caf50; /* Светло-зеленый текст для ссылок */
     text-decoration: none;
 }
 
@@ -118,9 +135,10 @@ header nav a {
     width: 80%;
     margin: 0 auto;
     padding: 20px;
-    background-color: #fff;
+    background-color: #ffffff; /* Белый фон для контейнеров */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
+    color: #4caf50; /* Светло-зеленый текст для контейнеров */
 }
 
 .order-history-container ul, .order-details-container ul {
@@ -130,10 +148,11 @@ header nav a {
 
 .order-history-container ul li, .order-details-container ul li {
     margin-bottom: 10px;
+    color: #4caf50; /* Светло-зеленый текст для элементов списка */
 }
 
 .order-history-container ul li a, .order-details-container ul li a {
-    color: #333;
+    color: #4caf50; /* Светло-зеленый текст для ссылок */
     text-decoration: none;
 }
 
@@ -157,6 +176,7 @@ input[type="number"]::-webkit-outer-spin-button {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+    color: #4caf50; /* Светло-зеленый текст для элементов списка */
 }
 
 .service-item span {
@@ -165,17 +185,19 @@ input[type="number"]::-webkit-outer-spin-button {
     overflow: hidden;
     text-overflow: ellipsis;
     margin-right: 10px;
+    color: #4caf50; /* Светло-зеленый текст для элементов списка */
 }
 
 .service-item input[type="checkbox"] {
     margin-left: 10px;
+    border: 1px solid #4caf50; /* Светло-зеленая рамка для чекбоксов */
 }
 
 /* Стили для кнопки */
 .submit-button {
     padding: 10px 20px;
-    background-color: #333;
-    color: #fff;
+    background-color: #4caf50; /* Светло-зеленый фон для кнопок */
+    color: #ffffff; /* Белый текст для кнопок */
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -183,19 +205,21 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .submit-button:hover {
-    background-color: #555;
+    background-color: #388e3c; /* Темно-зеленый фон для кнопок при наведении */
 }
 
 .selected-services {
     margin-bottom: 20px;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #4caf50; /* Светло-зеленая рамка для выбранных услуг */
     border-radius: 4px;
-    background-color: #f9f9f9;
+    background-color: #ffffff; /* Белый фон для выбранных услуг */
+    color: #4caf50; /* Светло-зеленый текст для выбранных услуг */
 }
 
 .selected-services h2 {
     margin-top: 0;
+    color: #4caf50; /* Светло-зеленый текст для заголовков */
 }
 
 .selected-services ul {
@@ -205,4 +229,13 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .selected-services li {
     margin-bottom: 5px;
+    color: #4caf50; /* Светло-зеленый текст для элементов списка */
+}
+
+/* Добавляем стили для логотипа */
+.logo {
+    width: 100px; /* Установите нужную ширину */
+    height: auto; /* Автоматическая высота, чтобы сохранить пропорции */
+    vertical-align: middle; /* Выравнивание по центру */
+    margin-right: 20px; /* Отступ справа */
 }

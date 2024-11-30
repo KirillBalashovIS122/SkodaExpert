@@ -13,6 +13,9 @@
 </head>
 <body>
     <header>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='9945c9963e9ad146627fc6e389b34379.svg') }}" alt="Логотип" class="logo">
+        </div>
         <nav>
             <a href="{{ url_for('main.index') }}">Главная</a>
             {% if 'user_id' in session %}
