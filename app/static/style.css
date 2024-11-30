@@ -185,3 +185,24 @@ input[type="number"]::-webkit-outer-spin-button {
 .submit-button:hover {
     background-color: #555;
 }
+
+.selected-services {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.selected-services h2 {
+    margin-top: 0;
+}
+
+.selected-services ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.selected-services li {
+    margin-bottom: 5px;
+}

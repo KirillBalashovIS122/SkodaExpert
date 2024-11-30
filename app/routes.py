@@ -123,7 +123,10 @@ def appointments():
             AppointmentSlot.is_available == 1
         ).all()
 
-        return render_template('client/appointments.html', available_slots=available_slots)
+        selected_services = session.get('selected_services', [])
+        services = Service.query.all()
+
+        return render_template('client/appointments.html', available_slots=available_slots, services=services, selected_services=selected_services)
 
     return redirect(url_for('main.index'))
 
