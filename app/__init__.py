@@ -7,6 +7,7 @@ db = SQLAlchemy()
 csrf = CSRFProtect()
 
 def create_app():
+    print("Hello")
     app = Flask(__name__)
     app.config.from_object('config.DevelopmentConfig')
 
@@ -16,5 +17,10 @@ def create_app():
     from .routes import main
     app.register_blueprint(main)
 
+    # Настройка логирования
     logging.basicConfig(level=logging.DEBUG)
+    file_handler = logging.FileHandler('app.log')
+    file_handler.setLevel(logging.DEBUG)
+    app.logger.addHandler(file_handler)
+
     return app

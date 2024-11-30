@@ -91,6 +91,8 @@ def appointments():
             appointment_date = request.form.get('appointment_date')
             appointment_time = request.form.get('appointment_time')
 
+            print(f"Received form data: full_name={full_name}, car_model={car_model}, vin_number={vin_number}, car_plate={car_plate}, phone={phone}, car_year={car_year}, appointment_date={appointment_date}, appointment_time={appointment_time}")
+
             if 'user_id' not in session:
                 return jsonify({'success': False, 'error': 'User ID not found in session'}), 400
 
@@ -126,7 +128,7 @@ def appointments():
     return redirect(url_for('main.index'))
 
 def create_car(client_id, model, vin, license_plate, car_year):
-    logging.debug(f"Creating car for client_id: {client_id}, model: {model}, vin: {vin}, license_plate: {license_plate}, car_year: {car_year}")
+    print(f"Creating car for client_id: {client_id}, model: {model}, vin: {vin}, license_plate: {license_plate}, car_year: {car_year}")
     client = Client.query.get(client_id)
     if not client:
         raise ValueError(f"Client with id {client_id} does not exist")
@@ -146,7 +148,7 @@ def create_car(client_id, model, vin, license_plate, car_year):
     return new_car
 
 def create_order(client_id, car_id):
-    logging.debug(f"Creating order for client_id: {client_id}, car_id: {car_id}")
+    print(f"Creating order for client_id: {client_id}, car_id: {car_id}")
     new_order = Order(client_id=client_id, car_id=car_id)
     db.session.add(new_order)
     db.session.commit()
@@ -161,7 +163,7 @@ def create_order(client_id, car_id):
     return new_order
 
 def save_order_history(order_id, client_id, car_id):
-    logging.debug(f"Saving order history for order_id: {order_id}, client_id: {client_id}, car_id: {car_id}")
+    print(f"Saving order history for order_id: {order_id}, client_id: {client_id}, car_id: {car_id}")
     new_order_history = OrderHistory(order_id=order_id, client_id=client_id, car_id=car_id)
     db.session.add(new_order_history)
     db.session.commit()
