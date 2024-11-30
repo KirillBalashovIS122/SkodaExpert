@@ -4,13 +4,18 @@
 
 {% block content %}
 <div class="form-container">
-    <h1>Выберите услуги</h1>
-    <form method="POST" action="{{ url_for('main.select_services') }}">
-        {{ form.csrf_token }}
-        {% for service in services %}
-            <input type="checkbox" name="services" value="{{ service.id }}"> {{ service.service_name }} - {{ service.price }} руб.<br>
-        {% endfor %}
-        <button type="submit">Далее</button>
+    <h1>Выбор услуг</h1>
+    <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="service-list">
+            {% for service in services %}
+                <div class="service-item">
+                    <span>{{ service.service_name }} - {{ service.price }} руб.</span>
+                    <input type="checkbox" name="services" value="{{ service.id }}">
+                </div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="submit-button">Далее</button>
     </form>
 </div>
 {% endblock %}

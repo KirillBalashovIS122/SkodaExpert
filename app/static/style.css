@@ -147,6 +147,7 @@ input[type="number"]::-webkit-outer-spin-button {
     margin: 0;
 }
 
+/* Добавляем стили для списка услуг */
 .service-list {
     display: flex;
     flex-direction: column;
@@ -168,4 +169,19 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .service-item input[type="checkbox"] {
     margin-left: 10px;
+}
+
+/* Стили для кнопки */
+.submit-button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.submit-button:hover {
+    background-color: #555;
 }

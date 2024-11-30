@@ -91,4 +91,3 @@ class OrderHistory(db.Model):
     client_id = db.Column(Integer, ForeignKey('clients.id'), nullable=False)
     car_id = db.Column(Integer, ForeignKey('cars.id'), nullable=False)
     created_at = db.Column(DateTime, default=db.func.current_timestamp())
-    
