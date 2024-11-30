@@ -7,15 +7,15 @@
     <h1>Выбор услуг</h1>
     <form method="post">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <div class="service-list">
+        <ul>
             {% for service in services %}
-                <div class="service-item">
-                    <span>{{ service.service_name }} - {{ service.price }} руб.</span>
+                <li>
                     <input type="checkbox" name="services" value="{{ service.id }}">
-                </div>
+                    {{ service.service_name }} - {{ service.price }} руб.
+                </li>
             {% endfor %}
-        </div>
-        <button type="submit" class="submit-button">Далее</button>
+        </ul>
+        <button type="submit">Далее</button>
     </form>
 </div>
 {% endblock %}

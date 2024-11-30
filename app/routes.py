@@ -285,6 +285,7 @@ def select_services():
             session['selected_services'] = selected_services
             return redirect(url_for('main.appointments'))
         services = Service.query.all()
+        current_app.logger.debug(f"Services: {services}")  # Добавьте эту строку для отладки
         return render_template('client/select_services.html', services=services, form=form)
     return redirect(url_for('main.index'))
 
