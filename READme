@@ -1,0 +1,91 @@
+English text below
+
+Автосервис SkodaExpert
+Описание проекта
+Автосервис SkodaExpert - это веб-приложение, разработанное для управления автосервисом. Приложение позволяет клиентам заказывать услуги, механики выполнять задачи и менеджеры управлять сотрудниками и услугами.
+
+Основные функции
+Аутентификация и регистрация:
+Клиенты, механики и менеджеры могут регистрироваться и входить в систему.
+
+Управление услугами:
+Менеджеры могут добавлять, редактировать и удалять услуги.
+
+Заказ услуг:
+Клиенты могут выбирать услуги, заказывать их и просматривать историю заказов.
+
+Управление сотрудниками:
+Менеджеры могут добавлять, редактировать и удалять сотрудников.
+
+Задачи для механиков:
+Механики могут просматривать свои задачи и создавать отчеты.
+
+Статистика:
+Менеджеры могут просматривать статистику по заказам, услугам и сотрудникам.
+
+Установка и запуск
+Клонирование репозитория:
+git clone https://github.com/KirillBalashovIS122/SkodaExpert.git
+cd SkodaExpert
+
+Установка зависимостей:
+pip install -r requirements.txt
+
+Настройка базы данных:
+Убедитесь, что у вас установлен Firebird и настроена база данных.
+Обновите конфигурацию в config.py с учетом ваших настроек базы данных.
+
+Доступ к приложению:
+Откройте браузер и перейдите по адресу http://127.0.0.1:5000.
+
+Вклад в проект
+Если вы хотите внести свой вклад в проект, пожалуйста, создайте форк репозитория и отправьте pull request с вашими изменениями.
+
+Лицензия
+Этот проект лицензирован под MIT License. Подробности смотрите в файле LICENSE.
+
+SkodaExpert Car Service
+Project Description
+SkodaExpert Car Service is a web application designed for managing a car service. The application allows clients to order services, mechanics to perform tasks, and managers to manage employees and services.
+
+Key Features
+Authentication and Registration:
+Clients, mechanics, and managers can register and log in.
+Service Management:
+
+Managers can add, edit, and delete services.
+
+Service Ordering:
+Clients can select services, place orders, and view order history.
+
+Employee Management:
+Managers can add, edit, and delete employees.
+
+Mechanic Tasks:
+Mechanics can view their tasks and create reports.
+
+Statistics:
+Managers can view statistics on orders, services, and employees.
+
+Installation and Running
+git clone https://github.com/KirillBalashovIS122/SkodaExpert.git
+cd SkodaExpert
+
+Install Dependencies:
+pip install -r requirements.txt
+
+Database Setup:
+Ensure you have Firebird installed and configured.
+Update the configuration in config.py with your database settings.
+
+Run the Application:
+python run.py
+
+Access the Application:
+Open your browser and go to http://127.0.0.1:5000.
+
+Contributing
+If you want to contribute to the project, please fork the repository and submit a pull request with your changes.
+
+License
+This project is licensed under the MIT License. See the LICENSE file for details.
