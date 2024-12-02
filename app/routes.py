@@ -6,7 +6,6 @@ from . import db, csrf
 from .utils import get_current_user, generate_pdf, calculate_statistics
 from flask_wtf import FlaskForm
 from wtforms import SubmitField
-import logging
 
 main = Blueprint('main', __name__)
 
@@ -17,7 +16,7 @@ class SelectServicesForm(FlaskForm):
 def index():
     if 'user_id' in session:
         return redirect(url_for('main.client_dashboard'))
-    return redirect(url_for('main.login'))  # Перенаправление на страницу входа
+    return redirect(url_for('main.login'))
 
 @main.route('/login', methods=['GET', 'POST'])
 @csrf.exempt
@@ -91,8 +90,6 @@ def appointments():
             appointment_date = request.form.get('appointment_date')
             appointment_time = request.form.get('appointment_time')
 
-            print(f"Received form data: full_name={full_name}, car_model={car_model}, vin_number={vin_number}, car_plate={car_plate}, phone={phone}, car_year={car_year}, appointment_date={appointment_date}, appointment_time={appointment_time}")
-
             if 'user_id' not in session:
                 return jsonify({'success': False, 'error': 'User ID not found in session'}), 400
 
@@ -131,7 +128,6 @@ def appointments():
     return redirect(url_for('main.index'))
 
 def create_car(client_id, model, vin, license_plate, car_year):
-    print(f"Creating car for client_id: {client_id}, model: {model}, vin: {vin}, license_plate: {license_plate}, car_year: {car_year}")
     client = Client.query.get(client_id)
     if not client:
         raise ValueError(f"Client with id {client_id} does not exist")
@@ -151,7 +147,6 @@ def create_car(client_id, model, vin, license_plate, car_year):
     return new_car
 
 def create_order(client_id, car_id):
-    print(f"Creating order for client_id: {client_id}, car_id: {car_id}")
     new_order = Order(client_id=client_id, car_id=car_id)
     db.session.add(new_order)
     db.session.commit()
@@ -166,7 +161,6 @@ def create_order(client_id, car_id):
     return new_order
 
 def save_order_history(order_id, client_id, car_id):
-    print(f"Saving order history for order_id: {order_id}, client_id: {client_id}, car_id: {car_id}")
     new_order_history = OrderHistory(order_id=order_id, client_id=client_id, car_id=car_id)
     db.session.add(new_order_history)
     db.session.commit()
@@ -285,7 +279,6 @@ def select_services():
             session['selected_services'] = selected_services
             return redirect(url_for('main.appointments'))
         services = Service.query.all()
-        current_app.logger.debug(f"Services: {services}")  # Добавьте эту строку для отладки
         return render_template('client/select_services.html', services=services, form=form)
     return redirect(url_for('main.index'))
 
