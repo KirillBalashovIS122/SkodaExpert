@@ -30,18 +30,6 @@
         <label for="appointment_time">Время:</label>
         <input type="time" id="appointment_time" name="appointment_time" required><br>
 
-        <div class="selected-services">
-            <h2>Выбранные услуги:</h2>
-            <ul>
-                {% for service_id in selected_services %}
-                    {% set service = services|selectattr('id', 'eq', service_id)|first %}
-                    {% if service %}
-                        <li>{{ service.service_name }} - {{ service.price }} руб.</li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        </div>
-
         <button type="submit">Записаться</button>
     </form>
 </div>

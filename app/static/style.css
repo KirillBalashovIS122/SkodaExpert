@@ -166,31 +166,31 @@ input[type="number"]::-webkit-outer-spin-button {
     margin: 0;
 }
 
-/* Добавляем стили для списка услуг */
-.service-list {
-    display: flex;
-    flex-direction: column;
+/* Добавляем стили для таблицы услуг */
+.service-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
 }
 
-.service-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    color: #4caf50; /* Светло-зеленый текст для элементов списка */
+.service-table th, .service-table td {
+    padding: 10px;
+    border: 1px solid #4caf50; /* Светло-зеленая рамка */
+    text-align: left;
+    color: #4caf50; /* Светло-зеленый текст */
+    vertical-align: middle; /* Выравнивание по середине вертикально */
 }
 
-.service-item span {
-    flex: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-right: 10px;
-    color: #4caf50; /* Светло-зеленый текст для элементов списка */
+.service-table th {
+    background-color: #f9fff9; /* Светлый зеленоватый фон */
 }
 
-.service-item input[type="checkbox"] {
-    margin-left: 10px;
-    border: 1px solid #4caf50; /* Светло-зеленая рамка для чекбоксов */
+.service-table td.checkbox-cell {
+    text-align: center; /* Центрирование по горизонтали */
+}
+
+.service-table td.checkbox-cell input[type="checkbox"] {
+    margin: 0; /* Убираем отступы */
 }
 
 /* Стили для кнопки */

@@ -17,7 +17,7 @@ class SelectServicesForm(FlaskForm):
 def index():
     if 'user_id' in session:
         return redirect(url_for('main.client_dashboard'))
-    return redirect(url_for('main.register'))
+    return redirect(url_for('main.login'))  # Перенаправление на страницу входа
 
 @main.route('/login', methods=['GET', 'POST'])
 @csrf.exempt
