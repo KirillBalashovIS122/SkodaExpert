@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, make_response, flash, jsonify, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, session, make_response, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import timedelta, datetime
-from .models import User, Car, Service, Order, Task, Report, AppointmentSlot, Client, OrderHistory
+from datetime import datetime, timedelta
+from .models import Employee, Client, Car, Service, Order, Task, Report, AppointmentSlot, OrderHistory
 from . import db, csrf
 from .utils import get_current_user, generate_pdf, calculate_statistics
 from flask_wtf import FlaskForm
@@ -15,26 +15,30 @@ class SelectServicesForm(FlaskForm):
 @main.route('/')
 def index():
     if 'user_id' in session:
-        return redirect(url_for('main.client_dashboard'))
+        role = session.get('role')
+        if role == 'client':
+            return redirect(url_for('main.client_dashboard'))
+        elif role == 'mechanic':
+            return redirect(url_for('main.mechanic_dashboard'))
+        elif role == 'manager':
+            return redirect(url_for('main.manager_dashboard'))
     return redirect(url_for('main.login'))
 
 @main.route('/login', methods=['GET', 'POST'])
-@csrf.exempt
 def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-        user = User.query.filter_by(email=email).first()
+        user = Employee.query.filter_by(email=email).first() or Client.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
             session['user_id'] = user.id
-            session['role'] = user.role
-            return redirect(url_for('main.client_dashboard'))
+            session['role'] = user.role if isinstance(user, Employee) else 'client'
+            return redirect(url_for('main.index'))
         else:
             flash("Неверный email или пароль", "error")
     return render_template('login.html')
 
 @main.route('/register', methods=['GET', 'POST'])
-@csrf.exempt
 def register():
     if request.method == 'POST':
         name = request.form.get('name')
@@ -43,7 +47,10 @@ def register():
         password = request.form.get('password')
         role = request.form.get('role')
         hashed_password = generate_password_hash(password)
-        new_user = User(name=name, email=email, phone=phone, password=hashed_password, role=role)
+        if role == 'client':
+            new_user = Client(name=name, email=email, phone=phone, password=hashed_password)
+        else:
+            new_user = Employee(name=name, email=email, phone=phone, password=hashed_password, role=role)
         db.session.add(new_user)
         db.session.commit()
         flash("Регистрация прошла успешно", "success")
@@ -53,24 +60,55 @@ def register():
 @main.route('/client_dashboard')
 def client_dashboard():
     if 'role' in session and session['role'] == 'client':
-        user = User.query.get(session['user_id'])
+        user = Client.query.get(session['user_id'])
         user_orders = Order.query.filter_by(client_id=session['user_id']).all()
         services = Service.query.all()
         return render_template('client/client_dashboard.html', user=user, orders=user_orders, services=services)
     return redirect(url_for('main.index'))
 
+@main.route('/mechanic_dashboard')
+def mechanic_dashboard():
+    if 'role' in session and session['role'] == 'mechanic':
+        user = Employee.query.get(session['user_id'])
+        today = datetime.now().date()
+        next_week = today + timedelta(days=7)
+        tasks = Task.query.filter(
+            Task.employee_id == session['user_id'],
+            Task.created_at >= today,
+            Task.created_at < next_week
+        ).all()
+        return render_template('employee/mechanic/mechanic_dashboard.html', user=user, tasks=tasks)
+    return redirect(url_for('main.index'))
+
+@main.route('/mechanic_all_orders')
+def mechanic_all_orders():
+    if 'role' in session and session['role'] == 'mechanic':
+        user = Employee.query.get(session['user_id'])
+        tasks = Task.query.filter_by(employee_id=session['user_id']).all()
+        return render_template('employee/mechanic/tasks.html', user=user, tasks=tasks)
+    return redirect(url_for('main.index'))
+
+@main.route('/manager_dashboard')
+def manager_dashboard():
+    if 'role' in session and session['role'] == 'manager':
+        user = Employee.query.get(session['user_id'])
+        employees = Employee.query.filter(Employee.role.in_(['mechanic', 'manager'])).all()
+        services = Service.query.all()
+        return render_template('employee/manager/manager_dashboard.html', user=user, employees=employees, services=services)
+    return redirect(url_for('main.index'))
+
 @main.route('/edit_profile', methods=['GET', 'POST'])
 def edit_profile():
-    if 'role' in session and session['role'] == 'client':
-        user = User.query.get(session['user_id'])
+    if 'role' in session:
+        user = get_current_user()
         if request.method == 'POST':
             user.name = request.form['name']
             user.email = request.form['email']
             user.phone = request.form['phone']
             db.session.commit()
             flash("Профиль обновлен!", "success")
-            return redirect(url_for('main.client_dashboard'))
-        return render_template('client/edit_profile.html', user=user)
+            return redirect(url_for('main.index'))
+        return render_template('edit_profile.html', user=user)
     return redirect(url_for('main.index'))
 
 @main.route('/appointment_success/<int:order_id>')
@@ -93,7 +131,7 @@ def appointments():
             if 'user_id' not in session:
                 return jsonify({'success': False, 'error': 'User ID not found in session'}), 400
 
-            client = User.query.get(session['user_id'])
+            client = Client.query.get(session['user_id'])
             if not client:
                 return jsonify({'success': False, 'error': 'Client not found'}), 400
 
@@ -221,11 +259,11 @@ def manage_employees():
             email = request.form.get('email')
             password = request.form.get('password')
             hashed_password = generate_password_hash(password)
-            new_employee = User(name=name, role=role, email=email, password=hashed_password)
+            new_employee = Employee(name=name, role=role, email=email, password=hashed_password)
             db.session.add(new_employee)
             db.session.commit()
             return redirect(url_for('main.manage_employees'))
-        employees = User.query.filter(User.role.in_(['mechanic', 'manager'])).all()
+        employees = Employee.query.filter(Employee.role.in_(['mechanic', 'manager'])).all()
         return render_template('employee/manager/manage_employees.html', employees=employees)
     return redirect(url_for('main.index'))
 
@@ -276,6 +314,9 @@ def select_services():
     if 'role' in session and session['role'] == 'client':
         if form.validate_on_submit():
             selected_services = request.form.getlist('services')
+            if not selected_services:
+                flash("Выберите хотя бы одну услугу", "error")
+                return redirect(url_for('main.select_services'))
             session['selected_services'] = selected_services
             return redirect(url_for('main.appointments'))
         services = Service.query.all()
@@ -285,7 +326,7 @@ def select_services():
 @main.route('/order_history')
 def order_history():
     if 'role' in session and session['role'] == 'client':
-        user = User.query.get(session['user_id'])
+        user = Client.query.get(session['user_id'])
         order_history = OrderHistory.query.filter_by(client_id=user.id).all()
         return render_template('client/order_history.html', user=user, order_history=order_history)
     return redirect(url_for('main.index'))
@@ -293,7 +334,7 @@ def order_history():
 @main.route('/order_details/<int:order_id>')
 def order_details(order_id):
     if 'role' in session and session['role'] == 'client':
-        user = User.query.get(session['user_id'])
+        user = Client.query.get(session['user_id'])
         order = Order.query.get(order_id)
         if not order or order.client_id != user.id:
             return "Заказ не найден", 404

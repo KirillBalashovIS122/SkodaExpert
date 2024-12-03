@@ -3,8 +3,8 @@ from sqlalchemy import Column, Integer, String, DateTime, Float, Boolean, Text, 
 from sqlalchemy.orm import relationship
 from . import db
 
-class User(db.Model):
-    __tablename__ = 'users'
+class Employee(db.Model):
+    __tablename__ = 'employees'
     id = db.Column(Integer, primary_key=True)
     name = db.Column(String(255))
     email = db.Column(String(255))
@@ -20,7 +20,7 @@ class Client(db.Model):
     email = db.Column(String(100), nullable=False, unique=True)
     phone = db.Column(String(15), nullable=False, unique=True)
     password = db.Column(String(200), nullable=False)
-    created_at = db.Column(DateTime, default=db.func.current_timestamp())
+    created_at = db.Column(DateTime, default=datetime.utcnow)
 
 class Car(db.Model):
     __tablename__ = 'cars'
@@ -30,7 +30,7 @@ class Car(db.Model):
     car_year = db.Column(Integer, nullable=False)
     vin = db.Column(String(17), nullable=False)
     license_plate = db.Column(String(12), nullable=False)
-    created_at = db.Column(DateTime, default=db.func.current_timestamp())
+    created_at = db.Column(DateTime, default=datetime.utcnow)
 
 class Service(db.Model):
     __tablename__ = 'services'
@@ -43,17 +43,11 @@ class Service(db.Model):
 class Order(db.Model):
     __tablename__ = 'orders'
     id = db.Column(Integer, primary_key=True)
-    client_id = db.Column(Integer, ForeignKey('users.id'), nullable=False)
+    client_id = db.Column(Integer, ForeignKey('clients.id'), nullable=False)
     car_id = db.Column(Integer, ForeignKey('cars.id'), nullable=False)
-    created_at = db.Column(DateTime, default=db.func.current_timestamp())
-
-    # Добавляем отношение к модели Car
+    created_at = db.Column(DateTime, default=datetime.utcnow)
     car = db.relationship('Car', backref='orders')
-
-    # Добавляем отношение к модели User (клиент) с явным условием соединения
-    user = db.relationship('User', primaryjoin='Order.client_id == User.id', backref='orders')
-
-    # Добавляем отношение к модели Service через промежуточную таблицу
+    client = db.relationship('Client', backref='orders')
     services = db.relationship('Service', secondary='order_services', backref='orders')
 
 class OrderService(db.Model):
@@ -64,17 +58,17 @@ class OrderService(db.Model):
 class Task(db.Model):
     __tablename__ = 'tasks'
     id = db.Column(Integer, primary_key=True)
-    employee_id = db.Column(Integer, ForeignKey('users.id'), nullable=False)
+    employee_id = db.Column(Integer, ForeignKey('employees.id'), nullable=False)
     order_id = db.Column(Integer, ForeignKey('orders.id'), nullable=False)
     status = db.Column(String(50), default='pending')
-    created_at = db.Column(DateTime, default=db.func.current_timestamp())
+    created_at = db.Column(DateTime, default=datetime.utcnow)
 
 class Report(db.Model):
     __tablename__ = 'reports'
     id = db.Column(Integer, primary_key=True)
     task_id = db.Column(Integer, ForeignKey('tasks.id'), nullable=False)
     description = db.Column(Text, nullable=False)
-    created_at = db.Column(DateTime, default=db.func.current_timestamp())
+    created_at = db.Column(DateTime, default=datetime.utcnow)
 
 class AppointmentSlot(db.Model):
     __tablename__ = 'appointment_slots'
@@ -90,4 +84,4 @@ class OrderHistory(db.Model):
     order_id = db.Column(Integer, ForeignKey('orders.id'), nullable=False)
     client_id = db.Column(Integer, ForeignKey('clients.id'), nullable=False)
     car_id = db.Column(Integer, ForeignKey('cars.id'), nullable=False)
-    created_at = db.Column(DateTime, default=db.func.current_timestamp())
+    created_at = db.Column(DateTime, default=datetime.utcnow)

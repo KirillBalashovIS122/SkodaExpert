@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Панель менеджера{% endblock %}
+
+{% block content %}
+<h1>Панель менеджера</h1>
+<p>Добро пожаловать, {{ user.name }}!</p>
+<h2>Управление сотрудниками</h2>
+<ul>
+    {% for employee in employees %}
+        <li>{{ employee.name }} - {{ employee.role }}</li>
+    {% endfor %}
+</ul>
+<h2>Управление услугами</h2>
+<ul>
+    {% for service in services %}
+        <li>{{ service.service_name }} - {{ service.price }} руб.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
