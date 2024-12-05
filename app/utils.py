@@ -25,8 +25,8 @@ def get_current_user():
         return Employee.query.get(user_id)
     return None
 
-def generate_pdf(order, appointment_time, appointment_date):
-    if appointment_time is None or appointment_date is None:
+def generate_pdf(order):
+    if not order.appointment_date or not order.appointment_time:
         raise ValueError("Время и дата записи не могут быть None")
 
     buffer = BytesIO()
@@ -42,8 +42,8 @@ def generate_pdf(order, appointment_time, appointment_date):
     pdf.drawString(1 * inch, 7 * inch, f"Гос номер: {order.car.license_plate}")
     pdf.drawString(1 * inch, 6.5 * inch, f"VIN код: {order.car.vin}")
 
-    formatted_date = datetime.strptime(appointment_date, "%Y-%m-%d").strftime("%d.%m.%Y")
-    pdf.drawString(1 * inch, 6 * inch, f"Время записи: {formatted_date} {appointment_time}")
+    formatted_date = order.appointment_date.strftime("%d.%m.%Y")
+    pdf.drawString(1 * inch, 6 * inch, f"Время записи: {formatted_date} {order.appointment_time}")
 
     y = 5.5 * inch
     total_price = 0

@@ -25,20 +25,44 @@
         <input type="number" id="car_year" name="car_year" required style="width: 60px; appearance: textfield;"><br>
 
         <label for="appointment_date">Дата:</label>
-        <input type="date" id="appointment_date" name="appointment_date" required><br>
+        <input type="text" id="appointment_date" name="appointment_date" required><br>
 
         <label for="appointment_time">Время:</label>
-        <input type="time" id="appointment_time" name="appointment_time" required><br>
+        <select id="appointment_time" name="appointment_time" required>
+            {% for slot in available_slots %}
+                <option value="{{ slot.start_time }}">{{ slot.start_time }}</option>
+            {% endfor %}
+        </select><br>
 
         <button type="submit">Записаться</button>
     </form>
 </div>
 
-<style>
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-</style>
+<script>
+    flatpickr('#appointment_date', {
+        locale: 'ru',
+        dateFormat: 'Y-m-d',
+        minDate: "today",
+        disable: [
+            function(date) {
+                return (date.getDay() === 0); // Disable Sundays
+            }
+        ],
+        onChange: function(selectedDates, dateStr, instance) {
+            // Update available slots based on selected date
+            fetch(`/get_available_slots?date=${dateStr}`)
+                .then(response => response.json())
+                .then(data => {
+                    const select = document.getElementById('appointment_time');
+                    select.innerHTML = '';
+                    data.forEach(slot => {
+                        const option = document.createElement('option');
+                        option.value = slot.start_time;
+                        option.textContent = slot.start_time;
+                        select.appendChild(option);
+                    });
+                });
+        }
+    });
+</script>
 {% endblock %}

@@ -4,16 +4,12 @@ from datetime import datetime, timedelta
 from .models import Employee, Client, Car, Service, Order, Task, Report, AppointmentSlot, OrderHistory
 from . import db, csrf
 from .utils import get_current_user, generate_pdf, calculate_statistics
-from flask_wtf import FlaskForm
-from wtforms import SubmitField
+from .forms import SelectServicesForm  # Импортируем форму
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
 main = Blueprint('main', __name__)
-
-class SelectServicesForm(FlaskForm):
-    submit = SubmitField('Далее')
 
 @main.route('/')
 def index():
@@ -44,13 +40,15 @@ def login():
 @main.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        name = request.form.get('name')
+        last_name = request.form.get('last_name')
+        first_name = request.form.get('first_name')
+        middle_name = request.form.get('middle_name')
         email = request.form.get('email')
         phone = request.form.get('phone')
         password = request.form.get('password')
         role = request.form.get('role')
         hashed_password = generate_password_hash(password)
-        new_employee = Employee(name=name, email=email, phone=phone, password=hashed_password, role=role)
+        new_employee = Employee(last_name=last_name, first_name=first_name, middle_name=middle_name, email=email, phone=phone, password=hashed_password, role=role)
         db.session.add(new_employee)
         db.session.commit()
         flash("Регистрация прошла успешно", "success")
@@ -102,7 +100,9 @@ def edit_profile():
     if 'role' in session:
         user = get_current_user()
         if request.method == 'POST':
-            user.name = request.form['name']
+            user.last_name = request.form['last_name']
+            user.first_name = request.form['first_name']
+            user.middle_name = request.form['middle_name']
             user.email = request.form['email']
             user.phone = request.form['phone']
             db.session.commit()
@@ -137,10 +137,8 @@ def appointments():
 
             try:
                 car = create_car(client.id, car_model, vin_number, car_plate, car_year)
-                new_order = create_order(client.id, car.id)
+                new_order = create_order(client.id, car.id, appointment_date, appointment_time)
                 save_order_history(new_order.id, client.id, car.id)
-                session['appointment_time'] = appointment_time
-                session['appointment_date'] = appointment_date
                 return redirect(url_for('main.appointment_success', order_id=new_order.id))
             except ValueError as e:
                 db.session.rollback()
@@ -154,10 +152,7 @@ def appointments():
             return redirect(url_for('main.select_services'))
 
         today = datetime.now().date()
-        available_slots = AppointmentSlot.query.filter(
-            AppointmentSlot.appointment_date >= today,
-            AppointmentSlot.is_available == 1
-        ).all()
+        available_slots = get_available_slots(today)
 
         selected_services = session.get('selected_services', [])
         services = Service.query.all()
@@ -165,6 +160,42 @@ def appointments():
         return render_template('client/appointments.html', available_slots=available_slots, services=services, selected_services=selected_services)
 
     return redirect(url_for('main.index'))
+
+@main.route('/get_available_slots', methods=['GET'])
+def get_available_slots():
+    date_str = request.args.get('date')
+    date = datetime.strptime(date_str, '%Y-%m-%d').date()
+    slots = get_available_slots(date)
+    return jsonify(slots)
+
+def get_available_slots(date):
+    # Get all slots for the given date
+    slots = AppointmentSlot.query.filter(
+        AppointmentSlot.appointment_date == date,
+        AppointmentSlot.is_available == True
+    ).all()
+
+    # Filter out slots that are already booked
+    booked_slots = Order.query.filter(
+        Order.appointment_date == date
+    ).all()
+
+    booked_times = []
+    for order in booked_slots:
+        services = order.services
+        total_duration = sum(service.duration for service in services)
+        start_time = datetime.strptime(order.appointment_time, '%H:%M').time()
+        end_time = (datetime.combine(date, start_time) + timedelta(minutes=total_duration)).time()
+        booked_times.append((start_time, end_time))
+
+    available_slots = []
+    for slot in slots:
+        slot_start_time = slot.start_time.time()
+        slot_end_time = slot.end_time.time()
+        if not any(start <= slot_start_time < end or start < slot_end_time <= end for start, end in booked_times):
+            available_slots.append(slot)
+
+    return available_slots
 
 def create_car(client_id, model, vin, license_plate, car_year):
     logging.debug(f"Creating car: client_id={client_id}, model={model}, vin={vin}, license_plate={license_plate}, car_year={car_year}")
@@ -187,9 +218,14 @@ def create_car(client_id, model, vin, license_plate, car_year):
     logging.debug(f"Car created: {new_car}")
     return new_car
 
-def create_order(client_id, car_id):
+def create_order(client_id, car_id, appointment_date, appointment_time):
     logging.debug(f"Creating order: client_id={client_id}, car_id={car_id}")
-    new_order = Order(client_id=client_id, car_id=car_id)
+    new_order = Order(
+        client_id=client_id,
+        car_id=car_id,
+        appointment_date=appointment_date,
+        appointment_time=appointment_time
+    )
     db.session.add(new_order)
     db.session.commit()
 
@@ -216,13 +252,10 @@ def generate_order_pdf(order_id):
     if not order:
         return "Заказ не найден", 404
 
-    appointment_time = session.get('appointment_time')
-    appointment_date = session.get('appointment_date')
-
-    if appointment_time is None or appointment_date is None:
-        return "Время и дата записи не найдены", 400
-
-    buffer = generate_pdf(order, appointment_time, appointment_date)
+    try:
+        buffer = generate_pdf(order)
+    except ValueError as e:
+        return str(e), 400
 
     response = make_response(buffer.getvalue())
     response.headers["Content-Type"] = "application/pdf"
@@ -264,12 +297,14 @@ def reports():
 def manage_employees():
     if 'role' in session and session['role'] == 'manager':
         if request.method == 'POST':
-            name = request.form.get('name')
+            last_name = request.form.get('last_name')
+            first_name = request.form.get('first_name')
+            middle_name = request.form.get('middle_name')
             role = request.form.get('role')
             email = request.form.get('email')
             password = request.form.get('password')
             hashed_password = generate_password_hash(password)
-            new_employee = Employee(name=name, role=role, email=email, password=hashed_password)
+            new_employee = Employee(last_name=last_name, first_name=first_name, middle_name=middle_name, role=role, email=email, password=hashed_password)
             db.session.add(new_employee)
             db.session.commit()
             return redirect(url_for('main.manage_employees'))
@@ -329,8 +364,7 @@ def select_services():
                 return redirect(url_for('main.select_services'))
             session['selected_services'] = selected_services
             return redirect(url_for('main.appointments'))
-        services = Service.query.all()
-        return render_template('client/select_services.html', services=services, form=form)
+        return render_template('client/select_services.html', form=form)
     return redirect(url_for('main.index'))
 
 @main.route('/order_history')

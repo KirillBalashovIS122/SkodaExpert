@@ -6,30 +6,26 @@
 <div class="form-container">
     <h1>Выбор услуг</h1>
     <form method="post">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        {% if services %}
-            <table class="service-table">
-                <thead>
+        {{ form.hidden_tag() }}
+        <table class="service-table">
+            <thead>
+                <tr>
+                    <th>Услуга</th>
+                    <th>Цена</th>
+                    <th>Выбрать</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service in form.services.choices %}
                     <tr>
-                        <th>Услуга</th>
-                        <th>Цена</th>
-                        <th>Выбрать</th>
+                        <td>{{ service[1] }}</td>
+                        <td>{{ service[2] }} руб.</td>
+                        <td class="checkbox-cell"><input type="checkbox" name="services" value="{{ service[0] }}"></td>
                     </tr>
-                </thead>
-                <tbody>
-                    {% for service in services %}
-                        <tr>
-                            <td>{{ service.service_name }}</td>
-                            <td>{{ service.price }} руб.</td>
-                            <td class="checkbox-cell"><input type="checkbox" name="services" value="{{ service.id }}"></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <button type="submit" class="submit-button">Далее</button>
-        {% else %}
-            <p>Услуги недоступны. Попробуйте позже.</p>
-        {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+        {{ form.submit(class="submit-button") }}
     </form>
 </div>
 {% endblock %}
