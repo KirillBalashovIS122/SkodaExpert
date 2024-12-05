@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Управление клиентами{% endblock %}
+
+{% block content %}
+<div class="manage-clients-container">
+    <h1>Управление клиентами</h1>
+    <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Имя:</label>
+        <input type="text" name="name" required>
+        <br>
+        <label>Email:</label>
+        <input type="email" name="email" required>
+        <br>
+        <label>Телефон:</label>
+        <input type="text" name="phone" required>
+        <br>
+        <label>Пароль:</label>
+        <input type="password" name="password" required>
+        <br>
+        <button type="submit">Добавить клиента</button>
+    </form>
+    <h2>Список клиентов:</h2>
+    <ul>
+        {% for client in clients %}
+            <li>{{ client.name }} - {{ client.email }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

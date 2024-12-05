@@ -6,7 +6,7 @@ from . import db
 class Employee(db.Model):
     __tablename__ = 'employees'
     id = db.Column(Integer, primary_key=True)
-    name = db.Column(String(255))
+    name = db.Column(String(255))  # Объединенная строка из last_name, first_name и middle_name
     email = db.Column(String(255), unique=True)
     phone = db.Column(String(20))
     password = db.Column("PASSWORD", String(255))

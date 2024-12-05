@@ -1,5 +1,5 @@
 from flask import session
-from .models import Employee, Client, Order, Service, Task, Report
+from .models import Employee, Client, Order, Service, Task, Report, OrderService
 from . import db
 from datetime import datetime
 from reportlab.lib.pagesizes import letter
@@ -66,9 +66,9 @@ def calculate_statistics():
 
     service_statistics = db.session.query(
         Service.service_name,
-        db.func.count(Order.id).label('count'),
+        db.func.count(OrderService.order_id).label('count'),
         db.func.sum(Service.price).label('total_price')
-    ).join(Order).group_by(Service.service_name).all()
+    ).join(OrderService, Service.id == OrderService.service_id).group_by(Service.service_name).all()
 
     employee_statistics = db.session.query(
         Employee.name,

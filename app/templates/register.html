@@ -7,8 +7,14 @@
     <h1>Регистрация</h1>
     <form method="post" name="form" onsubmit="return validateForm()">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Фамилия:</label>
+        <input type="text" name="last_name" required>
+        <br>
         <label>Имя:</label>
-        <input type="text" name="name" required>
+        <input type="text" name="first_name" required>
+        <br>
+        <label>Отчество:</label>
+        <input type="text" name="middle_name" required>
         <br>
         <label>Email:</label>
         <input type="email" name="email" required>
@@ -42,12 +48,14 @@
 
 <script>
     function validateForm() {
-        var name = document.forms["form"]["name"].value;
+        var last_name = document.forms["form"]["last_name"].value;
+        var first_name = document.forms["form"]["first_name"].value;
+        var middle_name = document.forms["form"]["middle_name"].value;
         var email = document.forms["form"]["email"].value;
         var phone = document.forms["form"]["phone"].value;
         var password = document.forms["form"]["password"].value;
         var role = document.forms["form"]["role"].value;
-        if (name == "" || email == "" || phone == "" || password == "" || role == "") {
+        if (last_name == "" || first_name == "" || middle_name == "" || email == "" || phone == "" || password == "" || role == "") {
             alert("Все поля должны быть заполнены");
             return false;
         }

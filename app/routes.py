@@ -40,15 +40,19 @@ def login():
 @main.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        last_name = request.form.get('last_name')
-        first_name = request.form.get('first_name')
-        middle_name = request.form.get('middle_name')
+        last_name = request.form.get('last_name') or ''
+        first_name = request.form.get('first_name') or ''
+        middle_name = request.form.get('middle_name') or ''
         email = request.form.get('email')
         phone = request.form.get('phone')
         password = request.form.get('password')
         role = request.form.get('role')
         hashed_password = generate_password_hash(password)
-        new_employee = Employee(last_name=last_name, first_name=first_name, middle_name=middle_name, email=email, phone=phone, password=hashed_password, role=role)
+        
+        # Объединяем last_name, first_name и middle_name в одну строку
+        name = f"{last_name} {first_name} {middle_name}".strip()
+        
+        new_employee = Employee(name=name, email=email, phone=phone, password=hashed_password, role=role)
         db.session.add(new_employee)
         db.session.commit()
         flash("Регистрация прошла успешно", "success")
@@ -280,36 +284,30 @@ def tasks():
         return render_template('employee/mechanic/tasks.html', tasks=tasks)
     return redirect(url_for('main.index'))
 
-@main.route('/reports', methods=['GET', 'POST'])
+@main.route('/reports')
 def reports():
-    if 'role' in session and session['role'] == 'mechanic':
-        if request.method == 'POST':
-            task_id = request.form.get('task_id')
-            description = request.form.get('description')
-            new_report = Report(task_id=task_id, description=description)
-            db.session.add(new_report)
-            db.session.commit()
-            return redirect(url_for('main.tasks'))
-        return render_template('employee/mechanic/reports.html')
+    if 'role' in session and session['role'] == 'manager':
+        stats = calculate_statistics()
+        return render_template('employee/manager/reports.html', **stats)
     return redirect(url_for('main.index'))
 
 @main.route('/manage_employees', methods=['GET', 'POST'])
 def manage_employees():
     if 'role' in session and session['role'] == 'manager':
         if request.method == 'POST':
-            last_name = request.form.get('last_name')
-            first_name = request.form.get('first_name')
-            middle_name = request.form.get('middle_name')
-            role = request.form.get('role')
+            name = request.form.get('name')
             email = request.form.get('email')
+            phone = request.form.get('phone')
             password = request.form.get('password')
+            role = request.form.get('role')
             hashed_password = generate_password_hash(password)
-            new_employee = Employee(last_name=last_name, first_name=first_name, middle_name=middle_name, role=role, email=email, password=hashed_password)
+            new_employee = Employee(name=name, email=email, phone=phone, password=hashed_password, role=role)
             db.session.add(new_employee)
             db.session.commit()
             return redirect(url_for('main.manage_employees'))
         employees = Employee.query.filter(Employee.role.in_(['mechanic', 'manager'])).all()
         return render_template('employee/manager/manage_employees.html', employees=employees)
+    return redirect(url_for('main.index'))
     return redirect(url_for('main.index'))
 
 @main.route('/manage_services', methods=['GET', 'POST'])
@@ -326,6 +324,23 @@ def manage_services():
             return redirect(url_for('main.manage_services'))
         services = Service.query.all()
         return render_template('employee/manager/manage_services.html', services=services)
+    return redirect(url_for('main.index'))
+
+@main.route('/manage_clients', methods=['GET', 'POST'])
+def manage_clients():
+    if 'role' in session and session['role'] == 'manager':
+        if request.method == 'POST':
+            name = request.form.get('name')
+            email = request.form.get('email')
+            phone = request.form.get('phone')
+            password = request.form.get('password')
+            hashed_password = generate_password_hash(password)
+            new_client = Client(name=name, email=email, phone=phone, password=hashed_password)
+            db.session.add(new_client)
+            db.session.commit()
+            return redirect(url_for('main.manage_clients'))
+        clients = Client.query.all()
+        return render_template('employee/manager/manage_clients.html', clients=clients)
     return redirect(url_for('main.index'))
 
 @main.route('/manage_appointments')
