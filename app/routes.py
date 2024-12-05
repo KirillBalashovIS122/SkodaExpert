@@ -6,6 +6,9 @@ from . import db, csrf
 from .utils import get_current_user, generate_pdf, calculate_statistics
 from flask_wtf import FlaskForm
 from wtforms import SubmitField
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 main = Blueprint('main', __name__)
 
@@ -47,11 +50,8 @@ def register():
         password = request.form.get('password')
         role = request.form.get('role')
         hashed_password = generate_password_hash(password)
-        if role == 'client':
-            new_user = Client(name=name, email=email, phone=phone, password=hashed_password)
-        else:
-            new_user = Employee(name=name, email=email, phone=phone, password=hashed_password, role=role)
-        db.session.add(new_user)
+        new_employee = Employee(name=name, email=email, phone=phone, password=hashed_password, role=role)
+        db.session.add(new_employee)
         db.session.commit()
         flash("Регистрация прошла успешно", "success")
         return redirect(url_for('main.login'))
@@ -147,6 +147,7 @@ def appointments():
                 return jsonify({'success': False, 'error': str(e)}), 400
             except Exception as e:
                 db.session.rollback()
+                logging.error(f"Error creating order: {e}")
                 return jsonify({'success': False, 'error': 'Error creating order'}), 500
 
         if 'selected_services' not in session:
@@ -166,6 +167,7 @@ def appointments():
     return redirect(url_for('main.index'))
 
 def create_car(client_id, model, vin, license_plate, car_year):
+    logging.debug(f"Creating car: client_id={client_id}, model={model}, vin={vin}, license_plate={license_plate}, car_year={car_year}")
     client = Client.query.get(client_id)
     if not client:
         raise ValueError(f"Client with id {client_id} does not exist")
@@ -182,9 +184,11 @@ def create_car(client_id, model, vin, license_plate, car_year):
     )
     db.session.add(new_car)
     db.session.commit()
+    logging.debug(f"Car created: {new_car}")
     return new_car
 
 def create_order(client_id, car_id):
+    logging.debug(f"Creating order: client_id={client_id}, car_id={car_id}")
     new_order = Order(client_id=client_id, car_id=car_id)
     db.session.add(new_order)
     db.session.commit()
@@ -196,12 +200,15 @@ def create_order(client_id, car_id):
             new_order.services.append(service)
 
     db.session.commit()
+    logging.debug(f"Order created: {new_order}")
     return new_order
 
 def save_order_history(order_id, client_id, car_id):
+    logging.debug(f"Saving order history: order_id={order_id}, client_id={client_id}, car_id={car_id}")
     new_order_history = OrderHistory(order_id=order_id, client_id=client_id, car_id=car_id)
     db.session.add(new_order_history)
     db.session.commit()
+    logging.debug(f"Order history saved: {new_order_history}")
 
 @main.route('/generate_order_pdf/<int:order_id>')
 def generate_order_pdf(order_id):
@@ -211,6 +218,9 @@ def generate_order_pdf(order_id):
 
     appointment_time = session.get('appointment_time')
     appointment_date = session.get('appointment_date')
+
+    if appointment_time is None or appointment_date is None:
+        return "Время и дата записи не найдены", 400
 
     buffer = generate_pdf(order, appointment_time, appointment_date)
 

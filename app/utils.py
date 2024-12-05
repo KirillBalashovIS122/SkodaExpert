@@ -26,6 +26,9 @@ def get_current_user():
     return None
 
 def generate_pdf(order, appointment_time, appointment_date):
+    if appointment_time is None or appointment_date is None:
+        raise ValueError("Время и дата записи не могут быть None")
+
     buffer = BytesIO()
     pdf = canvas.Canvas(buffer, pagesize=letter)
     pdf.setFont("Times-Roman", 14)

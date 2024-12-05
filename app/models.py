@@ -7,7 +7,7 @@ class Employee(db.Model):
     __tablename__ = 'employees'
     id = db.Column(Integer, primary_key=True)
     name = db.Column(String(255))
-    email = db.Column(String(255))
+    email = db.Column(String(255), unique=True)
     phone = db.Column(String(20))
     password = db.Column("PASSWORD", String(255))
     role = db.Column(String(50))
@@ -28,8 +28,8 @@ class Car(db.Model):
     client_id = db.Column(Integer, ForeignKey('clients.id'), nullable=False)
     model = db.Column(String(100), nullable=False)
     car_year = db.Column(Integer, nullable=False)
-    vin = db.Column(String(17), nullable=False)
-    license_plate = db.Column(String(12), nullable=False)
+    vin = db.Column(String(17), nullable=False, unique=True)
+    license_plate = db.Column(String(12), nullable=False, unique=True)
     created_at = db.Column(DateTime, default=datetime.utcnow)
 
 class Service(db.Model):
