@@ -3,28 +3,15 @@
 {% block title %}Панель менеджера{% endblock %}
 
 {% block content %}
-<h1>Панель менеджера</h1>
-<p>Добро пожаловать, {{ user.name }}!</p>
-
-<h2>Управление</h2>
-<ul>
-    <li><a href="{{ url_for('main.manage_employees') }}">Управление сотрудниками</a></li>
-    <li><a href="{{ url_for('main.manage_services') }}">Управление услугами</a></li>
-    <li><a href="{{ url_for('main.manage_clients') }}">Управление клиентами</a></li>
-    <li><a href="{{ url_for('main.reports') }}">Отчеты</a></li>
-</ul>
-
-<h2>Управление сотрудниками</h2>
-<ul>
-    {% for employee in employees %}
-        <li>{{ employee.name }} - {{ employee.role }}</li>
-    {% endfor %}
-</ul>
-
-<h2>Управление услугами</h2>
-<ul>
-    {% for service in services %}
-        <li>{{ service.service_name }} - {{ service.price }} руб.</li>
-    {% endfor %}
-</ul>
+<div class="container">
+    <h1>Панель менеджера</h1>
+    <p>Добро пожаловать, {{ user.name }}!</p>
+    <div class="button-container">
+        <a href="{{ url_for('main.manage_employees') }}" class="button">Управление сотрудниками</a>
+        <a href="{{ url_for('main.manage_services') }}" class="button">Управление услугами</a>
+        <a href="{{ url_for('main.manage_clients') }}" class="button">Управление клиентами</a>
+        <a href="{{ url_for('main.manage_appointments') }}" class="button">Управление записями</a>
+        <a href="{{ url_for('main.reports') }}" class="button">Отчеты</a>
+    </div>
+</div>
 {% endblock %}

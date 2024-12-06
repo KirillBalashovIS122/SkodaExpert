@@ -250,6 +250,13 @@ def save_order_history(order_id, client_id, car_id):
     db.session.commit()
     logging.debug(f"Order history saved: {new_order_history}")
 
+@main.route('/view_orders')
+def view_orders():
+    if 'role' in session and session['role'] == 'manager':
+        orders = Order.query.all()
+        return render_template('employee/manager/view_orders.html', orders=orders)
+    return redirect(url_for('main.index'))
+
 @main.route('/generate_order_pdf/<int:order_id>')
 def generate_order_pdf(order_id):
     order = Order.query.get(order_id)
@@ -295,33 +302,117 @@ def reports():
 def manage_employees():
     if 'role' in session and session['role'] == 'manager':
         if request.method == 'POST':
-            name = request.form.get('name')
-            email = request.form.get('email')
-            phone = request.form.get('phone')
-            password = request.form.get('password')
-            role = request.form.get('role')
-            hashed_password = generate_password_hash(password)
-            new_employee = Employee(name=name, email=email, phone=phone, password=hashed_password, role=role)
-            db.session.add(new_employee)
-            db.session.commit()
-            return redirect(url_for('main.manage_employees'))
+            if 'add_employee' in request.form:
+                name = request.form.get('name')
+                email = request.form.get('email')
+                phone = request.form.get('phone')
+                password = request.form.get('password')
+                role = request.form.get('role')
+
+                # Проверка на None для пароля
+                if password is None:
+                    flash("Пароль не может быть пустым", "error")
+                    return redirect(url_for('main.manage_employees'))
+
+                hashed_password = generate_password_hash(password)
+                new_employee = Employee(name=name, email=email, phone=phone, password=hashed_password, role=role)
+                db.session.add(new_employee)
+                db.session.commit()
+                flash("Сотрудник успешно добавлен", "success")
+
+            elif 'edit_employee' in request.form:
+                employee_id = request.form.get('employee_id')
+                name = request.form.get('name')
+                email = request.form.get('email')
+                phone = request.form.get('phone')
+                password = request.form.get('password')
+                role = request.form.get('role')
+
+                employee = Employee.query.get(employee_id)
+                if employee:
+                    employee.name = name
+                    employee.email = email
+                    employee.phone = phone
+                    employee.role = role
+
+                    # Проверка на None для пароля
+                    if password is not None:
+                        hashed_password = generate_password_hash(password)
+                        employee.password = hashed_password
+
+                    db.session.commit()
+                    flash("Сотрудник успешно отредактирован", "success")
+                else:
+                    flash("Сотрудник не найден", "error")
+
+            elif 'delete_employee' in request.form:
+                employee_id = request.form.get('employee_id')
+                employee = Employee.query.get(employee_id)
+                if employee:
+                    db.session.delete(employee)
+                    db.session.commit()
+                    flash("Сотрудник успешно удален", "success")
+                else:
+                    flash("Сотрудник не найден", "error")
+
         employees = Employee.query.filter(Employee.role.in_(['mechanic', 'manager'])).all()
         return render_template('employee/manager/manage_employees.html', employees=employees)
-    return redirect(url_for('main.index'))
     return redirect(url_for('main.index'))
 
 @main.route('/manage_services', methods=['GET', 'POST'])
 def manage_services():
     if 'role' in session and session['role'] == 'manager':
         if request.method == 'POST':
-            service_name = request.form.get('service_name')
-            description = request.form.get('description')
-            price = request.form.get('price')
-            duration = request.form.get('duration')
-            new_service = Service(service_name=service_name, description=description, price=price, duration=duration)
-            db.session.add(new_service)
-            db.session.commit()
-            return redirect(url_for('main.manage_services'))
+            if 'add_service' in request.form:
+                service_name = request.form.get('service_name')
+                description = request.form.get('description')
+                price = request.form.get('price')
+                duration = request.form.get('duration')
+
+                # Проверка на None для service_name, price и duration
+                if service_name is None or price is None or duration is None:
+                    flash("Все поля должны быть заполнены", "error")
+                    return redirect(url_for('main.manage_services'))
+
+                new_service = Service(service_name=service_name, description=description, price=price, duration=duration)
+                db.session.add(new_service)
+                db.session.commit()
+                flash("Услуга успешно добавлена", "success")
+
+            elif 'edit_service' in request.form:
+                service_id = request.form.get('service_id')
+                service_name = request.form.get('service_name')
+                description = request.form.get('description')
+                price = request.form.get('price')
+                duration = request.form.get('duration')
+
+                service = Service.query.get(service_id)
+                if service:
+                    # Обновляем только те поля, которые были переданы
+                    if service_name is not None:
+                        service.service_name = service_name
+                    if description is not None:
+                        service.description = description
+                    if price is not None:
+                        service.price = price
+                    if duration is not None:
+                        service.duration = duration
+
+                    db.session.commit()
+                    flash("Услуга успешно отредактирована", "success")
+                else:
+                    flash("Услуга не найдена", "error")
+
+            elif 'delete_service' in request.form:
+                service_id = request.form.get('service_id')
+                service = Service.query.get(service_id)
+                if service:
+                    db.session.delete(service)
+                    db.session.commit()
+                    flash("Услуга успешно удалена", "success")
+                else:
+                    flash("Услуга не найдена", "error")
+
         services = Service.query.all()
         return render_template('employee/manager/manage_services.html', services=services)
     return redirect(url_for('main.index'))
@@ -330,17 +421,60 @@ def manage_services():
 def manage_clients():
     if 'role' in session and session['role'] == 'manager':
         if request.method == 'POST':
-            name = request.form.get('name')
-            email = request.form.get('email')
-            phone = request.form.get('phone')
-            password = request.form.get('password')
-            hashed_password = generate_password_hash(password)
-            new_client = Client(name=name, email=email, phone=phone, password=hashed_password)
-            db.session.add(new_client)
-            db.session.commit()
-            return redirect(url_for('main.manage_clients'))
+            if 'add_client' in request.form:
+                name = request.form.get('name')
+                email = request.form.get('email')
+                phone = request.form.get('phone')
+                password = request.form.get('password')
+                hashed_password = generate_password_hash(password)
+                new_client = Client(name=name, email=email, phone=phone, password=hashed_password)
+                db.session.add(new_client)
+                db.session.commit()
+                flash("Клиент успешно добавлен", "success")
+            elif 'edit_client' in request.form:
+                client_id = request.form.get('client_id')
+                name = request.form.get('name')
+                email = request.form.get('email')
+                phone = request.form.get('phone')
+                password = request.form.get('password')
+
+                client = Client.query.get(client_id)
+                if client:
+                    client.name = name
+                    client.email = email
+                    client.phone = phone
+                    if password:
+                        hashed_password = generate_password_hash(password)
+                        client.password = hashed_password
+                    db.session.commit()
+                    flash("Клиент успешно отредактирован", "success")
+                else:
+                    flash("Клиент не найден", "error")
+            elif 'delete_client' in request.form:
+                client_id = request.form.get('client_id')
+                client = Client.query.get(client_id)
+                if client:
+                    db.session.delete(client)
+                    db.session.commit()
+                    flash("Клиент успешно удален", "success")
+                else:
+                    flash("Клиент не найден", "error")
+
         clients = Client.query.all()
         return render_template('employee/manager/manage_clients.html', clients=clients)
+    return redirect(url_for('main.index'))
+
+@main.route('/delete_appointment/<int:appointment_id>', methods=['POST'])
+def delete_appointment(appointment_id):
+    if 'role' in session and session['role'] == 'manager':
+        appointment = Order.query.get(appointment_id)
+        if appointment:
+            db.session.delete(appointment)
+            db.session.commit()
+            flash("Запись успешно удалена", "success")
+        else:
+            flash("Запись не найдена", "error")
+        return redirect(url_for('main.manage_appointments'))
     return redirect(url_for('main.index'))
 
 @main.route('/manage_appointments')

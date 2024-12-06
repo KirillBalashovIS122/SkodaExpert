@@ -3,9 +3,9 @@
 {% block title %}Управление сотрудниками{% endblock %}
 
 {% block content %}
-<div class="manage-employees-container">
+<div class="container">
     <h1>Управление сотрудниками</h1>
-    <form method="post">
+    <form method="post" class="form-container">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <label>Имя:</label>
         <input type="text" name="name" required>
@@ -17,7 +17,7 @@
         <input type="text" name="phone" required>
         <br>
         <label>Пароль:</label>
-        <input type="password" name="password" required>
+        <input type="password" name="password">
         <br>
         <label>Роль:</label>
         <select name="role" required>
@@ -25,13 +25,63 @@
             <option value="manager">Менеджер</option>
         </select>
         <br>
-        <button type="submit">Добавить сотрудника</button>
+        <button type="submit" name="add_employee" class="submit-button">Добавить сотрудника</button>
     </form>
     <h2>Список сотрудников:</h2>
     <ul>
         {% for employee in employees %}
-            <li>{{ employee.name }} - {{ employee.role }}</li>
+            <li>
+                {{ employee.name }} - {{ employee.role }}
+                <button onclick="editEmployee({{ employee.id }}, '{{ employee.name|e }}', '{{ employee.email|e }}', '{{ employee.phone|e }}', '{{ employee.role|e }}')" class="button">Редактировать</button>
+                <form method="post" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="employee_id" value="{{ employee.id }}">
+                    <button type="submit" name="delete_employee" class="button">Удалить</button>
+                </form>
+            </li>
         {% endfor %}
     </ul>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
 </div>
+
+<!-- Модальное окно для редактирования сотрудника -->
+<div id="editEmployeeModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('editEmployeeModal')">&times;</span>
+        <h2>Редактировать сотрудника</h2>
+        <form method="post" id="editEmployeeForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="employee_id" id="editEmployeeId">
+            <label>Имя:</label>
+            <input type="text" name="name" id="editEmployeeName">
+            <br>
+            <label>Email:</label>
+            <input type="email" name="email" id="editEmployeeEmail">
+            <br>
+            <label>Телефон:</label>
+            <input type="text" name="phone" id="editEmployeePhone">
+            <br>
+            <label>Пароль:</label>
+            <input type="password" name="password" id="editEmployeePassword">
+            <br>
+            <label>Роль:</label>
+            <select name="role" id="editEmployeeRole">
+                <option value="mechanic">Механик</option>
+                <option value="manager">Менеджер</option>
+            </select>
+            <br>
+            <button type="submit" name="edit_employee" class="submit-button">Сохранить изменения</button>
+        </form>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 {% endblock %}

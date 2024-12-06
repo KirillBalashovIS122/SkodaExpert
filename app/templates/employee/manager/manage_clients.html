@@ -3,9 +3,9 @@
 {% block title %}Управление клиентами{% endblock %}
 
 {% block content %}
-<div class="manage-clients-container">
+<div class="container">
     <h1>Управление клиентами</h1>
-    <form method="post">
+    <form method="post" class="form-container">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <label>Имя:</label>
         <input type="text" name="name" required>
@@ -17,15 +17,59 @@
         <input type="text" name="phone" required>
         <br>
         <label>Пароль:</label>
-        <input type="password" name="password" required>
+        <input type="password" name="password">
         <br>
-        <button type="submit">Добавить клиента</button>
+        <button type="submit" name="add_client" class="submit-button">Добавить клиента</button>
     </form>
     <h2>Список клиентов:</h2>
     <ul>
         {% for client in clients %}
-            <li>{{ client.name }} - {{ client.email }}</li>
+            <li>
+                {{ client.name }} - {{ client.email }}
+                <button onclick="editClient({{ client.id }}, '{{ client.name|e }}', '{{ client.email|e }}', '{{ client.phone|e }}')" class="button">Редактировать</button>
+                <form method="post" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="client_id" value="{{ client.id }}">
+                    <button type="submit" name="delete_client" class="button">Удалить</button>
+                </form>
+            </li>
         {% endfor %}
     </ul>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
 </div>
+
+<!-- Модальное окно для редактирования клиента -->
+<div id="editClientModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('editClientModal')">&times;</span>
+        <h2>Редактировать клиента</h2>
+        <form method="post" id="editClientForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="client_id" id="editClientId">
+            <label>Имя:</label>
+            <input type="text" name="name" id="editClientName">
+            <br>
+            <label>Email:</label>
+            <input type="email" name="email" id="editClientEmail">
+            <br>
+            <label>Телефон:</label>
+            <input type="text" name="phone" id="editClientPhone">
+            <br>
+            <label>Пароль:</label>
+            <input type="password" name="password" id="editClientPassword">
+            <br>
+            <button type="submit" name="edit_client" class="submit-button">Сохранить изменения</button>
+        </form>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 {% endblock %}

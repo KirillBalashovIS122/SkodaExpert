@@ -3,16 +3,18 @@
 {% block title %}Панель механика{% endblock %}
 
 {% block content %}
-<h1>Панель механика</h1>
-<p>Добро пожаловать, {{ user.name }}!</p>
-<h2>Заказы на ближайшую неделю</h2>
-<ul>
-    {% for task in tasks %}
-        <li>
-            Задача №{{ task.id }} - {{ task.status }}
-            <a href="{{ url_for('main.reports', task_id=task.id) }}">Создать отчет</a>
-        </li>
-    {% endfor %}
-</ul>
-<a href="{{ url_for('main.mechanic_all_orders') }}" class="button">Просмотреть все заказы</a>
+<div class="container">
+    <h1>Панель механика</h1>
+    <p>Добро пожаловать, {{ user.name }}!</p>
+    <h2>Заказы на ближайшую неделю</h2>
+    <ul>
+        {% for task in tasks %}
+            <li>
+                Задача №{{ task.id }} - {{ task.status }}
+                <a href="{{ url_for('main.reports', task_id=task.id) }}" class="button">Создать отчет</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('main.mechanic_all_orders') }}" class="button">Просмотреть все заказы</a>
+</div>
 {% endblock %}

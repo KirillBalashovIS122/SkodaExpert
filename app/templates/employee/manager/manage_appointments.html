@@ -3,16 +3,35 @@
 {% block title %}Управление записями{% endblock %}
 
 {% block content %}
-<div class="manage-appointments-container">
+<div class="container">
     <h1>Управление записями</h1>
     <h2>Список записей:</h2>
     <ul>
         {% for appointment in appointments %}
             <li>
                 Запись №{{ appointment.id }} - {{ appointment.created_at }}
-                <a href="{{ url_for('main.generate_order_pdf', order_id=appointment.id) }}">Скачать PDF</a>
+                <button onclick="confirmDelete({{ appointment.id }})" class="button">Удалить</button>
+                <a href="{{ url_for('main.generate_order_pdf', order_id=appointment.id) }}" class="button">Скачать заказ-наряд</a>
+                <button onclick="viewOrderDetails({{ appointment.id }}, '{{ appointment.client.name }}', '{{ appointment.car.model }}', '{{ appointment.appointment_date }}', '{{ appointment.appointment_time }}')" class="button">Просмотреть детали</button>
+                <form id="deleteForm{{ appointment.id }}" method="post" action="{{ url_for('main.delete_appointment', appointment_id=appointment.id) }}" style="display: none;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                </form>
             </li>
         {% endfor %}
     </ul>
 </div>
+
+<!-- Модальное окно для просмотра деталей заказа -->
+<div id="viewOrderDetailsModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('viewOrderDetailsModal')">&times;</span>
+        <h2>Детали заказа</h2>
+        <p><strong>Клиент:</strong> <span id="orderClientName"></span></p>
+        <p><strong>Модель автомобиля:</strong> <span id="orderCarModel"></span></p>
+        <p><strong>Дата записи:</strong> <span id="orderAppointmentDate"></span></p>
+        <p><strong>Время записи:</strong> <span id="orderAppointmentTime"></span></p>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 {% endblock %}

@@ -3,9 +3,9 @@
 {% block title %}Управление услугами{% endblock %}
 
 {% block content %}
-<div class="manage-services-container">
+<div class="container">
     <h1>Управление услугами</h1>
-    <form method="post">
+    <form method="post" class="form-container">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <label>Название услуги:</label>
         <input type="text" name="service_name" required>
@@ -19,13 +19,57 @@
         <label>Длительность (в минутах):</label>
         <input type="number" name="duration" required>
         <br>
-        <button type="submit">Добавить услугу</button>
+        <button type="submit" name="add_service" class="submit-button">Добавить услугу</button>
     </form>
     <h2>Список услуг:</h2>
     <ul>
         {% for service in services %}
-            <li>{{ service.service_name }} - {{ service.price }} руб.</li>
+            <li>
+                {{ service.service_name }} - {{ service.price }} руб.
+                <button onclick="editService({{ service.id }}, '{{ service.service_name|e }}', '{{ service.description|e }}', {{ service.price }}, {{ service.duration }})" class="button">Редактировать</button>
+                <form method="post" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="service_id" value="{{ service.id }}">
+                    <button type="submit" name="delete_service" class="button">Удалить</button>
+                </form>
+            </li>
         {% endfor %}
     </ul>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
 </div>
+
+<!-- Модальное окно для редактирования услуги -->
+<div id="editServiceModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('editServiceModal')">&times;</span>
+        <h2>Редактировать услугу</h2>
+        <form method="post" id="editServiceForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="service_id" id="editServiceId">
+            <label>Название услуги:</label>
+            <input type="text" name="service_name" id="editServiceName">
+            <br>
+            <label>Описание:</label>
+            <textarea name="description" id="editServiceDescription"></textarea>
+            <br>
+            <label>Цена:</label>
+            <input type="number" name="price" id="editServicePrice">
+            <br>
+            <label>Длительность (в минутах):</label>
+            <input type="number" name="duration" id="editServiceDuration">
+            <br>
+            <button type="submit" name="edit_service" class="submit-button">Сохранить изменения</button>
+        </form>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 {% endblock %}

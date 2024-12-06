@@ -253,3 +253,178 @@ input[type="number"]::-webkit-outer-spin-button {
 .button:hover {
     background-color: #388e3c; /* Темно-зеленый фон для кнопок при наведении */
 }
+
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.button-container .button {
+    padding: 10px 20px;
+    background-color: #4caf50; /* Светло-зеленый фон для кнопок */
+    color: #ffffff; /* Белый текст для кнопок */
+    text-decoration: none;
+    border-radius: 4px;
+    display: inline-block;
+    text-align: center;
+    flex: 1 1 200px; /* Растягиваем кнопки на всю ширину контейнера */
+}
+
+.button-container .button:hover {
+    background-color: #388e3c; /* Темно-зеленый фон для кнопок при наведении */
+}
+
+.manage-employees-container form button,
+.manage-services-container form button,
+.manage-clients-container form button,
+.manage-appointments-container form button {
+    padding: 5px 10px;
+    background-color: #4caf50; /* Светло-зеленый фон для кнопок */
+    color: #ffffff; /* Белый текст для кнопок */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.flashes {
+    list-style-type: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+.flashes li {
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
+.flashes .success {
+    background-color: #d4edda; /* Зеленый фон для успешных сообщений */
+    color: #155724; /* Темно-зеленый текст для успешных сообщений */
+    border: 1px solid #c3e6cb; /* Светло-зеленая рамка для успешных сообщений */
+}
+
+.flashes .error {
+    background-color: #f8d7da; /* Красный фон для ошибок */
+    color: #721c24; /* Темно-красный текст для ошибок */
+    border: 1px solid #f5c6cb; /* Светло-красная рамка для ошибок */
+}
+
+.manage-employees-container form button:hover,
+.manage-services-container form button:hover,
+.manage-clients-container form button:hover,
+.manage-appointments-container form button:hover {
+    background-color: #388e3c; /* Темно-зеленый фон для кнопок при наведении */
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Стили для модальных окон */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Стили для форм внутри модальных окон */
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-content label {
+    margin-bottom: 5px;
+    color: #4caf50;
+}
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #4caf50;
+    border-radius: 4px;
+    color: #4caf50;
+}
+
+.modal-content button {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    align-self: flex-start;
+}
+
+.modal-content button:hover {
+    background-color: #388e3c;
+}

@@ -1,0 +1,55 @@
+<!-- Модальное окно для редактирования услуги -->
+<div id="editServiceModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('editServiceModal')">&times;</span>
+        <h2>Редактировать услугу</h2>
+        <form method="post" id="editServiceForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="service_id" id="editServiceId">
+            <label>Название услуги:</label>
+            <input type="text" name="service_name" id="editServiceName">
+            <br>
+            <label>Описание:</label>
+            <textarea name="description" id="editServiceDescription"></textarea>
+            <br>
+            <label>Цена:</label>
+            <input type="number" name="price" id="editServicePrice">
+            <br>
+            <label>Длительность (в минутах):</label>
+            <input type="number" name="duration" id="editServiceDuration">
+            <br>
+            <button type="submit" name="edit_service">Сохранить изменения</button>
+        </form>
+    </div>
+</div>
+
+<!-- Модальное окно для редактирования сотрудника -->
+<div id="editEmployeeModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('editEmployeeModal')">&times;</span>
+        <h2>Редактировать сотрудника</h2>
+        <form method="post" id="editEmployeeForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="employee_id" id="editEmployeeId">
+            <label>Имя:</label>
+            <input type="text" name="name" id="editEmployeeName">
+            <br>
+            <label>Email:</label>
+            <input type="email" name="email" id="editEmployeeEmail">
+            <br>
+            <label>Телефон:</label>
+            <input type="text" name="phone" id="editEmployeePhone">
+            <br>
+            <label>Пароль:</label>
+            <input type="password" name="password" id="editEmployeePassword">
+            <br>
+            <label>Роль:</label>
+            <select name="role" id="editEmployeeRole">
+                <option value="mechanic">Механик</option>
+                <option value="manager">Менеджер</option>
+            </select>
+            <br>
+            <button type="submit" name="edit_employee">Сохранить изменения</button>
+        </form>
+    </div>
+</div>
