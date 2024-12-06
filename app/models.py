@@ -62,8 +62,11 @@ class Task(db.Model):
     id = db.Column(Integer, primary_key=True)
     employee_id = db.Column(Integer, ForeignKey('employees.id'), nullable=False)
     order_id = db.Column(Integer, ForeignKey('orders.id'), nullable=False)
-    status = db.Column(String(50), default='pending')
+    status = db.Column(String(50), default='pending')  # Добавляем поле статуса
     created_at = db.Column(DateTime, default=datetime.utcnow)
+
+    employee = db.relationship('Employee', backref='tasks')
+    order = db.relationship('Order', backref='tasks')
 
 class Report(db.Model):
     __tablename__ = 'reports'

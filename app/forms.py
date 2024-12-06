@@ -8,4 +8,4 @@ class SelectServicesForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         super(SelectServicesForm, self).__init__(*args, **kwargs)
-        self.services.choices = [(service.id, service.service_name) for service in Service.query.all()]
+        self.services.choices = [(service.id, service.service_name, service.price) for service in Service.query.all()]

@@ -6,15 +6,23 @@
 <div class="container">
     <h1>Панель механика</h1>
     <p>Добро пожаловать, {{ user.name }}!</p>
-    <h2>Заказы на ближайшую неделю</h2>
+    <h2>Задачи на сегодня:</h2>
     <ul>
         {% for task in tasks %}
             <li>
                 Задача №{{ task.id }} - {{ task.status }}
-                <a href="{{ url_for('main.reports', task_id=task.id) }}" class="button">Создать отчет</a>
+                <form method="post" action="{{ url_for('main.update_task_status', task_id=task.id) }}" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <select name="status">
+                        <option value="pending" {% if task.status == 'pending' %}selected{% endif %}>В ожидании</option>
+                        <option value="in_progress" {% if task.status == 'in_progress' %}selected{% endif %}>В процессе</option>
+                        <option value="completed" {% if task.status == 'completed' %}selected{% endif %}>Завершено</option>
+                    </select>
+                    <button type="submit" class="button">Обновить статус</button>
+                </form>
             </li>
         {% endfor %}
     </ul>
-    <a href="{{ url_for('main.mechanic_all_orders') }}" class="button">Просмотреть все заказы</a>
+    <a href="{{ url_for('main.mechanic_statistics') }}" class="button">Просмотреть статистику</a>
 </div>
 {% endblock %}

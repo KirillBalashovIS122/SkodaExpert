@@ -6,34 +6,16 @@
 <div class="form-container">
     <h1>Запись на ремонт</h1>
     <form method="POST" action="{{ url_for('main.appointments') }}">
-        <label for="full_name">ФИО:</label>
-        <input type="text" id="full_name" name="full_name" required><br>
-
-        <label for="car_model">Модель машины:</label>
-        <input type="text" id="car_model" name="car_model" required><br>
-
-        <label for="car_vin">VIN номер:</label>
-        <input type="text" id="car_vin" name="car_vin" required><br>
-
-        <label for="car_plate">Гос номер:</label>
-        <input type="text" id="car_plate" name="car_plate" required><br>
-
-        <label for="phone">Телефон:</label>
-        <input type="text" id="phone" name="phone" required><br>
-
-        <label for="car_year">Год выпуска:</label>
-        <input type="number" id="car_year" name="car_year" required style="width: 60px; appearance: textfield;"><br>
-
         <label for="appointment_date">Дата:</label>
-        <input type="text" id="appointment_date" name="appointment_date" required><br>
-
+        <input type="text" id="appointment_date" name="appointment_date" required>
+        <br>
         <label for="appointment_time">Время:</label>
         <select id="appointment_time" name="appointment_time" required>
             {% for slot in available_slots %}
-                <option value="{{ slot.start_time }}">{{ slot.start_time }}</option>
+                <option value="{{ slot }}">{{ slot }}</option>
             {% endfor %}
-        </select><br>
-
+        </select>
+        <br>
         <button type="submit">Записаться</button>
     </form>
 </div>
@@ -57,8 +39,8 @@
                     select.innerHTML = '';
                     data.forEach(slot => {
                         const option = document.createElement('option');
-                        option.value = slot.start_time;
-                        option.textContent = slot.start_time;
+                        option.value = slot;
+                        option.textContent = slot;
                         select.appendChild(option);
                     });
                 });

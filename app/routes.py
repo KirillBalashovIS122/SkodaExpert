@@ -5,6 +5,7 @@ from .models import Employee, Client, Car, Service, Order, Task, Report, Appoint
 from . import db, csrf
 from .utils import get_current_user, generate_pdf, calculate_statistics
 from .forms import SelectServicesForm  # Импортируем форму
+from sqlalchemy import text
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
@@ -68,17 +69,27 @@ def client_dashboard():
         return render_template('client/client_dashboard.html', user=user, orders=user_orders, services=services)
     return redirect(url_for('main.index'))
 
+from sqlalchemy import text
+
 @main.route('/mechanic_dashboard')
 def mechanic_dashboard():
     if 'role' in session and session['role'] == 'mechanic':
         user = Employee.query.get(session['user_id'])
         today = datetime.now().date()
         next_week = today + timedelta(days=7)
-        tasks = Task.query.filter(
-            Task.employee_id == session['user_id'],
-            Task.created_at >= today,
-            Task.created_at < next_week
-        ).all()
+        
+        query = text("""
+            SELECT * FROM tasks 
+            WHERE employee_id = :employee_id 
+            AND created_at >= :today 
+            AND created_at < :next_week
+        """)
+        tasks = db.session.execute(query, {
+            'employee_id': session['user_id'],
+            'today': today,
+            'next_week': next_week
+        }).fetchall()
+        
         return render_template('employee/mechanic/mechanic_dashboard.html', user=user, tasks=tasks)
     return redirect(url_for('main.index'))
 
@@ -123,83 +134,96 @@ def appointment_success(order_id):
 def appointments():
     if 'role' in session and session['role'] == 'client':
         if request.method == 'POST':
-            full_name = request.form.get('full_name')
-            car_model = request.form.get('car_model')
-            vin_number = request.form.get('car_vin')
-            car_plate = request.form.get('car_plate')
-            phone = request.form.get('phone')
-            car_year = request.form.get('car_year')
             appointment_date = request.form.get('appointment_date')
             appointment_time = request.form.get('appointment_time')
-
-            if 'user_id' not in session:
-                return jsonify({'success': False, 'error': 'User ID not found in session'}), 400
-
-            client = Client.query.get(session['user_id'])
-            if not client:
-                return jsonify({'success': False, 'error': 'Client not found'}), 400
-
-            try:
-                car = create_car(client.id, car_model, vin_number, car_plate, car_year)
-                new_order = create_order(client.id, car.id, appointment_date, appointment_time)
-                save_order_history(new_order.id, client.id, car.id)
-                return redirect(url_for('main.appointment_success', order_id=new_order.id))
-            except ValueError as e:
-                db.session.rollback()
-                return jsonify({'success': False, 'error': str(e)}), 400
-            except Exception as e:
-                db.session.rollback()
-                logging.error(f"Error creating order: {e}")
-                return jsonify({'success': False, 'error': 'Error creating order'}), 500
-
-        if 'selected_services' not in session:
-            return redirect(url_for('main.select_services'))
+            selected_services = session.get('selected_services', [])
+            if not appointment_date or not appointment_time or not selected_services:
+                flash("Выберите дату, время и услуги", "error")
+                return redirect(url_for('main.appointments'))
+            
+            # Создаем новый заказ
+            new_order = Order(
+                client_id=session['user_id'],
+                appointment_date=datetime.strptime(appointment_date, '%Y-%m-%d').date(),
+                appointment_time=appointment_time
+            )
+            db.session.add(new_order)
+            db.session.commit()
+            
+            # Добавляем выбранные услуги к заказу
+            for service_id in selected_services:
+                service = Service.query.get(service_id)
+                if service:
+                    new_order.services.append(service)
+            db.session.commit()
+            
+            return redirect(url_for('main.appointment_success', order_id=new_order.id))
 
         today = datetime.now().date()
-        available_slots = get_available_slots(today)
-
+        available_slots = get_available_slots_for_date(today)  # Исправлено здесь
         selected_services = session.get('selected_services', [])
         services = Service.query.all()
-
         return render_template('client/appointments.html', available_slots=available_slots, services=services, selected_services=selected_services)
-
     return redirect(url_for('main.index'))
 
 @main.route('/get_available_slots', methods=['GET'])
 def get_available_slots():
     date_str = request.args.get('date')
     date = datetime.strptime(date_str, '%Y-%m-%d').date()
-    slots = get_available_slots(date)
+    slots = get_available_slots_for_date(date)
     return jsonify(slots)
 
-def get_available_slots(date):
-    # Get all slots for the given date
-    slots = AppointmentSlot.query.filter(
-        AppointmentSlot.appointment_date == date,
-        AppointmentSlot.is_available == True
-    ).all()
-
-    # Filter out slots that are already booked
-    booked_slots = Order.query.filter(
-        Order.appointment_date == date
-    ).all()
-
-    booked_times = []
-    for order in booked_slots:
-        services = order.services
-        total_duration = sum(service.duration for service in services)
+def get_available_slots_for_date(date):
+    # Создаем временные слоты, если их еще нет
+    existing_slots = AppointmentSlot.query.filter_by(appointment_date=date).all()
+    if not existing_slots:
+        create_appointment_slots(date)
+    
+    # Получаем все записи на выбранную дату
+    existing_orders = Order.query.filter_by(appointment_date=date).all()
+    
+    # Получаем все временные слоты на выбранную дату
+    appointment_slots = AppointmentSlot.query.filter_by(appointment_date=date, is_available=True).all()
+    
+    # Создаем словарь для хранения занятых слотов
+    booked_slots = {}
+    for order in existing_orders:
         start_time = datetime.strptime(order.appointment_time, '%H:%M').time()
-        end_time = (datetime.combine(date, start_time) + timedelta(minutes=total_duration)).time()
-        booked_times.append((start_time, end_time))
-
+        duration = sum(service.duration for service in order.services)
+        end_time = (datetime.combine(date, start_time) + timedelta(minutes=duration)).time()
+        booked_slots[order.appointment_time] = (start_time, end_time)
+    
+    # Создаем список доступных слотов
     available_slots = []
-    for slot in slots:
+    for slot in appointment_slots:
         slot_start_time = slot.start_time.time()
         slot_end_time = slot.end_time.time()
-        if not any(start <= slot_start_time < end or start < slot_end_time <= end for start, end in booked_times):
-            available_slots.append(slot)
-
+        is_available = True
+        for booked_start, booked_end in booked_slots.values():
+            if (slot_start_time < booked_end and slot_end_time > booked_start):
+                is_available = False
+                break
+        if is_available:
+            available_slots.append(slot_start_time.strftime('%H:%M'))
+    
     return available_slots
+
+def create_appointment_slots(date):
+    start_time = datetime.strptime('09:00', '%H:%M').time()
+    end_time = datetime.strptime('17:00', '%H:%M').time()
+    current_time = datetime.combine(date, start_time)
+    
+    while current_time.time() < end_time:
+        slot = AppointmentSlot(
+            appointment_date=date,
+            start_time=current_time,
+            end_time=(current_time + timedelta(minutes=30)),
+            is_available=True
+        )
+        db.session.add(slot)
+        current_time += timedelta(minutes=30)
+    
+    db.session.commit()
 
 def create_car(client_id, model, vin, license_plate, car_year):
     logging.debug(f"Creating car: client_id={client_id}, model={model}, vin={vin}, license_plate={license_plate}, car_year={car_year}")

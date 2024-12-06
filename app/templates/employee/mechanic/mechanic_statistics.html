@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Статистика механика{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Статистика механика</h1>
+    <p>Добро пожаловать, {{ user.name }}!</p>
+    <h2>Статистика задач:</h2>
+    <ul>
+        <li>Всего задач: {{ total_tasks }}</li>
+        <li>Завершено: {{ completed_tasks }}</li>
+        <li>В ожидании: {{ pending_tasks }}</li>
+    </ul>
+    <a href="{{ url_for('main.mechanic_dashboard') }}" class="button">Вернуться на панель механика</a>
+</div>
+{% endblock %}
