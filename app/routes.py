@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from .models import Employee, Client, Car, Service, Order, Task, Report, AppointmentSlot, OrderHistory
 from . import db, csrf
 from .utils import get_current_user, generate_pdf, calculate_statistics
-from .forms import SelectServicesForm  # Импортируем форму
+from .forms import SelectServicesForm, CarForm
 from sqlalchemy import text
 import logging
 
@@ -50,7 +50,6 @@ def register():
         role = request.form.get('role')
         hashed_password = generate_password_hash(password)
         
-        # Объединяем last_name, first_name и middle_name в одну строку
         name = f"{last_name} {first_name} {middle_name}".strip()
         
         new_employee = Employee(name=name, email=email, phone=phone, password=hashed_password, role=role)
@@ -69,8 +68,6 @@ def client_dashboard():
         return render_template('client/client_dashboard.html', user=user, orders=user_orders, services=services)
     return redirect(url_for('main.index'))
 
-from sqlalchemy import text
-
 @main.route('/mechanic_dashboard')
 def mechanic_dashboard():
     if 'role' in session and session['role'] == 'mechanic':
@@ -78,17 +75,11 @@ def mechanic_dashboard():
         today = datetime.now().date()
         next_week = today + timedelta(days=7)
         
-        query = text("""
-            SELECT * FROM tasks 
-            WHERE employee_id = :employee_id 
-            AND created_at >= :today 
-            AND created_at < :next_week
-        """)
-        tasks = db.session.execute(query, {
-            'employee_id': session['user_id'],
-            'today': today,
-            'next_week': next_week
-        }).fetchall()
+        tasks = Task.query.filter(
+            Task.employee_id == session['user_id'],
+            Task.created_at >= today,
+            Task.created_at < next_week
+        ).all()
         
         return render_template('employee/mechanic/mechanic_dashboard.html', user=user, tasks=tasks)
     return redirect(url_for('main.index'))
@@ -99,6 +90,31 @@ def mechanic_all_orders():
         user = Employee.query.get(session['user_id'])
         tasks = Task.query.filter_by(employee_id=session['user_id']).all()
         return render_template('employee/mechanic/tasks.html', user=user, tasks=tasks)
+    return redirect(url_for('main.index'))
+
+@main.route('/mechanic_statistics')
+def mechanic_statistics():
+    if 'role' in session and session['role'] == 'mechanic':
+        user = Employee.query.get(session['user_id'])
+        # Ваш код для получения статистики
+        return render_template('employee/mechanic/mechanic_statistics.html', user=user, tasks=tasks)
+    return redirect(url_for('main.index'))
+
+@main.route('/mechanic_tasks_current_month')
+def mechanic_tasks_current_month():
+    if 'role' in session and session['role'] == 'mechanic':
+        user = Employee.query.get(session['user_id'])
+        today = datetime.now().date()
+        first_day_of_month = today.replace(day=1)
+        last_day_of_month = (today.replace(day=1) + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+        
+        tasks = Task.query.filter(
+            Task.employee_id == session['user_id'],
+            Task.created_at >= first_day_of_month,
+            Task.created_at <= last_day_of_month
+        ).all()
+        
+        return render_template('employee/mechanic/mechanic_tasks_current_month.html', user=user, tasks=tasks)
     return redirect(url_for('main.index'))
 
 @main.route('/manager_dashboard')
@@ -133,59 +149,79 @@ def appointment_success(order_id):
 @main.route('/appointments', methods=['GET', 'POST'])
 def appointments():
     if 'role' in session and session['role'] == 'client':
+        car_form = CarForm()
+        selected_services = session.get('selected_services', [])
+
+        if not selected_services:
+            flash("Выберите услуги на странице выбора услуг", "error")
+            return redirect(url_for('main.select_services'))
+
         if request.method == 'POST':
-            appointment_date = request.form.get('appointment_date')
-            appointment_time = request.form.get('appointment_time')
-            selected_services = session.get('selected_services', [])
-            if not appointment_date or not appointment_time or not selected_services:
-                flash("Выберите дату, время и услуги", "error")
-                return redirect(url_for('main.appointments'))
-            
-            # Создаем новый заказ
-            new_order = Order(
-                client_id=session['user_id'],
-                appointment_date=datetime.strptime(appointment_date, '%Y-%m-%d').date(),
-                appointment_time=appointment_time
-            )
-            db.session.add(new_order)
-            db.session.commit()
-            
-            # Добавляем выбранные услуги к заказу
-            for service_id in selected_services:
-                service = Service.query.get(service_id)
-                if service:
-                    new_order.services.append(service)
-            db.session.commit()
-            
-            return redirect(url_for('main.appointment_success', order_id=new_order.id))
+            if car_form.validate_on_submit():
+                full_name = request.form.get('full_name')
+                phone = request.form.get('phone')
+                appointment_date = request.form.get('appointment_date')
+                appointment_time = request.form.get('appointment_time')
+                
+                if not full_name or not phone or not appointment_date or not appointment_time:
+                    flash("Заполните все обязательные поля", "error")
+                    return redirect(url_for('main.appointments'))
+                
+                new_order = Order(
+                    client_id=session['user_id'],
+                    appointment_date=datetime.strptime(appointment_date, '%Y-%m-%d').date(),
+                    appointment_time=appointment_time
+                )
+                db.session.add(new_order)
+                db.session.commit()
+                
+                for service_id in selected_services:
+                    service = Service.query.get(service_id)
+                    if service:
+                        new_order.services.append(service)
+                db.session.commit()
+                
+                new_car = Car(
+                    client_id=session['user_id'],
+                    model=car_form.model.data,
+                    car_year=car_form.car_year.data,
+                    vin=car_form.vin.data,
+                    license_plate=car_form.license_plate.data
+                )
+                db.session.add(new_car)
+                db.session.commit()
+                
+                new_order.car_id = new_car.id
+                db.session.commit()
+                
+                logging.debug(f"Order created: {new_order}")
+                
+                return redirect(url_for('main.appointment_success', order_id=new_order.id))
 
         today = datetime.now().date()
-        available_slots = get_available_slots_for_date(today)  # Исправлено здесь
-        selected_services = session.get('selected_services', [])
+        available_slots = get_available_slots_for_date(today, selected_services)
         services = Service.query.all()
-        return render_template('client/appointments.html', available_slots=available_slots, services=services, selected_services=selected_services)
+        return render_template('client/appointments.html', available_slots=available_slots, services=services, selected_services=selected_services, car_form=car_form)
     return redirect(url_for('main.index'))
 
-@main.route('/get_available_slots', methods=['GET'])
-def get_available_slots():
-    date_str = request.args.get('date')
-    date = datetime.strptime(date_str, '%Y-%m-%d').date()
-    slots = get_available_slots_for_date(date)
-    return jsonify(slots)
+def is_slot_available(slot, service_duration, booked_slots):
+    slot_start_time = datetime.strptime(slot, '%H:%M').time()
+    slot_end_time = (datetime.combine(datetime.today(), slot_start_time) + timedelta(minutes=service_duration)).time()
+    
+    for booked_start, booked_end in booked_slots.values():
+        if (slot_start_time < booked_end and slot_end_time > booked_start):
+            return False
+    return True
 
-def get_available_slots_for_date(date):
-    # Создаем временные слоты, если их еще нет
+def get_available_slots_for_date(date, selected_services):
     existing_slots = AppointmentSlot.query.filter_by(appointment_date=date).all()
     if not existing_slots:
         create_appointment_slots(date)
     
-    # Получаем все записи на выбранную дату
     existing_orders = Order.query.filter_by(appointment_date=date).all()
     
-    # Получаем все временные слоты на выбранную дату
     appointment_slots = AppointmentSlot.query.filter_by(appointment_date=date, is_available=True).all()
     
-    # Создаем словарь для хранения занятых слотов
     booked_slots = {}
     for order in existing_orders:
         start_time = datetime.strptime(order.appointment_time, '%H:%M').time()
@@ -193,11 +229,10 @@ def get_available_slots_for_date(date):
         end_time = (datetime.combine(date, start_time) + timedelta(minutes=duration)).time()
         booked_slots[order.appointment_time] = (start_time, end_time)
     
-    # Создаем список доступных слотов
     available_slots = []
     for slot in appointment_slots:
-        slot_start_time = slot.start_time.time()
-        slot_end_time = slot.end_time.time()
+        slot_start_time = slot.start_time
+        slot_end_time = slot.end_time
         is_available = True
         for booked_start, booked_end in booked_slots.values():
             if (slot_start_time < booked_end and slot_end_time > booked_start):
@@ -206,24 +241,14 @@ def get_available_slots_for_date(date):
         if is_available:
             available_slots.append(slot_start_time.strftime('%H:%M'))
     
+    # Преобразуем строки в объекты Service
+    selected_services = [Service.query.get(service_id) for service_id in selected_services]
+    
+    # Проверка доступности времени с учетом выбранных услуг
+    total_service_duration = sum(service.duration for service in selected_services)
+    available_slots = [slot for slot in available_slots if is_slot_available(slot, total_service_duration, booked_slots)]
+    
     return available_slots
-
-def create_appointment_slots(date):
-    start_time = datetime.strptime('09:00', '%H:%M').time()
-    end_time = datetime.strptime('17:00', '%H:%M').time()
-    current_time = datetime.combine(date, start_time)
-    
-    while current_time.time() < end_time:
-        slot = AppointmentSlot(
-            appointment_date=date,
-            start_time=current_time,
-            end_time=(current_time + timedelta(minutes=30)),
-            is_available=True
-        )
-        db.session.add(slot)
-        current_time += timedelta(minutes=30)
-    
-    db.session.commit()
 
 def create_car(client_id, model, vin, license_plate, car_year):
     logging.debug(f"Creating car: client_id={client_id}, model={model}, vin={vin}, license_plate={license_plate}, car_year={car_year}")
@@ -333,7 +358,6 @@ def manage_employees():
                 password = request.form.get('password')
                 role = request.form.get('role')
 
-                # Проверка на None для пароля
                 if password is None:
                     flash("Пароль не может быть пустым", "error")
                     return redirect(url_for('main.manage_employees'))
@@ -359,7 +383,6 @@ def manage_employees():
                     employee.phone = phone
                     employee.role = role
 
-                    # Проверка на None для пароля
                     if password is not None:
                         hashed_password = generate_password_hash(password)
                         employee.password = hashed_password
@@ -393,7 +416,6 @@ def manage_services():
                 price = request.form.get('price')
                 duration = request.form.get('duration')
 
-                # Проверка на None для service_name, price и duration
                 if service_name is None or price is None or duration is None:
                     flash("Все поля должны быть заполнены", "error")
                     return redirect(url_for('main.manage_services'))
@@ -412,7 +434,6 @@ def manage_services():
 
                 service = Service.query.get(service_id)
                 if service:
-                    # Обновляем только те поля, которые были переданы
                     if service_name is not None:
                         service.service_name = service_name
                     if description is not None:

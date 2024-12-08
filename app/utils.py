@@ -37,10 +37,18 @@ def generate_pdf(order):
     pdf.drawString(1 * inch, 9.5 * inch, f"Номер заказ-наряда: {order.id}")
     pdf.drawString(1 * inch, 9 * inch, f"Имя заказчика: {order.client.name}")
     pdf.drawString(1 * inch, 8.5 * inch, f"Телефон: {order.client.phone}")
-    pdf.drawString(1 * inch, 8 * inch, f"Марка и модель авто: {order.car.model}")
-    pdf.drawString(1 * inch, 7.5 * inch, f"Год выпуска: {order.car.car_year}")
-    pdf.drawString(1 * inch, 7 * inch, f"Гос номер: {order.car.license_plate}")
-    pdf.drawString(1 * inch, 6.5 * inch, f"VIN код: {order.car.vin}")
+    
+    # Проверка на None для order.car
+    if order.car:
+        pdf.drawString(1 * inch, 8 * inch, f"Марка и модель авто: {order.car.model}")
+        pdf.drawString(1 * inch, 7.5 * inch, f"Год выпуска: {order.car.car_year}")
+        pdf.drawString(1 * inch, 7 * inch, f"Гос номер: {order.car.license_plate}")
+        pdf.drawString(1 * inch, 6.5 * inch, f"VIN код: {order.car.vin}")
+    else:
+        pdf.drawString(1 * inch, 8 * inch, "Марка и модель авто: Не указано")
+        pdf.drawString(1 * inch, 7.5 * inch, "Год выпуска: Не указано")
+        pdf.drawString(1 * inch, 7 * inch, "Гос номер: Не указано")
+        pdf.drawString(1 * inch, 6.5 * inch, "VIN код: Не указано")
 
     formatted_date = order.appointment_date.strftime("%d.%m.%Y")
     pdf.drawString(1 * inch, 6 * inch, f"Время записи: {formatted_date} {order.appointment_time}")

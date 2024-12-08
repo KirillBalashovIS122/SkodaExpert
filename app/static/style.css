@@ -63,7 +63,7 @@ header nav a {
 
 .form-container button {
     padding: 10px 20px;
-    background-color: #4caf50; /* Светло-зеленый фон для кнопок */
+    background-color: #4caf50; /* Зеленый фон для кнопок */
     color: #ffffff; /* Белый текст для кнопок */
     border: none;
     border-radius: 4px;
@@ -71,7 +71,7 @@ header nav a {
 }
 
 .form-container button:hover {
-    background-color: #388e3c; /* Темно-зеленый фон для кнопок при наведении */
+    background-color: #4caf50; /* Оставляем тот же зеленый фон */
 }
 
 .success-container {
@@ -92,14 +92,14 @@ header nav a {
 
 .success-container .button {
     padding: 10px 20px;
-    background-color: #4caf50; /* Светло-зеленый фон для кнопок */
+    background-color: #4caf50; /* Зеленый фон для кнопок */
     color: #ffffff; /* Белый текст для кнопок */
     text-decoration: none;
     border-radius: 4px;
 }
 
 .success-container .button:hover {
-    background-color: #388e3c; /* Темно-зеленый фон для кнопок при наведении */
+    background-color: #4caf50; /* Оставляем тот же зеленый фон */
 }
 
 .tasks-container, .manage-employees-container, .manage-services-container, .manage-appointments-container, .statistics-container {
@@ -193,19 +193,23 @@ input[type="number"]::-webkit-outer-spin-button {
     margin: 0; /* Убираем отступы */
 }
 
-/* Стили для кнопки */
-.submit-button {
+/* Общие стили для кнопок */
+.button {
     padding: 10px 20px;
-    background-color: #4caf50; /* Светло-зеленый фон для кнопок */
+    background-color: #4caf50; /* Зеленый фон для кнопок */
     color: #ffffff; /* Белый текст для кнопок */
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
     margin-top: 20px;
 }
 
-.submit-button:hover {
-    background-color: #388e3c; /* Темно-зеленый фон для кнопок при наведении */
+/* Убираем изменение цвета при наведении */
+.button:hover {
+    background-color: #4caf50; /* Оставляем тот же зеленый фон */
 }
 
 .selected-services {
@@ -240,20 +244,6 @@ input[type="number"]::-webkit-outer-spin-button {
     margin-right: 20px; /* Отступ справа */
 }
 
-.button {
-    padding: 10px 20px;
-    background-color: #4caf50; /* Светло-зеленый фон для кнопок */
-    color: #ffffff; /* Белый текст для кнопок */
-    text-decoration: none;
-    border-radius: 4px;
-    display: inline-block;
-    margin-top: 20px;
-}
-
-.button:hover {
-    background-color: #388e3c; /* Темно-зеленый фон для кнопок при наведении */
-}
-
 .button-container {
     display: flex;
     flex-wrap: wrap;
@@ -264,7 +254,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .button-container .button {
     padding: 10px 20px;
-    background-color: #4caf50; /* Светло-зеленый фон для кнопок */
+    background-color: #4caf50; /* Зеленый фон для кнопок */
     color: #ffffff; /* Белый текст для кнопок */
     text-decoration: none;
     border-radius: 4px;
@@ -274,7 +264,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .button-container .button:hover {
-    background-color: #388e3c; /* Темно-зеленый фон для кнопок при наведении */
+    background-color: #4caf50; /* Оставляем тот же зеленый фон */
 }
 
 .manage-employees-container form button,
@@ -282,7 +272,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .manage-clients-container form button,
 .manage-appointments-container form button {
     padding: 5px 10px;
-    background-color: #4caf50; /* Светло-зеленый фон для кнопок */
+    background-color: #4caf50; /* Зеленый фон для кнопок */
     color: #ffffff; /* Белый текст для кнопок */
     border: none;
     border-radius: 4px;
@@ -318,7 +308,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .manage-services-container form button:hover,
 .manage-clients-container form button:hover,
 .manage-appointments-container form button:hover {
-    background-color: #388e3c; /* Темно-зеленый фон для кнопок при наведении */
+    background-color: #4caf50; /* Оставляем тот же зеленый фон */
 }
 
 .modal {
@@ -417,8 +407,8 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .modal-content button {
     padding: 10px 20px;
-    background-color: #4caf50;
-    color: #ffffff;
+    background-color: #4caf50; /* Зеленый фон для кнопок */
+    color: #ffffff; /* Белый текст для кнопок */
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -426,5 +416,5 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .modal-content button:hover {
-    background-color: #388e3c;
+    background-color: #4caf50; /* Оставляем тот же зеленый фон */
 }

@@ -6,45 +6,97 @@
 <div class="form-container">
     <h1>Запись на ремонт</h1>
     <form method="POST" action="{{ url_for('main.appointments') }}">
-        <label for="appointment_date">Дата:</label>
+        {{ car_form.hidden_tag() }}
+        
+        <!-- ФИО -->
+        <label for="full_name">ФИО:</label>
+        <input type="text" id="full_name" name="full_name" required>
+        <br>
+        
+        <!-- Телефон -->
+        <label for="phone">Телефон:</label>
+        <input type="text" id="phone" name="phone" required>
+        <br>
+        
+        <!-- Модель машины -->
+        {{ car_form.model.label }} {{ car_form.model() }}
+        <br>
+        
+        <!-- VIN номер -->
+        {{ car_form.vin.label }} {{ car_form.vin() }}
+        <br>
+        
+        <!-- Гос номер -->
+        {{ car_form.license_plate.label }} {{ car_form.license_plate() }}
+        <br>
+        
+        <!-- Год выпуска -->
+        {{ car_form.car_year.label }} {{ car_form.car_year() }}
+        <br>
+        
+        <!-- Дата и время -->
+        <label for="appointment_date">Дата и время:</label>
         <input type="text" id="appointment_date" name="appointment_date" required>
         <br>
-        <label for="appointment_time">Время:</label>
-        <select id="appointment_time" name="appointment_time" required>
-            {% for slot in available_slots %}
-                <option value="{{ slot }}">{{ slot }}</option>
-            {% endfor %}
-        </select>
-        <br>
-        <button type="submit">Записаться</button>
+        
+        <!-- Сообщение об ошибке -->
+        <div id="error-message" style="color: red; display: none;"></div>
+        
+        <!-- Кнопка "Записаться" -->
+        <button type="submit" class="submit-button">Записаться</button>
     </form>
 </div>
 
 <script>
-    flatpickr('#appointment_date', {
-        locale: 'ru',
-        dateFormat: 'Y-m-d',
-        minDate: "today",
-        disable: [
-            function(date) {
-                return (date.getDay() === 0); // Disable Sundays
+    document.addEventListener("DOMContentLoaded", function() {
+        flatpickr("#appointment_date", {
+            locale: "ru", // Устанавливаем русский язык
+            enableTime: true, // Включаем выбор времени
+            noCalendar: false, // Включаем календарь
+            dateFormat: "Y-m-d H:i", // Формат даты и времени
+            time_24hr: true, // 24-часовой формат времени
+            minTime: "09:00", // Минимальное время - 09:00
+            maxTime: "17:00", // Максимальное время - 17:00
+            minuteIncrement: 30, // Интервал в 30 минут
+            disable: [
+                function(date) {
+                    // Исключаем воскресенье и понедельник
+                    return date.getDay() === 0 || date.getDay() === 1;
+                },
+                // Исключаем официальные праздники в России на 2024 и 2025 годы
+                "2024-01-01", // Новый год
+                "2024-01-07", // Рождество Христово
+                "2024-02-23", // День защитника Отечества
+                "2024-03-08", // Международный женский день
+                "2024-05-01", // Праздник Весны и Труда
+                "2024-05-09", // День Победы
+                "2024-06-12", // День России
+                "2024-11-04", // День народного единства
+                "2024-12-31", // Новый год (предновогодний день)
+                "2025-01-01", // Новый год
+                "2025-01-07", // Рождество Христово
+                "2025-02-23", // День защитника Отечества
+                "2025-03-08", // Международный женский день
+                "2025-05-01", // Праздник Весны и Труда
+                "2025-05-09", // День Победы
+                "2025-06-12", // День России
+                "2025-11-04", // День народного единства
+                "2025-12-31"  // Новый год (предновогодний день)
+            ],
+            onChange: function(selectedDates, dateStr, instance) {
+                // Проверка доступности времени
+                const selectedDate = new Date(dateStr);
+                const selectedTime = selectedDate.getHours() + ':' + selectedDate.getMinutes();
+                const availableSlots = instance.config.enable.map(slot => slot.time);
+
+                if (!availableSlots.includes(selectedTime)) {
+                    document.getElementById('error-message').innerText = 'Выбранное время недоступно для записи.';
+                    document.getElementById('error-message').style.display = 'block';
+                } else {
+                    document.getElementById('error-message').style.display = 'none';
+                }
             }
-        ],
-        onChange: function(selectedDates, dateStr, instance) {
-            // Update available slots based on selected date
-            fetch(`/get_available_slots?date=${dateStr}`)
-                .then(response => response.json())
-                .then(data => {
-                    const select = document.getElementById('appointment_time');
-                    select.innerHTML = '';
-                    data.forEach(slot => {
-                        const option = document.createElement('option');
-                        option.value = slot;
-                        option.textContent = slot;
-                        select.appendChild(option);
-                    });
-                });
-        }
+        });
     });
 </script>
 {% endblock %}

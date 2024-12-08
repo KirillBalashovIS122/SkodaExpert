@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Панель механика{% endblock %}
+{% block title %}Задачи на текущий месяц{% endblock %}
 
 {% block content %}
 <div class="container">
-    <h1>Панель механика</h1>
+    <h1>Задачи на текущий месяц</h1>
     <p>Добро пожаловать, {{ user.name }}!</p>
-    <h2>Задачи на сегодня:</h2>
+    <h2>Задачи:</h2>
     <ul>
         {% for task in tasks %}
             <li>
@@ -23,7 +23,6 @@
             </li>
         {% endfor %}
     </ul>
-    <a href="{{ url_for('main.mechanic_statistics') }}" class="button">Просмотреть статистику</a>
-    <a href="{{ url_for('main.mechanic_tasks_current_month') }}" class="button">Просмотреть задачи на текущий месяц</a>
+    <a href="{{ url_for('main.mechanic_dashboard') }}" class="button">Вернуться на панель механика</a>
 </div>
 {% endblock %}
