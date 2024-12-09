@@ -9,42 +9,48 @@
         {{ car_form.hidden_tag() }}
         
         <!-- ФИО -->
-        {{ car_form.full_name.label }} {{ car_form.full_name() }}
+        <label for="full_name">ФИО:</label>
+        {{ car_form.full_name(required=True) }}
         {% for error in car_form.full_name.errors %}
             <span style="color: red;">{{ error }}</span>
         {% endfor %}
         <br>
         
         <!-- Телефон -->
-        {{ car_form.phone.label }} {{ car_form.phone() }}
+        <label for="phone">Телефон:</label>
+        {{ car_form.phone(required=True) }}
         {% for error in car_form.phone.errors %}
             <span style="color: red;">{{ error }}</span>
         {% endfor %}
         <br>
         
         <!-- Модель машины -->
-        {{ car_form.model.label }} {{ car_form.model() }}
+        <label for="model">Модель машины:</label>
+        {{ car_form.model(required=True) }}
         {% for error in car_form.model.errors %}
             <span style="color: red;">{{ error }}</span>
         {% endfor %}
         <br>
         
         <!-- VIN номер -->
-        {{ car_form.vin.label }} {{ car_form.vin() }}
+        <label for="vin">VIN номер:</label>
+        {{ car_form.vin(required=True) }}
         {% for error in car_form.vin.errors %}
             <span style="color: red;">{{ error }}</span>
         {% endfor %}
         <br>
         
         <!-- Гос номер -->
-        {{ car_form.license_plate.label }} {{ car_form.license_plate() }}
+        <label for="license_plate">Гос номер:</label>
+        {{ car_form.license_plate(required=True) }}
         {% for error in car_form.license_plate.errors %}
             <span style="color: red;">{{ error }}</span>
         {% endfor %}
         <br>
         
         <!-- Год выпуска -->
-        {{ car_form.car_year.label }} {{ car_form.car_year() }}
+        <label for="car_year">Год выпуска:</label>
+        {{ car_form.car_year(required=True) }}
         {% for error in car_form.car_year.errors %}
             <span style="color: red;">{{ error }}</span>
         {% endfor %}

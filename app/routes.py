@@ -181,46 +181,53 @@ def appointments():
                 # Добавляем отладочную информацию
                 logging.debug(f"Parsed appointment_datetime: {appointment_datetime}")
 
-                new_order = Order(
-                    client_id=session['user_id'],
-                    appointment_date=appointment_datetime.date(),
-                    appointment_time=appointment_datetime.time()
-                )
-                db.session.add(new_order)
-                db.session.commit()
+                try:
+                    new_order = Order(
+                        client_id=session['user_id'],
+                        appointment_date=appointment_datetime.date(),
+                        appointment_time=appointment_datetime.time()
+                    )
+                    db.session.add(new_order)
+                    db.session.commit()
 
-                # Добавляем отладочную информацию
-                logging.debug(f"New order created: {new_order}")
+                    # Добавляем отладочную информацию
+                    logging.debug(f"New order created: {new_order}")
 
-                for service_id in selected_services:
-                    service = Service.query.get(service_id)
-                    if service:
-                        new_order.services.append(service)
-                db.session.commit()
+                    for service_id in selected_services:
+                        service = Service.query.get(service_id)
+                        if service:
+                            new_order.services.append(service)
+                    db.session.commit()
 
-                # Добавляем отладочную информацию
-                logging.debug(f"Services added to order: {new_order.services}")
+                    # Добавляем отладочную информацию
+                    logging.debug(f"Services added to order: {new_order.services}")
 
-                new_car = Car(
-                    client_id=session['user_id'],
-                    model=car_form.model.data,
-                    car_year=car_form.car_year.data,
-                    vin=car_form.vin.data,
-                    license_plate=car_form.license_plate.data
-                )
-                db.session.add(new_car)
-                db.session.commit()
+                    new_car = Car(
+                        client_id=session['user_id'],
+                        model=car_form.model.data,
+                        car_year=car_form.car_year.data,
+                        vin=car_form.vin.data,
+                        license_plate=car_form.license_plate.data
+                    )
+                    db.session.add(new_car)
+                    db.session.commit()
 
-                # Добавляем отладочную информацию
-                logging.debug(f"New car created: {new_car}")
+                    # Добавляем отладочную информацию
+                    logging.debug(f"New car created: {new_car}")
 
-                new_order.car_id = new_car.id
-                db.session.commit()
+                    new_order.car_id = new_car.id
+                    db.session.commit()
 
-                # Добавляем отладочную информацию
-                logging.debug(f"Order updated with car_id: {new_order}")
+                    # Добавляем отладочную информацию
+                    logging.debug(f"Order updated with car_id: {new_order}")
 
-                return redirect(url_for('main.appointment_success', order_id=new_order.id))
+                    flash("Запись успешно создана!", "success")
+                    return redirect(url_for('main.appointment_success', order_id=new_order.id))
+
+                except Exception as e:
+                    db.session.rollback()
+                    logging.error(f"Database error: {e}")
+                    flash("Ошибка при сохранении данных", "error")
 
             else:
                 # Добавляем отладочную информацию
@@ -341,6 +348,15 @@ def reports():
         stats = calculate_statistics()
         return render_template('employee/manager/reports.html', **stats)
     return redirect(url_for('main.index'))
+
+@main.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+@main.errorhandler(500)
+def internal_server_error(e):
+    db.session.rollback()
+    return render_template('500.html'), 500
 
 @main.route('/manage_employees', methods=['GET', 'POST'])
 def manage_employees():

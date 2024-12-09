@@ -16,14 +16,6 @@ function editService(id, name, description, price, duration) {
     document.getElementById('editServiceModal').style.display = 'block';
 }
 
-function editClient(id, name, email, phone) {
-    document.getElementById('editClientId').value = id;
-    document.getElementById('editClientName').value = name;
-    document.getElementById('editClientEmail').value = email;
-    document.getElementById('editClientPhone').value = phone;
-    document.getElementById('editClientModal').style.display = 'block';
-}
-
 function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
 }

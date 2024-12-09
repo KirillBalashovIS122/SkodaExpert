@@ -1,17 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, SubmitField, SelectMultipleField 
-from wtforms import DateField
+from wtforms import StringField, IntegerField, SubmitField, SelectMultipleField, DateField, DateTimeField
 from wtforms.validators import DataRequired
 from .models import Service
-from wtforms import DateTimeField
+import logging
 
-class SelectServicesForm(FlaskForm):
-    services = SelectMultipleField('Выберите услуги', choices=[])
-    submit = SubmitField('Далее')
-
-    def __init__(self, *args, **kwargs):
-        super(SelectServicesForm, self).__init__(*args, **kwargs)
-        self.services.choices = [(service.id, service.service_name, service.price) for service in Service.query.all()]
+logging.basicConfig(level=logging.DEBUG)
 
 class CarForm(FlaskForm):
     full_name = StringField('ФИО', validators=[DataRequired()])
@@ -28,3 +21,11 @@ class CarForm(FlaskForm):
             logging.debug(f"Form validation failed: {self.errors}")
             return False
         return True
+
+class SelectServicesForm(FlaskForm):
+    services = SelectMultipleField('Выберите услуги', choices=[])
+    submit = SubmitField('Далее')
+
+    def __init__(self, *args, **kwargs):
+        super(SelectServicesForm, self).__init__(*args, **kwargs)
+        self.services.choices = [(service.id, service.service_name, service.price) for service in Service.query.all()]
