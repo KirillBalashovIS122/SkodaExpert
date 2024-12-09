@@ -162,25 +162,40 @@ def appointments():
                 phone = request.form.get('phone')
                 appointment_date = request.form.get('appointment_date')
                 appointment_time = request.form.get('appointment_time')
-                
+
+                # Добавляем отладочную информацию
+                logging.debug(f"Form data: {request.form}")
+
                 if not full_name or not phone or not appointment_date or not appointment_time:
                     flash("Заполните все обязательные поля", "error")
                     return redirect(url_for('main.appointments'))
-                
+
+                # Преобразуем строку даты и времени в объект datetime
+                appointment_datetime = datetime.strptime(appointment_date, '%Y-%m-%d %H:%M')
+
+                # Добавляем отладочную информацию
+                logging.debug(f"Parsed appointment_datetime: {appointment_datetime}")
+
                 new_order = Order(
                     client_id=session['user_id'],
-                    appointment_date=datetime.strptime(appointment_date, '%Y-%m-%d').date(),
-                    appointment_time=appointment_time
+                    appointment_date=appointment_datetime.date(),
+                    appointment_time=appointment_datetime.time()
                 )
                 db.session.add(new_order)
                 db.session.commit()
-                
+
+                # Добавляем отладочную информацию
+                logging.debug(f"New order created: {new_order}")
+
                 for service_id in selected_services:
                     service = Service.query.get(service_id)
                     if service:
                         new_order.services.append(service)
                 db.session.commit()
-                
+
+                # Добавляем отладочную информацию
+                logging.debug(f"Services added to order: {new_order.services}")
+
                 new_car = Car(
                     client_id=session['user_id'],
                     model=car_form.model.data,
@@ -190,13 +205,22 @@ def appointments():
                 )
                 db.session.add(new_car)
                 db.session.commit()
-                
+
+                # Добавляем отладочную информацию
+                logging.debug(f"New car created: {new_car}")
+
                 new_order.car_id = new_car.id
                 db.session.commit()
-                
-                logging.debug(f"Order created: {new_order}")
-                
+
+                # Добавляем отладочную информацию
+                logging.debug(f"Order updated with car_id: {new_order}")
+
                 return redirect(url_for('main.appointment_success', order_id=new_order.id))
+
+            else:
+                # Добавляем отладочную информацию
+                logging.debug(f"Form errors: {car_form.errors}")
+                flash("Ошибка валидации формы", "error")
 
         today = datetime.now().date()
         available_slots = get_available_slots_for_date(today, selected_services)
@@ -250,54 +274,20 @@ def get_available_slots_for_date(date, selected_services):
     
     return available_slots
 
-def create_car(client_id, model, vin, license_plate, car_year):
-    logging.debug(f"Creating car: client_id={client_id}, model={model}, vin={vin}, license_plate={license_plate}, car_year={car_year}")
-    client = Client.query.get(client_id)
-    if not client:
-        raise ValueError(f"Client with id {client_id} does not exist")
-
-    if not model or not vin or not license_plate or not car_year:
-        raise ValueError("All fields are required")
-
-    new_car = Car(
-        client_id=client_id,
-        model=model,
-        vin=vin,
-        license_plate=license_plate,
-        car_year=car_year
-    )
-    db.session.add(new_car)
+def create_appointment_slots(date):
+    start_time = datetime.strptime('09:00', '%H:%M').time()
+    end_time = datetime.strptime('17:00', '%H:%M').time()
+    current_time = start_time
+    while current_time < end_time:
+        slot = AppointmentSlot(
+            appointment_date=date,
+            start_time=datetime.combine(date, current_time),
+            end_time=datetime.combine(date, (datetime.combine(datetime.today(), current_time) + timedelta(minutes=30)).time()),
+            is_available=True
+        )
+        db.session.add(slot)
+        current_time = (datetime.combine(datetime.today(), current_time) + timedelta(minutes=30)).time()
     db.session.commit()
-    logging.debug(f"Car created: {new_car}")
-    return new_car
-
-def create_order(client_id, car_id, appointment_date, appointment_time):
-    logging.debug(f"Creating order: client_id={client_id}, car_id={car_id}")
-    new_order = Order(
-        client_id=client_id,
-        car_id=car_id,
-        appointment_date=appointment_date,
-        appointment_time=appointment_time
-    )
-    db.session.add(new_order)
-    db.session.commit()
-
-    selected_services = session.get('selected_services', [])
-    for service_id in selected_services:
-        service = Service.query.get(service_id)
-        if service:
-            new_order.services.append(service)
-
-    db.session.commit()
-    logging.debug(f"Order created: {new_order}")
-    return new_order
-
-def save_order_history(order_id, client_id, car_id):
-    logging.debug(f"Saving order history: order_id={order_id}, client_id={client_id}, car_id={car_id}")
-    new_order_history = OrderHistory(order_id=order_id, client_id=client_id, car_id=car_id)
-    db.session.add(new_order_history)
-    db.session.commit()
-    logging.debug(f"Order history saved: {new_order_history}")
 
 @main.route('/view_orders')
 def view_orders():

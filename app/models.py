@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime, Float, Boolean, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Float, Boolean, Text, ForeignKey, Date, Time
 from sqlalchemy.orm import relationship
 from . import db
 
@@ -46,8 +46,8 @@ class Order(db.Model):
     client_id = db.Column(Integer, ForeignKey('clients.id'), nullable=False)
     car_id = db.Column(Integer, ForeignKey('cars.id'), nullable=False)
     created_at = db.Column(DateTime, default=datetime.utcnow)
-    appointment_date = db.Column(DateTime, nullable=False)
-    appointment_time = db.Column(String(10), nullable=False)
+    appointment_date = db.Column(Date, nullable=False)
+    appointment_time = db.Column(Time, nullable=False)
     car = db.relationship('Car', backref='orders')
     client = db.relationship('Client', backref='orders')
     services = db.relationship('Service', secondary='order_services', backref='orders')

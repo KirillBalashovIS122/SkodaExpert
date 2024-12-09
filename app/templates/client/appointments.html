@@ -9,34 +9,53 @@
         {{ car_form.hidden_tag() }}
         
         <!-- ФИО -->
-        <label for="full_name">ФИО:</label>
-        <input type="text" id="full_name" name="full_name" required>
+        {{ car_form.full_name.label }} {{ car_form.full_name() }}
+        {% for error in car_form.full_name.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
         <br>
         
         <!-- Телефон -->
-        <label for="phone">Телефон:</label>
-        <input type="text" id="phone" name="phone" required>
+        {{ car_form.phone.label }} {{ car_form.phone() }}
+        {% for error in car_form.phone.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
         <br>
         
         <!-- Модель машины -->
         {{ car_form.model.label }} {{ car_form.model() }}
+        {% for error in car_form.model.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
         <br>
         
         <!-- VIN номер -->
         {{ car_form.vin.label }} {{ car_form.vin() }}
+        {% for error in car_form.vin.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
         <br>
         
         <!-- Гос номер -->
         {{ car_form.license_plate.label }} {{ car_form.license_plate() }}
+        {% for error in car_form.license_plate.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
         <br>
         
         <!-- Год выпуска -->
         {{ car_form.car_year.label }} {{ car_form.car_year() }}
+        {% for error in car_form.car_year.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
         <br>
         
         <!-- Дата и время -->
         <label for="appointment_date">Дата и время:</label>
         <input type="text" id="appointment_date" name="appointment_date" required>
+        {% for error in car_form.appointment_date.errors %}
+            <span style="color: red;">{{ error }}</span>
+        {% endfor %}
         <br>
         
         <!-- Сообщение об ошибке -->
