@@ -171,7 +171,12 @@ def appointments():
                     return redirect(url_for('main.appointments'))
 
                 # Преобразуем строку даты и времени в объект datetime
-                appointment_datetime = datetime.strptime(appointment_date, '%Y-%m-%d %H:%M')
+                try:
+                    appointment_datetime = datetime.strptime(appointment_date, '%Y-%m-%d %H:%M')
+                except ValueError as e:
+                    logging.error(f"Error parsing datetime: {e}")
+                    flash("Неверный формат даты и времени", "error")
+                    return redirect(url_for('main.appointments'))
 
                 # Добавляем отладочную информацию
                 logging.debug(f"Parsed appointment_datetime: {appointment_datetime}")
@@ -547,6 +552,7 @@ def select_services():
                 flash("Выберите хотя бы одну услугу", "error")
                 return redirect(url_for('main.select_services'))
             session['selected_services'] = selected_services
+            logging.debug(f"Selected services: {selected_services}")
             return redirect(url_for('main.appointments'))
         return render_template('client/select_services.html', form=form)
     return redirect(url_for('main.index'))

@@ -22,3 +22,9 @@ class CarForm(FlaskForm):
     license_plate = StringField('Гос номер', validators=[DataRequired()])
     appointment_date = DateTimeField('Дата записи', format='%Y-%m-%d %H:%M', validators=[DataRequired()])
     submit = SubmitField('Записаться')
+
+    def validate(self):
+        if not super(CarForm, self).validate():
+            logging.debug(f"Form validation failed: {self.errors}")
+            return False
+        return True
