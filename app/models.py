@@ -47,7 +47,7 @@ class Order(db.Model):
     car_id = db.Column(Integer, ForeignKey('cars.id'), nullable=False)
     created_at = db.Column(DateTime, default=datetime.utcnow)
     appointment_date = db.Column(Date, nullable=False)
-    appointment_time = db.Column(Time, nullable=False)
+    appointment_time = db.Column(String(5), nullable=False)  # Изменение типа на String
     car = db.relationship('Car', backref='orders')
     client = db.relationship('Client', backref='orders')
     services = db.relationship('Service', secondary='order_services', backref='orders')

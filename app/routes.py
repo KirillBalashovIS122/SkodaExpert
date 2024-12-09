@@ -172,7 +172,7 @@ def appointments():
 
                 # Преобразуем строку даты и времени в объект datetime
                 try:
-                    appointment_datetime = datetime.strptime(appointment_date, '%Y-%m-%d %H:%M')
+                    appointment_datetime = datetime.strptime(f"{appointment_date} {appointment_time}", '%Y-%m-%d %H:%M')
                 except ValueError as e:
                     logging.error(f"Error parsing datetime: {e}")
                     flash("Неверный формат даты и времени", "error")
@@ -185,7 +185,7 @@ def appointments():
                     new_order = Order(
                         client_id=session['user_id'],
                         appointment_date=appointment_datetime.date(),
-                        appointment_time=appointment_datetime.time()
+                        appointment_time=appointment_time  # Сохраняем время как строку
                     )
                     db.session.add(new_order)
                     db.session.commit()

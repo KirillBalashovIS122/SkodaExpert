@@ -13,7 +13,8 @@ class CarForm(FlaskForm):
     car_year = IntegerField('Год выпуска', validators=[DataRequired()])
     vin = StringField('VIN номер', validators=[DataRequired()])
     license_plate = StringField('Гос номер', validators=[DataRequired()])
-    appointment_date = DateTimeField('Дата записи', format='%Y-%m-%d %H:%M', validators=[DataRequired()])
+    appointment_date = DateField('Дата записи', format='%Y-%m-%d', validators=[DataRequired()])
+    appointment_time = StringField('Время записи', validators=[DataRequired()])  # Изменение типа на String
     submit = SubmitField('Записаться')
 
     def validate(self):
