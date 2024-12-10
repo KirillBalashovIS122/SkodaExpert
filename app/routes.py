@@ -142,118 +142,79 @@ def appointment_success(order_id):
 def appointments():
     if 'role' in session and session['role'] == 'client':
         car_form = CarForm()
-        selected_services = session.get('selected_services', [])
+        selected_service_ids = session.get('selected_services', [])  # Используем идентификаторы услуг
 
-        if not selected_services:
+        if not selected_service_ids:
             flash("Выберите услуги на странице выбора услуг", "error")
             return redirect(url_for('main.select_services'))
 
-        if request.method == 'POST':
-            if car_form.validate_on_submit():
-                full_name = request.form.get('full_name')
-                phone = request.form.get('phone')
-                appointment_date = request.form.get('appointment_date')
-                appointment_time = request.form.get('appointment_time')
+        if request.method == 'POST' and car_form.validate_on_submit():
+            appointment_date = request.form.get('appointment_date')
+            appointment_time = request.form.get('appointment_time')
 
-                # Добавляем отладочную информацию
-                logging.debug(f"Form data: {request.form}")
+            # Преобразуем строку даты и времени в объект datetime
+            try:
+                appointment_datetime = datetime.strptime(f"{appointment_date} {appointment_time}", '%Y-%m-%d %H:%M')
+            except ValueError as e:
+                logging.error(f"Error parsing datetime: {e}")
+                flash("Неверный формат даты и времени", "error")
+                return redirect(url_for('main.appointments'))
 
-                if not full_name or not phone or not appointment_date or not appointment_time:
-                    flash("Заполните все обязательные поля", "error")
-                    return redirect(url_for('main.appointments'))
+            # Проверяем доступность времени
+            available_slots = get_available_slots_for_date(appointment_datetime.date(), selected_service_ids)
+            if not any(slot == appointment_time and is_available for slot, is_available in available_slots):
+                flash("Выбранное время уже занято. Пожалуйста, выберите другое время.", "error")
+                return redirect(url_for('main.appointments'))
 
-                # Преобразуем строку даты и времени в объект datetime
-                try:
-                    appointment_datetime = datetime.strptime(f"{appointment_date} {appointment_time}", '%Y-%m-%d %H:%M')
-                except ValueError as e:
-                    logging.error(f"Error parsing datetime: {e}")
-                    flash("Неверный формат даты и времени", "error")
-                    return redirect(url_for('main.appointments'))
+            # Проверка на валидность даты и времени
+            if not is_valid_appointment_date(appointment_datetime.date(), appointment_time):
+                flash("Нельзя записаться на прошедшее время или после 17:00.", "error")
+                return redirect(url_for('main.appointments'))
 
-                # Добавляем отладочную информацию
-                logging.debug(f"Parsed appointment_datetime: {appointment_datetime}")
+            try:
+                new_order = Order(
+                    client_id=session['user_id'],
+                    appointment_date=appointment_datetime.date(),
+                    appointment_time=appointment_time  # Сохраняем время как строку
+                )
+                db.session.add(new_order)
+                db.session.commit()
 
-                # Проверяем доступность времени
-                available_slots = get_available_slots_for_date(appointment_datetime.date(), selected_services)
-                if not any(slot[0] == appointment_time and slot[1] for slot in available_slots):
-                    flash("Выбранное время уже занято. Пожалуйста, выберите другое время.", "error")
-                    return redirect(url_for('main.appointments'))
+                for service_id in selected_service_ids:
+                    service = Service.query.get(service_id)
+                    if service:
+                        new_order.services.append(service)
+                db.session.commit()
 
-                # Проверка на валидность даты и времени
-                if not is_valid_appointment_date(appointment_datetime.date(), appointment_time):
-                    flash("Нельзя записаться на прошедшее время или после 17:00.", "error")
-                    return redirect(url_for('main.appointments'))
+                new_car = Car(
+                    client_id=session['user_id'],
+                    model=car_form.model.data,
+                    car_year=car_form.car_year.data,
+                    vin=car_form.vin.data,
+                    license_plate=car_form.license_plate.data
+                )
+                db.session.add(new_car)
+                db.session.commit()
 
-                try:
-                    new_order = Order(
-                        client_id=session['user_id'],
-                        appointment_date=appointment_datetime.date(),
-                        appointment_time=appointment_time  # Сохраняем время как строку
-                    )
-                    db.session.add(new_order)
-                    db.session.commit()
+                new_order.car_id = new_car.id
+                db.session.commit()
 
-                    # Добавляем отладочную информацию
-                    logging.debug(f"New order created: {new_order}")
+                flash("Запись успешно создана!", "success")
+                return redirect(url_for('main.appointment_success', order_id=new_order.id))
 
-                    for service_id in selected_services:
-                        service = Service.query.get(service_id)
-                        if service:
-                            new_order.services.append(service)
-                    db.session.commit()
-
-                    # Добавляем отладочную информацию
-                    logging.debug(f"Services added to order: {new_order.services}")
-
-                    new_car = Car(
-                        client_id=session['user_id'],
-                        model=car_form.model.data,
-                        car_year=car_form.car_year.data,
-                        vin=car_form.vin.data,
-                        license_plate=car_form.license_plate.data
-                    )
-                    db.session.add(new_car)
-                    db.session.commit()
-
-                    # Добавляем отладочную информацию
-                    logging.debug(f"New car created: {new_car}")
-
-                    new_order.car_id = new_car.id
-                    db.session.commit()
-
-                    # Добавляем отладочную информацию
-                    logging.debug(f"Order updated with car_id: {new_order}")
-
-                    flash("Запись успешно создана!", "success")
-                    return redirect(url_for('main.appointment_success', order_id=new_order.id))
-
-                except Exception as e:
-                    db.session.rollback()
-                    logging.error(f"Database error: {e}")
-                    flash("Ошибка при сохранении данных", "error")
-
-            else:
-                # Добавляем отладочную информацию
-                logging.debug(f"Form errors: {car_form.errors}")
-                flash("Ошибка валидации формы", "error")
+            except Exception as e:
+                db.session.rollback()
+                logging.error(f"Database error: {e}")
+                flash("Ошибка при сохранении данных", "error")
 
         today = datetime.now().date()
-        available_slots = get_available_slots_for_date(today, selected_services)
-        services = Service.query.all()
-        return render_template('client/appointments.html', available_slots=available_slots, services=services, selected_services=selected_services, car_form=car_form)
+        available_slots = get_available_slots_for_date(today, selected_service_ids)
+        return render_template(
+            'client/appointments.html', 
+            available_slots=available_slots, 
+            car_form=car_form
+        )
     return redirect(url_for('main.index'))
-
-def is_slot_available(slot, service_duration, booked_slots):
-    slot_start_time = datetime.strptime(slot, '%H:%M').time()
-    slot_end_time = (datetime.combine(datetime.today(), slot_start_time) + timedelta(minutes=service_duration)).time()
-
-    # Проверка пересечения со всеми занятыми слотами
-    for booked_start, booked_end in booked_slots.values():
-        if (slot_start_time < booked_end and slot_end_time > booked_start):
-            return False
-    return True
-
-from datetime import datetime, time
 
 def is_valid_appointment_date(date, appointment_time):
     current_time = datetime.now()
@@ -275,36 +236,48 @@ def is_valid_appointment_date(date, appointment_time):
     return True
 
 def get_available_slots_for_date(date, selected_services):
-    # Определяем рабочие часы
-    work_start = time(9, 0)
-    work_end = time(17, 0)
-    slot_duration = timedelta(minutes=30)
-
-    # Создаем все возможные временные слоты
-    current_time = datetime.combine(date, work_start)
-    available_slots = []
-
     # Получаем заказы на выбранную дату
     existing_orders = Order.query.filter_by(appointment_date=date).all()
 
     # Создаем словарь занятых слотов
     booked_slots = {}
     for order in existing_orders:
-        start_time = datetime.strptime(order.appointment_time, '%H:%M').time()
+        start_time = order.appointment_time  # Уже datetime.time
         duration = sum(service.duration for service in order.services)
         end_time = (datetime.combine(date, start_time) + timedelta(minutes=duration)).time()
         booked_slots[order.appointment_time] = (start_time, end_time)
 
-    # Проверяем, какие слоты доступны
+    # Формирование доступных слотов
+    work_start = time(9, 0)
+    work_end = time(17, 0)
+    slot_duration = timedelta(minutes=30)
+
+    available_slots = []
+    current_time = datetime.combine(date, work_start)
+
+    # Преобразуем выбранные услуги
+    selected_services_objects = Service.query.filter(Service.id.in_(selected_services)).all()
+    total_service_duration = sum(service.duration for service in selected_services_objects)
+
     while current_time.time() < work_end:
         slot_start_str = current_time.strftime('%H:%M')
-
-        # Проверяем, занят ли слот
-        is_available = is_slot_available(slot_start_str, 30, booked_slots)
+        is_available = is_slot_available(current_time.time(), total_service_duration, booked_slots)
         available_slots.append((slot_start_str, is_available))
         current_time += slot_duration
 
     return available_slots
+
+def is_slot_available(slot_start_time, service_duration, booked_slots):
+    """
+    Проверяет, доступен ли слот
+    """
+    slot_end_time = (datetime.combine(datetime.today(), slot_start_time) + timedelta(minutes=service_duration)).time()
+
+    # Проверяем пересечение со всеми занятыми слотами
+    for booked_start, booked_end in booked_slots.values():
+        if slot_start_time < booked_end and slot_end_time > booked_start:
+            return False
+    return True
 
 def create_appointment_slots(date):
     start_time = datetime.strptime('09:00', '%H:%M').time()
