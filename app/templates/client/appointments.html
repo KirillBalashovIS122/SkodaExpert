@@ -66,7 +66,13 @@
         
         <!-- Время -->
         <label for="appointment_time">Время:</label>
-        <input type="text" id="appointment_time" name="appointment_time" required>
+        <select id="appointment_time" name="appointment_time" required>
+            {% for slot, is_available in available_slots %}
+                <option value="{{ slot }}" {% if not is_available %}disabled style="color: gray;"{% endif %}>
+                    {{ slot }} {% if not is_available %}(занято){% endif %}
+                </option>
+            {% endfor %}
+        </select>
         {% for error in car_form.appointment_time.errors %}
             <span style="color: red;">{{ error }}</span>
         {% endfor %}
@@ -82,12 +88,26 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        const currentDateTime = new Date();
+        const today = new Date(currentDateTime.toDateString());
+        const closingTime = new Date(today.setHours(17, 0, 0, 0));
+        const openingTime = new Date(today.setHours(9, 0, 0, 0));
+
         flatpickr("#appointment_date", {
             locale: "ru",
-            dateFormat: "Y-m-d", // Совпадает с форматом формы
+            dateFormat: "Y-m-d",
+            minDate: currentDateTime,  // Отключаем прошедшие даты
             disable: [
                 function(date) {
-                    return date.getDay() === 0 || date.getDay() === 1;
+                    // Отключаем дни в прошлом
+                    if (date < today) {
+                        return true;
+                    }
+                    // Отключаем сегодняшнее число после 17:00
+                    if (date.toDateString() === today.toDateString() && currentDateTime >= closingTime) {
+                        return true;
+                    }
+                    return false;
                 }
             ]
         });
@@ -95,9 +115,11 @@
         flatpickr("#appointment_time", {
             enableTime: true,
             noCalendar: true,
-            dateFormat: "H:i", // Совпадает с формой
+            dateFormat: "H:i",
             time_24hr: true,
-            minTime: "09:00",
+            minTime: currentDateTime.toDateString() === today.toDateString() && currentDateTime < closingTime
+                ? (currentDateTime > openingTime ? currentDateTime.toTimeString().slice(0, 5) : "09:00")
+                : "09:00",
             maxTime: "17:00",
             minuteIncrement: 30
         });

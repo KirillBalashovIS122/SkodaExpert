@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, make_response, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime, timedelta
-from .models import Employee, Client, Car, Service, Order, Task, Report, AppointmentSlot, OrderHistory
+from datetime import datetime, timedelta, time
+from .models import *
 from . import db, csrf
 from .utils import get_current_user, generate_pdf, calculate_statistics
 from .forms import SelectServicesForm, CarForm
@@ -68,20 +68,12 @@ def client_dashboard():
         return render_template('client/client_dashboard.html', user=user, orders=user_orders, services=services)
     return redirect(url_for('main.index'))
 
-@main.route('/mechanic_dashboard')
+@main.route('/mechanic_dashboard', methods=['GET'])
 def mechanic_dashboard():
     if 'role' in session and session['role'] == 'mechanic':
-        user = Employee.query.get(session['user_id'])
-        today = datetime.now().date()
-        next_week = today + timedelta(days=7)
-        
-        tasks = Task.query.filter(
-            Task.employee_id == session['user_id'],
-            Task.created_at >= today,
-            Task.created_at < next_week
-        ).all()
-        
-        return render_template('employee/mechanic/mechanic_dashboard.html', user=user, tasks=tasks)
+        mechanic_id = session['user_id']
+        tasks = get_mechanic_tasks(mechanic_id)
+        return render_template('mechanic/dashboard.html', tasks=tasks)
     return redirect(url_for('main.index'))
 
 @main.route('/mechanic_all_orders')
@@ -181,6 +173,17 @@ def appointments():
                 # Добавляем отладочную информацию
                 logging.debug(f"Parsed appointment_datetime: {appointment_datetime}")
 
+                # Проверяем доступность времени
+                available_slots = get_available_slots_for_date(appointment_datetime.date(), selected_services)
+                if not any(slot[0] == appointment_time and slot[1] for slot in available_slots):
+                    flash("Выбранное время уже занято. Пожалуйста, выберите другое время.", "error")
+                    return redirect(url_for('main.appointments'))
+
+                # Проверка на валидность даты и времени
+                if not is_valid_appointment_date(appointment_datetime.date(), appointment_time):
+                    flash("Нельзя записаться на прошедшее время или после 17:00.", "error")
+                    return redirect(url_for('main.appointments'))
+
                 try:
                     new_order = Order(
                         client_id=session['user_id'],
@@ -243,47 +246,64 @@ def appointments():
 def is_slot_available(slot, service_duration, booked_slots):
     slot_start_time = datetime.strptime(slot, '%H:%M').time()
     slot_end_time = (datetime.combine(datetime.today(), slot_start_time) + timedelta(minutes=service_duration)).time()
-    
+
+    # Проверка пересечения со всеми занятыми слотами
     for booked_start, booked_end in booked_slots.values():
         if (slot_start_time < booked_end and slot_end_time > booked_start):
             return False
     return True
 
+from datetime import datetime, time
+
+def is_valid_appointment_date(date, appointment_time):
+    current_time = datetime.now()
+    opening_time = time(9, 0)
+    closing_time = time(17, 0)
+
+    # Проверка на прошедшую дату
+    if date < current_time.date():
+        return False
+    
+    # Проверка на текущее число после закрытия
+    if date == current_time.date() and datetime.strptime(appointment_time, '%H:%M').time() >= closing_time:
+        return False
+
+    # Проверка, что время находится в пределах рабочего времени
+    if datetime.strptime(appointment_time, '%H:%M').time() < opening_time:
+        return False
+    
+    return True
+
 def get_available_slots_for_date(date, selected_services):
-    existing_slots = AppointmentSlot.query.filter_by(appointment_date=date).all()
-    if not existing_slots:
-        create_appointment_slots(date)
-    
+    # Определяем рабочие часы
+    work_start = time(9, 0)
+    work_end = time(17, 0)
+    slot_duration = timedelta(minutes=30)
+
+    # Создаем все возможные временные слоты
+    current_time = datetime.combine(date, work_start)
+    available_slots = []
+
+    # Получаем заказы на выбранную дату
     existing_orders = Order.query.filter_by(appointment_date=date).all()
-    
-    appointment_slots = AppointmentSlot.query.filter_by(appointment_date=date, is_available=True).all()
-    
+
+    # Создаем словарь занятых слотов
     booked_slots = {}
     for order in existing_orders:
         start_time = datetime.strptime(order.appointment_time, '%H:%M').time()
         duration = sum(service.duration for service in order.services)
         end_time = (datetime.combine(date, start_time) + timedelta(minutes=duration)).time()
         booked_slots[order.appointment_time] = (start_time, end_time)
-    
-    available_slots = []
-    for slot in appointment_slots:
-        slot_start_time = slot.start_time
-        slot_end_time = slot.end_time
-        is_available = True
-        for booked_start, booked_end in booked_slots.values():
-            if (slot_start_time < booked_end and slot_end_time > booked_start):
-                is_available = False
-                break
-        if is_available:
-            available_slots.append(slot_start_time.strftime('%H:%M'))
-    
-    # Преобразуем строки в объекты Service
-    selected_services = [Service.query.get(service_id) for service_id in selected_services]
-    
-    # Проверка доступности времени с учетом выбранных услуг
-    total_service_duration = sum(service.duration for service in selected_services)
-    available_slots = [slot for slot in available_slots if is_slot_available(slot, total_service_duration, booked_slots)]
-    
+
+    # Проверяем, какие слоты доступны
+    while current_time.time() < work_end:
+        slot_start_str = current_time.strftime('%H:%M')
+
+        # Проверяем, занят ли слот
+        is_available = is_slot_available(slot_start_str, 30, booked_slots)
+        available_slots.append((slot_start_str, is_available))
+        current_time += slot_duration
+
     return available_slots
 
 def create_appointment_slots(date):
@@ -295,7 +315,7 @@ def create_appointment_slots(date):
             appointment_date=date,
             start_time=datetime.combine(date, current_time),
             end_time=datetime.combine(date, (datetime.combine(datetime.today(), current_time) + timedelta(minutes=30)).time()),
-            is_available=True
+            is_available=True  # Устанавливаем is_available в True
         )
         db.session.add(slot)
         current_time = (datetime.combine(datetime.today(), current_time) + timedelta(minutes=30)).time()
@@ -324,6 +344,19 @@ def generate_order_pdf(order_id):
     response.headers["Content-Disposition"] = f"attachment; filename=order_{order_id}.pdf"
 
     return response
+
+def get_mechanic_tasks(employee_id):
+    tasks = (
+        Task.query
+        .join(Order, Task.order_id == Order.id)
+        .join(Car, Order.car_id == Car.id)
+        .join(Client, Order.client_id == Client.id)
+        .join(Service, Order.services)
+        .filter(Task.employee_id == employee_id)
+        .order_by(Order.appointment_date, Order.appointment_time)
+        .all()
+    )
+    return tasks
 
 @main.route('/logout')
 def logout():

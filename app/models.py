@@ -75,14 +75,6 @@ class Report(db.Model):
     description = db.Column(Text, nullable=False)
     created_at = db.Column(DateTime, default=datetime.utcnow)
 
-class AppointmentSlot(db.Model):
-    __tablename__ = 'appointment_slots'
-    id = db.Column(Integer, primary_key=True)
-    appointment_date = db.Column(DateTime, nullable=False)
-    start_time = db.Column(DateTime, nullable=False)
-    end_time = db.Column(DateTime, nullable=False)
-    is_available = db.Column(Boolean, default=True)
-
 class OrderHistory(db.Model):
     __tablename__ = 'order_history'
     id = db.Column(Integer, primary_key=True)
