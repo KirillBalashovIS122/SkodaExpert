@@ -5,7 +5,7 @@
 {% block content %}
 <div class="form-container">
     <h1>Запись на ремонт</h1>
-    <form method="POST" action="{{ url_for('main.appointments') }}">
+    <form method="POST" action="{{ url_for('main.appointments') }}" id="appointmentForm">
         {{ car_form.hidden_tag() }}
         
         <!-- ФИО -->
@@ -58,7 +58,7 @@
         
         <!-- Дата -->
         <label for="appointment_date">Дата:</label>
-        <input type="text" id="appointment_date" name="appointment_date" required>
+        <input type="text" id="appointment_date" name="appointment_date" value="{{ selected_date }}" required>
         {% for error in car_form.appointment_date.errors %}
             <span style="color: red;">{{ error }}</span>
         {% endfor %}
@@ -86,42 +86,69 @@
     </form>
 </div>
 
+<!-- Добавляем логирование для отладки -->
+<div style="margin-top: 20px;">
+    <h3>Отладочная информация:</h3>
+    <pre>Сегодняшняя дата: {{ today }}</pre>
+    <pre>Выбранная дата: <span id="selectedDate">{{ selected_date }}</span></pre>
+    <pre>Доступные слоты для выбранной даты: <span id="availableSlots">{{ available_slots }}</span></pre>
+    <pre>Выбранные услуги: {{ selected_service_ids }}</pre>
+</div>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const currentDateTime = new Date();
-        const today = new Date(currentDateTime.toDateString());
-        const closingTime = new Date(today.setHours(17, 0, 0, 0));
-        const openingTime = new Date(today.setHours(9, 0, 0, 0));
-
         flatpickr("#appointment_date", {
             locale: "ru",
             dateFormat: "Y-m-d",
-            minDate: currentDateTime,  // Отключаем прошедшие даты
+            minDate: "today",  // Отключаем прошедшие даты
             disable: [
                 function(date) {
-                    // Отключаем дни в прошлом
-                    if (date < today) {
-                        return true;
-                    }
-                    // Отключаем сегодняшнее число после 17:00
-                    if (date.toDateString() === today.toDateString() && currentDateTime >= closingTime) {
-                        return true;
+                    const today = new Date();
+                    const closingTime = new Date(today.setHours(17, 0, 0, 0));
+                    if (date.toDateString() === today.toDateString() && new Date() >= closingTime) {
+                        return true; // Отключаем сегодняшнюю дату после 17:00
                     }
                     return false;
                 }
-            ]
-        });
+            ],
+            onChange: function(selectedDates, dateStr, instance) {
+                // При изменении даты отправляем AJAX-запрос
+                const selectedDate = dateStr;
+                const selectedServiceIds = {{ selected_service_ids | tojson }};
 
-        flatpickr("#appointment_time", {
-            enableTime: true,
-            noCalendar: true,
-            dateFormat: "H:i",
-            time_24hr: true,
-            minTime: currentDateTime.toDateString() === today.toDateString() && currentDateTime < closingTime
-                ? (currentDateTime > openingTime ? currentDateTime.toTimeString().slice(0, 5) : "09:00")
-                : "09:00",
-            maxTime: "17:00",
-            minuteIncrement: 30
+                fetch('/get_available_slots', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        date: selectedDate,
+                        services: selectedServiceIds
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Обновляем список слотов
+                    const appointmentTimeSelect = document.getElementById('appointment_time');
+                    appointmentTimeSelect.innerHTML = '';
+
+                    data.forEach(slot => {
+                        const option = document.createElement('option');
+                        option.value = slot[0];
+                        option.text = slot[0] + (slot[1] ? '' : ' (занято)');
+                        if (!slot[1]) {
+                            option.disabled = true;
+                            option.style.color = 'gray';
+                        }
+                        appointmentTimeSelect.appendChild(option);
+                    });
+
+                    // Обновляем отладочную информацию
+                    document.getElementById('selectedDate').textContent = selectedDate;
+                    document.getElementById('availableSlots').textContent = JSON.stringify(data);
+                });
+            }
         });
     });
 </script>
