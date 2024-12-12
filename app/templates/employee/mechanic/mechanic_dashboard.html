@@ -4,26 +4,31 @@
 
 {% block content %}
 <div class="container">
-    <h1>Панель механика</h1>
-    <h2>Задачи:</h2>
-    <ul>
+    <h1 class="text-center mb-4">Панель механика</h1>
+
+    <!-- Кнопки для действий -->
+    <div class="d-flex justify-content-between mb-4">
+        <a href="{{ url_for('main.mechanic_orders_current_month') }}" class="btn btn-secondary">Заказы за текущий месяц</a>
+        <a href="{{ url_for('main.generate_report') }}" class="btn btn-primary">Сгенерировать отчет</a>
+    </div>
+
+    <h2 class="mb-3">Задачи:</h2>
+    <div class="row">
         {% for task in tasks %}
-            <li>
-                Заказ №{{ task.order_id }} - {{ task.order.appointment_date }} {{ task.order.appointment_time }}
-                <ul>
-                    <li>Клиент: {{ task.order.client.name }}</li>
-                    <li>Машина: {{ task.order.car.model }} ({{ task.order.car.license_plate }})</li>
-                    <li>Услуги:
-                        <ul>
-                            {% for service in task.order.services %}
-                                <li>{{ service.service_name }} - {{ service.duration }} мин</li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    <li>Статус: {{ task.status }}</li>
-                </ul>
-            </li>
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <a href="{{ url_for('main.task_details', task_id=task.id) }}" class="text-decoration-none">Заказ №{{ task.order.id }}</a>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <p class="text-center">Нет доступных задач.</p>
+            </div>
         {% endfor %}
-    </ul>
+    </div>
 </div>
 {% endblock %}

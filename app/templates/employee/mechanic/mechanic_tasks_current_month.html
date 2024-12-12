@@ -1,28 +1,46 @@
 {% extends "base.html" %}
 
-{% block title %}Задачи на текущий месяц{% endblock %}
+{% block title %}Заказы за текущий месяц{% endblock %}
 
 {% block content %}
 <div class="container">
-    <h1>Задачи на текущий месяц</h1>
-    <p>Добро пожаловать, {{ user.name }}!</p>
-    <h2>Задачи:</h2>
-    <ul>
-        {% for task in tasks %}
-            <li>
-                Задача №{{ task.id }} - {{ task.status }}
-                <form method="post" action="{{ url_for('main.update_task_status', task_id=task.id) }}" style="display: inline;">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <select name="status">
-                        <option value="pending" {% if task.status == 'pending' %}selected{% endif %}>В ожидании</option>
-                        <option value="in_progress" {% if task.status == 'in_progress' %}selected{% endif %}>В процессе</option>
-                        <option value="completed" {% if task.status == 'completed' %}selected{% endif %}>Завершено</option>
-                    </select>
-                    <button type="submit" class="button">Обновить статус</button>
-                </form>
-            </li>
+    <h1 class="text-center mb-4">Заказы за текущий месяц</h1>
+    <div class="row">
+        {% for order in orders %}
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title">Заказ №{{ order.id }}</h5>
+                        <p class="card-text">
+                            <strong>Дата и время:</strong> {{ order.appointment_date }} {{ order.appointment_time }}
+                        </p>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">
+                            <strong>Клиент:</strong> {{ order.client.name }}
+                        </p>
+                        <p class="card-text">
+                            <strong>Машина:</strong> {{ order.car.model }} ({{ order.car.license_plate }})
+                        </p>
+                        <p class="card-text">
+                            <strong>Услуги:</strong>
+                            <ul>
+                                {% for service in order.services %}
+                                    <li>{{ service.service_name }} - {{ service.price }} руб.</li>
+                                {% endfor %}
+                            </ul>
+                        </p>
+                        <p class="card-text">
+                            <strong>Итого:</strong> {{ order.services | sum(attribute='price') }} руб.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <p class="text-center">Нет заказов за текущий месяц.</p>
+            </div>
         {% endfor %}
-    </ul>
-    <a href="{{ url_for('main.mechanic_dashboard') }}" class="button">Вернуться на панель механика</a>
+    </div>
 </div>
 {% endblock %}

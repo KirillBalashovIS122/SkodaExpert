@@ -16,6 +16,15 @@ import os
 
 pdfmetrics.registerFont(TTFont('Times-Roman', 'times.ttf'))
 
+STATUS_TRANSLATIONS = {
+    'pending': 'В ожидании',
+    'in_progress': 'В процессе',
+    'completed': 'Завершено'
+}
+
+def translate_status(status):
+    return STATUS_TRANSLATIONS.get(status, status)
+
 def get_current_user():
     user_id = session.get('user_id')
     role = session.get('role')

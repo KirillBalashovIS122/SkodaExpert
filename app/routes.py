@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta, time, date
 from .models import *
 from . import db, csrf
-from .utils import get_current_user, generate_pdf, calculate_statistics
+from .utils import *
 from .forms import SelectServicesForm, CarForm
 from sqlalchemy import text
 import logging
@@ -72,8 +72,108 @@ def client_dashboard():
 def mechanic_dashboard():
     if 'role' in session and session['role'] == 'mechanic':
         mechanic_id = session['user_id']
+        logging.debug(f"Mechanic dashboard accessed by user ID: {mechanic_id}")
         tasks = get_mechanic_tasks(mechanic_id)
-        return render_template('mechanic/dashboard.html', tasks=tasks)
+        logging.debug(f"Fetched tasks: {tasks}")  # Логируем задачи
+        return render_template('employee/mechanic/mechanic_dashboard.html', tasks=tasks)
+    return redirect(url_for('main.index'))
+
+def create_task_for_order(order_id, employee_id):
+    logging.debug(f"Creating task for order ID: {order_id}, employee ID: {employee_id}")
+    new_task = Task(
+        employee_id=employee_id,
+        order_id=order_id,
+        status='pending'
+    )
+    db.session.add(new_task)
+    db.session.commit()
+    logging.debug(f"Task created: {new_task}")
+
+@main.route('/mechanic_orders_current_month')
+def mechanic_orders_current_month():
+    if 'role' in session and session['role'] == 'mechanic':
+        mechanic_id = session['user_id']
+        today = datetime.now().date()
+        first_day_of_month = today.replace(day=1)
+        last_day_of_month = (today.replace(day=1) + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+
+        # Получаем заказы механика за текущий месяц
+        orders = (
+            Order.query
+            .join(Task, Order.id == Task.order_id)
+            .filter(
+                Task.employee_id == mechanic_id,
+                Order.appointment_date >= first_day_of_month,
+                Order.appointment_date <= last_day_of_month
+            )
+            .order_by(Order.appointment_date, Order.appointment_time)
+            .all()
+        )
+
+        return render_template('employee/mechanic/mechanic_tasks_current_month.html', orders=orders)
+    return redirect(url_for('main.index'))
+
+@main.route('/task_details/<int:task_id>')
+def task_details(task_id):
+    if 'role' in session and session['role'] == 'mechanic':
+        task = Task.query.get(task_id)
+        if not task:
+            flash("Задача не найдена", "error")
+            return redirect(url_for('main.mechanic_dashboard'))
+        return render_template('employee/mechanic/task_details.html', task=task)
+    return redirect(url_for('main.index'))
+
+@main.route('/generate_report')
+def generate_report():
+    if 'role' in session and session['role'] == 'mechanic':
+        mechanic_id = session['user_id']
+        today = datetime.now().date()
+        first_day_of_month = today.replace(day=1)
+        last_day_of_month = (today.replace(day=1) + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+
+        # Получаем выполненные заказы механика за текущий месяц
+        completed_orders = (
+            Order.query
+            .join(Task, Order.id == Task.order_id)
+            .filter(
+                Task.employee_id == mechanic_id,
+                Task.status == 'completed',
+                Order.appointment_date >= first_day_of_month,
+                Order.appointment_date <= last_day_of_month
+            )
+            .order_by(Order.appointment_date, Order.appointment_time)
+            .all()
+        )
+
+        # Генерируем отчет
+        report_data = []
+        total_revenue = 0
+        for order in completed_orders:
+            order_total = sum(service.price for service in order.services)
+            report_data.append({
+                'order_id': order.id,
+                'date': order.appointment_date,
+                'client': order.client.name,
+                'services': ', '.join([service.service_name for service in order.services]),
+                'total': order_total
+            })
+            total_revenue += order_total
+
+        return render_template('employee/mechanic/report.html', report_data=report_data, total_revenue=total_revenue)
+    return redirect(url_for('main.index'))
+
+@main.route('/update_task_status/<int:task_id>', methods=['POST'])
+def update_task_status(task_id):
+    if 'role' in session and session['role'] == 'mechanic':
+        task = Task.query.get(task_id)
+        if task:
+            new_status = request.form.get('status')
+            task.status = new_status
+            db.session.commit()
+            flash("Статус задачи обновлен", "success")
+        else:
+            flash("Задача не найдена", "error")
+        return redirect(url_for('main.mechanic_dashboard'))
     return redirect(url_for('main.index'))
 
 @main.route('/mechanic_all_orders')
@@ -177,6 +277,15 @@ def appointments():
                     appointment_time=appointment_time
                 )
                 db.session.add(new_order)
+                db.session.commit()
+
+                # Создаем задачу для заказа
+                new_task = Task(
+                    employee_id=13,  # Укажите ID механика
+                    order_id=new_order.id,
+                    status='pending'
+                )
+                db.session.add(new_task)
                 db.session.commit()
 
                 for service_id in selected_service_ids:
@@ -376,6 +485,7 @@ def generate_order_pdf(order_id):
     return response
 
 def get_mechanic_tasks(employee_id):
+    logging.debug(f"Fetching tasks for mechanic with ID: {employee_id}")
     tasks = (
         Task.query
         .join(Order, Task.order_id == Order.id)
@@ -386,6 +496,7 @@ def get_mechanic_tasks(employee_id):
         .order_by(Order.appointment_date, Order.appointment_time)
         .all()
     )
+    logging.debug(f"Fetched tasks: {tasks}")  # Логируем задачи
     return tasks
 
 @main.route('/logout')

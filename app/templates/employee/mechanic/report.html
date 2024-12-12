@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Отчет механика{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">Отчет механика</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Заказ №</th>
+                <th>Дата</th>
+                <th>Клиент</th>
+                <th>Услуги</th>
+                <th>Итого</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in report_data %}
+                <tr>
+                    <td>{{ item.order_id }}</td>
+                    <td>{{ item.date }}</td>
+                    <td>{{ item.client }}</td>
+                    <td>{{ item.services }}</td>
+                    <td>{{ item.total }} руб.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="4" class="text-right">Итого:</th>
+                <th>{{ total_revenue }} руб.</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+{% endblock %}
