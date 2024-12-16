@@ -5,7 +5,7 @@
 {% block content %}
 <div class="form-container">
     <h1>Редактировать профиль</h1>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <label>Имя:</label>
         <input type="text" name="name" value="{{ user.name }}" required>
@@ -15,6 +15,12 @@
         <br>
         <label>Телефон:</label>
         <input type="text" name="phone" value="{{ user.phone }}" required>
+        <br>
+        <label>Пароль:</label>
+        <input type="password" name="password">
+        <br>
+        <label>Аватар:</label>
+        <input type="file" name="avatar">
         <br>
         <button type="submit">Сохранить</button>
     </form>

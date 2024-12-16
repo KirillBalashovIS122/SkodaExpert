@@ -1,4 +1,4 @@
-from flask import session
+from flask import session, make_response
 from .models import Employee, Client, Order, Service, Task, Report, OrderService
 from . import db
 from datetime import datetime
@@ -49,7 +49,13 @@ def generate_pdf(order):
     
     # Проверка на None для order.car
     if order.car:
-        pdf.drawString(1 * inch, 8 * inch, f"Марка и модель авто: {order.car.model}")
+        # Получаем марку и модель автомобиля из таблицы CarModel
+        car_model = order.car.car_model
+        if car_model:
+            pdf.drawString(1 * inch, 8 * inch, f"Марка и модель авто: {car_model.brand} {car_model.model_name}")
+        else:
+            pdf.drawString(1 * inch, 8 * inch, "Марка и модель авто: Не указано")
+        
         pdf.drawString(1 * inch, 7.5 * inch, f"Год выпуска: {order.car.car_year}")
         pdf.drawString(1 * inch, 7 * inch, f"Гос номер: {order.car.license_plate}")
         pdf.drawString(1 * inch, 6.5 * inch, f"VIN код: {order.car.vin}")

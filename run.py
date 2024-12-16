@@ -1,3 +1,10 @@
+"""
+Файл запуска приложения.
+
+Этот файл создает и запускает приложение Flask. Он также проверяет подключение к базе данных
+и выводит текущее время в базе данных.
+"""
+
 from app import create_app, db
 from sqlalchemy import text
 
@@ -8,7 +15,6 @@ if __name__ == '__main__':
         try:
             print(f"Database URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
             with db.engine.connect() as connection:
-                # Преобразуем CURRENT_TIMESTAMP в строку с увеличенной длиной
                 result = connection.execute(text("SELECT CAST(CURRENT_TIMESTAMP AS VARCHAR(50)) FROM RDB$DATABASE"))
                 current_time = result.fetchone()
                 if current_time:

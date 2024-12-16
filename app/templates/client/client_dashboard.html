@@ -3,11 +3,21 @@
 {% block content %}
     <h1>Панель клиента</h1>
     <p>Добро пожаловать, {{ user.name }}!</p>
-    <a href="{{ url_for('main.select_services') }}">Записаться на ремонт</a>
+    <a href="{{ url_for('main.select_services') }}" class="button">Записаться на ремонт</a>
+    
     <h2>Ваши заказы</h2>
-    <ul>
-        {% for order in orders %}
-            <li><a href="{{ url_for('main.order_details', order_id=order.id) }}">Заказ №{{ order.id }}</a></li>
-        {% endfor %}
-    </ul>
+    {% if orders %}
+        <ul>
+            {% for order in orders %}
+                <li>
+                    <a href="{{ url_for('main.order_details', order_id=order.id) }}">
+                        Заказ №{{ order.id }}
+                    </a>
+                    <p>Дата записи: {{ order.appointment_date }} {{ order.appointment_time }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>У вас пока нет заказов.</p>
+    {% endif %}
 {% endblock %}

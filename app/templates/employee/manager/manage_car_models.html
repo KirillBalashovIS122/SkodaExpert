@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Управление моделями автомобилей{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Управление моделями автомобилей</h1>
+    <form method="post" class="form-container">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Марка:</label>
+        <input type="text" name="brand" required>
+        <br>
+        <label>Модель:</label>
+        <input type="text" name="model_name" required>
+        <br>
+        <button type="submit" name="add_model" class="submit-button">Добавить модель</button>
+    </form>
+    <h2>Список моделей:</h2>
+    <ul>
+        {% for model in car_models %}
+            <li>
+                {{ model.brand }} {{ model.model_name }}
+                <button onclick="editModel({{ model.id }}, '{{ model.brand }}', '{{ model.model_name }}')" class="button">Редактировать</button>
+                <form method="post" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="model_id" value="{{ model.id }}">
+                    <button type="submit" name="delete_model" class="button">Удалить</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Модальное окно для редактирования модели -->
+<div id="editModelModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('editModelModal')">&times;</span>
+        <h2>Редактировать модель</h2>
+        <form method="post" id="editModelForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="model_id" id="editModelId">
+            <label>Марка:</label>
+            <input type="text" name="brand" id="editModelBrand">
+            <br>
+            <label>Модель:</label>
+            <input type="text" name="model_name" id="editModelName">
+            <br>
+            <button type="submit" name="edit_model" class="submit-button">Сохранить изменения</button>
+        </form>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+{% endblock %}

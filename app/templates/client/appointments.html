@@ -24,9 +24,13 @@
         {% endfor %}
         <br>
         
-        <!-- Модель машины -->
-        <label for="model">Модель машины:</label>
-        {{ car_form.model(required=True) }}
+        <!-- Модель автомобиля -->
+        <label for="model">Модель автомобиля:</label>
+        <select name="model" required>
+            {% for model in car_models %}
+                <option value="{{ model.id }}">{{ model.brand }} {{ model.model_name }}</option>
+            {% endfor %}
+        </select>
         {% for error in car_form.model.errors %}
             <span style="color: red;">{{ error }}</span>
         {% endfor %}
@@ -103,11 +107,18 @@
             minDate: "today",  // Отключаем прошедшие даты
             disable: [
                 function(date) {
+                    // Отключаем воскресенье (0 - воскресенье)
+                    if (date.getDay() === 0) {
+                        return true;
+                    }
+
+                    // Отключаем сегодняшнюю дату после 17:00
                     const today = new Date();
                     const closingTime = new Date(today.setHours(17, 0, 0, 0));
                     if (date.toDateString() === today.toDateString() && new Date() >= closingTime) {
-                        return true; // Отключаем сегодняшнюю дату после 17:00
+                        return true;
                     }
+
                     return false;
                 }
             ],

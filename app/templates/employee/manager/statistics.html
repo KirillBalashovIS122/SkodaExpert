@@ -5,20 +5,58 @@
 {% block content %}
 <div class="container">
     <h1>Статистика</h1>
-    <h2>Общая статистика:</h2>
-    <p>Всего заказов: {{ total_orders }}</p>
-    <p>Общий доход: {{ total_revenue }} руб.</p>
-    <h2>Статистика по услугам:</h2>
-    <ul>
-        {% for service in service_statistics %}
-            <li>{{ service.service_name }} - {{ service.count }} заказов, {{ service.total_price }} руб.</li>
-        {% endfor %}
-    </ul>
-    <h2>Статистика по сотрудникам:</h2>
-    <ul>
-        {% for employee in employee_statistics %}
-            <li>{{ employee.name }} - {{ employee.task_count }} задач, {{ employee.report_count }} отчетов</li>
-        {% endfor %}
-    </ul>
+    <div class="chart-container">
+        <canvas id="ordersChart"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="servicesChart"></canvas>
+    </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Данные для графиков
+    const ordersData = {
+        labels: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь'],
+        datasets: [{
+            label: 'Количество заказов',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    };
+
+    const servicesData = {
+        labels: ['Услуга 1', 'Услуга 2', 'Услуга 3'],
+        datasets: [{
+            label: 'Популярность услуг',
+            data: [10, 20, 30],
+            backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)'],
+            borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'],
+            borderWidth: 1
+        }]
+    };
+
+    // Инициализация графиков
+    const ordersChart = new Chart(document.getElementById('ordersChart'), {
+        type: 'line',
+        data: ordersData,
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    const servicesChart = new Chart(document.getElementById('servicesChart'), {
+        type: 'bar',
+        data: servicesData,
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
 {% endblock %}

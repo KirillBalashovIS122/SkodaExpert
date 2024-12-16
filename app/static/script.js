@@ -16,6 +16,13 @@ function editService(id, name, description, price, duration) {
     document.getElementById('editServiceModal').style.display = 'block';
 }
 
+function editModel(id, brand, model_name) {
+    document.getElementById('editModelId').value = id;
+    document.getElementById('editModelBrand').value = brand;
+    document.getElementById('editModelName').value = model_name;
+    document.getElementById('editModelModal').style.display = 'block';
+}
+
 function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
 }
