@@ -6,18 +6,14 @@
 """
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, SubmitField, SelectMultipleField, DateField, SelectField
+from wtforms import StringField, IntegerField, SubmitField, SelectField, DateField, SelectMultipleField
 from wtforms.validators import DataRequired
-from .models import Service, CarModel
-import logging
-
-logging.basicConfig(level=logging.DEBUG)
+from .models import *
 
 class CarForm(FlaskForm):
-    """Форма для записи клиента на ремонт."""
     full_name = StringField('ФИО', validators=[DataRequired()])
     phone = StringField('Телефон', validators=[DataRequired()])
-    model = SelectField('Модель автомобиля', coerce=int, validators=[DataRequired()])
+    car_model = SelectField('Модель автомобиля', coerce=int, validators=[DataRequired()])  # Поле для выбора модели
     car_year = IntegerField('Год выпуска', validators=[DataRequired()])
     vin = StringField('VIN номер', validators=[DataRequired()])
     license_plate = StringField('Гос номер', validators=[DataRequired()])
@@ -27,14 +23,8 @@ class CarForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         super(CarForm, self).__init__(*args, **kwargs)
-        self.model.choices = [(model.id, f"{model.brand} {model.model_name}") for model in CarModel.query.all()]
-
-    def validate(self):
-        """Проверяет валидность формы."""
-        if not super(CarForm, self).validate():
-            logging.debug(f"Form validation failed: {self.errors}")
-            return False
-        return True
+        # Заполняем выпадающий список моделями автомобилей
+        self.car_model.choices = [(model.id, f"{model.brand} {model.model_name}") for model in CarModel.query.all()]
 
 class SelectServicesForm(FlaskForm):
     """Форма для выбора услуг."""

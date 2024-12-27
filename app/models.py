@@ -45,13 +45,13 @@ class Car(db.Model):
     __tablename__ = 'cars'
     id = db.Column(Integer, primary_key=True)
     client_id = db.Column(Integer, ForeignKey('clients.id'), nullable=False)
-    car_model_id = db.Column(Integer, ForeignKey('car_models.id'), nullable=False)  # Указываем модель автомобиля
+    car_model_id = db.Column(Integer, ForeignKey('car_models.id'), nullable=False)
     car_year = db.Column(Integer, nullable=False)
     vin = db.Column(String(17), nullable=False, unique=True)
     license_plate = db.Column(String(12), nullable=False, unique=True)
     created_at = db.Column(DateTime, default=datetime.utcnow)
 
-    car_model = db.relationship('CarModel', backref='cars')  # Связь с CarModel
+    car_model = relationship('CarModel', backref='cars')
 
 class Service(db.Model):
     """Модель услуги."""
@@ -63,19 +63,21 @@ class Service(db.Model):
     duration = db.Column(Integer, nullable=False)
 
 class Order(db.Model):
-    """Модель заказа."""
     __tablename__ = 'orders'
     id = db.Column(Integer, primary_key=True)
     client_id = db.Column(Integer, ForeignKey('clients.id'), nullable=False)
     car_id = db.Column(Integer, ForeignKey('cars.id'), nullable=False)
+    car_brand = db.Column(String(100), nullable=False)  # Марка автомобиля
+    car_model = db.Column(String(100), nullable=False)  # Модель автомобиля
     created_at = db.Column(DateTime, default=datetime.utcnow)
     appointment_date = db.Column(Date, nullable=False)
     appointment_time = db.Column(Time, nullable=False)
     end_time = db.Column(Time, nullable=False)
-    car = db.relationship('Car', backref='orders')
-    client = db.relationship('Client', backref='orders')
-    services = db.relationship('Service', secondary='order_services', backref='orders')
 
+    services = relationship('Service', secondary='order_services', backref='orders')
+    car = relationship('Car', backref='orders')
+    client = relationship('Client', backref='orders')
+                       
 class OrderService(db.Model):
     """Модель связи заказа и услуги."""
     __tablename__ = 'order_services'

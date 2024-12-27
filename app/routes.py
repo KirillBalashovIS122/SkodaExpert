@@ -1,7 +1,7 @@
+from datetime import datetime, timedelta, time, date
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from datetime import datetime, timedelta, time, date
 from .models import *
 from . import db, csrf
 from .utils import *
@@ -13,6 +13,11 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 main = Blueprint('main', __name__)
+
+def calculate_end_time(appointment_time, service_ids):
+    """Рассчитывает время окончания заказа на основе выбранных услуг."""
+    total_duration = sum(Service.query.get(service_id).duration for service_id in service_ids)
+    return (datetime.strptime(appointment_time, '%H:%M') + timedelta(minutes=total_duration)).strftime('%H:%M')
 
 @main.route('/')
 def index():
@@ -301,77 +306,59 @@ def appointments():
             return redirect(url_for('main.select_services'))
 
         if request.method == 'POST' and car_form.validate_on_submit():
-            appointment_date = request.form.get('appointment_date')
-            appointment_time = request.form.get('appointment_time')
-
-            try:
-                appointment_datetime = datetime.strptime(f"{appointment_date} {appointment_time}", '%Y-%m-%d %H:%M')
-            except ValueError as e:
-                flash("Неверный формат даты и времени", "error")
+            # Получаем выбранную модель автомобиля
+            car_model = CarModel.query.get(car_form.car_model.data)
+            if not car_model:
+                flash("Модель автомобиля не найдена", "error")
                 return redirect(url_for('main.appointments'))
 
-            available_slots = get_available_slots_for_date(appointment_datetime.date(), selected_service_ids)
-            if not any(slot == appointment_time and is_available for slot, is_available in available_slots):
-                flash("Выбранное время уже занято. Пожалуйста, выберите другое время.", "error")
-                return redirect(url_for('main.appointments'))
+            # Создаем новый автомобиль
+            new_car = Car(
+                client_id=session['user_id'],
+                car_model_id=car_model.id,
+                car_year=car_form.car_year.data,
+                vin=car_form.vin.data,
+                license_plate=car_form.license_plate.data
+            )
+            db.session.add(new_car)
+            db.session.commit()
 
-            if not is_valid_appointment_date(appointment_datetime.date(), appointment_time):
-                flash("Нельзя записаться на прошедшее время или после 17:00.", "error")
-                return redirect(url_for('main.appointments'))
+            # Рассчитываем время окончания заказа
+            end_time = calculate_end_time(car_form.appointment_time.data, selected_service_ids)
 
-            try:
-                # Создаем новый заказ
-                new_order = Order(
-                    client_id=session['user_id'],
-                    appointment_date=appointment_datetime.date(),
-                    appointment_time=appointment_time
-                )
-                db.session.add(new_order)
-                db.session.commit()
+            new_order = Order(
+                client_id=session['user_id'],
+                car_id=new_car.id,
+                car_brand=car_model.brand,
+                car_model=car_model.model_name,
+                appointment_date=car_form.appointment_date.data,
+                appointment_time=car_form.appointment_time.data,
+                end_time=end_time
+            )
 
-                # Создаем новую машину
-                new_car = Car(
-                    client_id=session['user_id'],
-                    car_model_id=car_form.model.data,  # Указываем модель автомобиля
-                    car_year=car_form.car_year.data,
-                    vin=car_form.vin.data,
-                    license_plate=car_form.license_plate.data
-                )
-                db.session.add(new_car)
-                db.session.commit()
+            # Добавляем выбранные услуги к заказу
+            for service_id in selected_service_ids:
+                service = Service.query.get(service_id)
+                if service:
+                    new_order.services.append(service)
 
-                # Связываем машину с заказом
-                new_order.car_id = new_car.id
-                db.session.commit()
+            db.session.add(new_order)
+            db.session.commit()
 
-                # Добавляем услуги в заказ
-                for service_id in selected_service_ids:
-                    service = Service.query.get(service_id)
-                    if service:
-                        new_order.services.append(service)
-                db.session.commit()
-
-                flash("Запись успешно создана!", "success")
-                return redirect(url_for('main.appointment_success', order_id=new_order.id))
-
-            except Exception as e:
-                db.session.rollback()
-                flash("Ошибка при сохранении данных", "error")
+            flash("Запись успешно создана!", "success")
+            return redirect(url_for('main.appointment_success', order_id=new_order.id))
 
         today = datetime.now().date()
         selected_date = request.form.get('appointment_date', today)
         available_slots = get_available_slots_for_date(selected_date, selected_service_ids)
 
-        car_models = CarModel.query.all()
-
         return render_template(
-            'client/appointments.html', 
-            available_slots=available_slots, 
+            'client/appointments.html',
+            available_slots=available_slots,
             car_form=car_form,
             today=today,
             selected_date=selected_date,
-            selected_service_ids=selected_service_ids,
-            car_models=car_models
+            selected_service_ids=selected_service_ids
         )
     return redirect(url_for('main.index'))
 
@@ -385,6 +372,17 @@ def get_available_slots():
     available_slots = get_available_slots_for_date(selected_date, selected_service_ids)
 
     return jsonify(available_slots)
+
+@main.route('/order_details/<int:order_id>')
+def order_details(order_id):
+    """Обрабатывает детали заказа."""
+    if 'role' in session and session['role'] == 'client':
+        order = Order.query.get(order_id)
+        if not order:
+            flash("Заказ не найден", "error")
+            return redirect(url_for('main.client_dashboard'))
+        return render_template('client/order_details.html', order=order)
+    return redirect(url_for('main.index'))
 
 # Проверка валидности даты и времени
 def is_valid_appointment_date(date, appointment_time):
@@ -404,7 +402,6 @@ def is_valid_appointment_date(date, appointment_time):
     
     return True
 
-# Получение доступных слотов для даты
 def get_available_slots_for_date(date_str, selected_service_ids):
     """Получает доступные слоты для даты."""
     if isinstance(date_str, date):
@@ -414,39 +411,32 @@ def get_available_slots_for_date(date_str, selected_service_ids):
 
     existing_orders = Order.query.filter_by(appointment_date=date_obj).all()
 
-    if not existing_orders:
-        work_start = time(9, 0)
-        work_end = time(17, 0)
-        slot_duration = timedelta(minutes=30)
-        current_time = datetime.combine(date_obj, work_start)
-        available_slots = []
-
-        while current_time.time() < work_end:
-            slot_start_str = current_time.strftime('%H:%M')
-            available_slots.append((slot_start_str, True))
-            current_time += slot_duration
-
-        return available_slots
-
-    booked_slots = {}
-    for order in existing_orders:
-        start_time = order.appointment_time
-        end_time = order.end_time
-        booked_slots[start_time.strftime('%H:%M')] = (start_time, end_time)
+    # Рассчитываем общую длительность выбранных услуг
+    total_duration = sum(Service.query.get(service_id).duration for service_id in selected_service_ids)
 
     work_start = time(9, 0)
     work_end = time(17, 0)
     slot_duration = timedelta(minutes=30)
-
-    selected_services_objects = Service.query.filter(Service.id.in_(selected_service_ids)).all()
-    total_service_duration = sum(service.duration for service in selected_services_objects)
-
     current_time = datetime.combine(date_obj, work_start)
     available_slots = []
 
     while current_time.time() < work_end:
         slot_start_str = current_time.strftime('%H:%M')
-        is_available = is_slot_available(current_time.time(), total_service_duration, booked_slots)
+        slot_end_time = current_time + timedelta(minutes=total_duration)
+
+        # Проверяем, не пересекается ли слот с существующими заказами
+        is_available = True
+        for order in existing_orders:
+            if order.end_time is None:  # Пропускаем заказы с end_time = NULL
+                continue
+
+            order_start = datetime.combine(date_obj, order.appointment_time)
+            order_end = datetime.combine(date_obj, order.end_time)
+
+            if not (slot_end_time <= order_start or current_time >= order_end):
+                is_available = False
+                break
+
         available_slots.append((slot_start_str, is_available))
         current_time += slot_duration
 
@@ -494,7 +484,6 @@ def generate_order_pdf(order_id):
 
     return response
 
-# Получение задач механика
 def get_mechanic_tasks(employee_id):
     """Получает задачи механика."""
     tasks = (
@@ -502,14 +491,13 @@ def get_mechanic_tasks(employee_id):
         .join(Order, Task.order_id == Order.id)
         .join(Car, Order.car_id == Car.id)
         .join(Client, Order.client_id == Client.id)
-        .join(Service, Order.services)
+        .join(Service, Order.services)  # Используем связь services
         .filter(Task.employee_id == employee_id)
         .order_by(Order.appointment_date, Order.appointment_time)
         .all()
     )
     return tasks
 
-# Выход
 @main.route('/logout')
 def logout():
     """Обрабатывает выход пользователя."""
@@ -828,14 +816,4 @@ def order_history():
         return render_template('client/order_history.html', user=user, order_history=order_history)
     return redirect(url_for('main.index'))
 
-# Подробности заказа
-@main.route('/order_details/<int:order_id>')
-def order_details(order_id):
-    """Обрабатывает подробности заказа."""
-    if 'role' in session and session['role'] == 'client':
-        user = Client.query.get(session['user_id'])
-        order = Order.query.get(order_id)
-        if not order or order.client_id != user.id:
-            return "Заказ не найден", 404
-        return render_template('client/order_details.html', user=user, order=order)
-    return redirect(url_for('main.index'))
+

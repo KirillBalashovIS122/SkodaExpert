@@ -13,8 +13,10 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from io import BytesIO
 import os
+import logging
 
-pdfmetrics.registerFont(TTFont('Times-Roman', 'times.ttf'))
+# Настройка логирования
+logging.basicConfig(level=logging.DEBUG)
 
 STATUS_TRANSLATIONS = {
     'pending': 'В ожидании',
@@ -38,48 +40,47 @@ def generate_pdf(order):
     if not order.appointment_date or not order.appointment_time:
         raise ValueError("Время и дата записи не могут быть None")
 
+    # Регистрация шрифта с поддержкой кириллицы
+    pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))  # Убедитесь, что файл Arial.ttf доступен
+
     buffer = BytesIO()
     pdf = canvas.Canvas(buffer, pagesize=letter)
-    pdf.setFont("Times-Roman", 14)
-    pdf.drawString(1 * inch, 10 * inch, "Автосервис SkodaExpert")
-    pdf.setFont("Times-Roman", 12)
+    pdf.setFont("Arial", 14)  # Используем зарегистрированный шрифт
+
+    # Добавление логотипа
+    logo_path = os.path.join(os.path.dirname(__file__), 'static', 'logo.png')  # Путь к логотипу
+    if os.path.exists(logo_path):
+        pdf.drawImage(logo_path, 1 * inch, 10.5 * inch, width=1.5 * inch, height=0.75 * inch)
+
+    # Заголовок
+    pdf.drawString(2.5 * inch, 10.75 * inch, "Автосервис SkodaExpert")
+    pdf.setFont("Arial", 12)
+
+    # Информация о заказе
     pdf.drawString(1 * inch, 9.5 * inch, f"Номер заказ-наряда: {order.id}")
     pdf.drawString(1 * inch, 9 * inch, f"Имя заказчика: {order.client.name}")
     pdf.drawString(1 * inch, 8.5 * inch, f"Телефон: {order.client.phone}")
-    
-    # Проверка на None для order.car
-    if order.car:
-        # Получаем марку и модель автомобиля из таблицы CarModel
-        car_model = order.car.car_model
-        if car_model:
-            pdf.drawString(1 * inch, 8 * inch, f"Марка и модель авто: {car_model.brand} {car_model.model_name}")
-        else:
-            pdf.drawString(1 * inch, 8 * inch, "Марка и модель авто: Не указано")
-        
-        pdf.drawString(1 * inch, 7.5 * inch, f"Год выпуска: {order.car.car_year}")
-        pdf.drawString(1 * inch, 7 * inch, f"Гос номер: {order.car.license_plate}")
-        pdf.drawString(1 * inch, 6.5 * inch, f"VIN код: {order.car.vin}")
-    else:
-        pdf.drawString(1 * inch, 8 * inch, "Марка и модель авто: Не указано")
-        pdf.drawString(1 * inch, 7.5 * inch, "Год выпуска: Не указано")
-        pdf.drawString(1 * inch, 7 * inch, "Гос номер: Не указано")
-        pdf.drawString(1 * inch, 6.5 * inch, "VIN код: Не указано")
-
+    pdf.drawString(1 * inch, 8 * inch, f"Марка и модель авто: {order.car_brand} {order.car_model}")
+    pdf.drawString(1 * inch, 7.5 * inch, f"Год выпуска: {order.car.car_year}")
+    pdf.drawString(1 * inch, 7 * inch, f"Гос номер: {order.car.license_plate}")
+    pdf.drawString(1 * inch, 6.5 * inch, f"VIN код: {order.car.vin}")
     formatted_date = order.appointment_date.strftime("%d.%m.%Y")
     pdf.drawString(1 * inch, 6 * inch, f"Время записи: {formatted_date} {order.appointment_time}")
 
-    y = 5.5 * inch
-    total_price = 0
-    pdf.drawString(1 * inch, y, "Выбранные услуги:")
-    y -= 0.5 * inch
-    for i, service in enumerate(order.services):
-        pdf.drawString(1 * inch, y, f"{i + 1}. {service.service_name} - {service.price} руб.")
+    # Вывод списка услуг
+    pdf.drawString(1 * inch, 5.5 * inch, "Выбранные услуги:")
+    y_position = 5 * inch  # Начальная позиция для списка услуг
+    total_price = 0  # Итоговая стоимость
+
+    for service in order.services:
+        pdf.drawString(1.5 * inch, y_position, f"- {service.service_name}: {service.price} руб.")
         total_price += service.price
-        y -= 0.5 * inch
+        y_position -= 0.25 * inch  # Смещение вниз для следующей услуги
 
-    pdf.drawString(1 * inch, y - 0.5 * inch, f"Итого: {total_price} руб.")
+    # Итоговая стоимость
+    pdf.drawString(1 * inch, y_position - 0.5 * inch, f"Итоговая стоимость: {total_price} руб.")
+
     pdf.save()
-
     buffer.seek(0)
     return buffer
 
@@ -105,3 +106,4 @@ def calculate_statistics():
         'service_statistics': service_statistics,
         'employee_statistics': employee_statistics
     }
+    

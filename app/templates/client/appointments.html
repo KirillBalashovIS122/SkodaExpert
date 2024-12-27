@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% block title %}Запись на ремонт{% endblock %}
-
 {% block content %}
 <div class="form-container">
     <h1>Запись на ремонт</h1>
@@ -25,13 +23,9 @@
         <br>
         
         <!-- Модель автомобиля -->
-        <label for="model">Модель автомобиля:</label>
-        <select name="model" required>
-            {% for model in car_models %}
-                <option value="{{ model.id }}">{{ model.brand }} {{ model.model_name }}</option>
-            {% endfor %}
-        </select>
-        {% for error in car_form.model.errors %}
+        <label for="car_model">Модель автомобиля:</label>
+        {{ car_form.car_model(required=True) }}  <!-- Используем правильное имя поля -->
+        {% for error in car_form.car_model.errors %}
             <span style="color: red;">{{ error }}</span>
         {% endfor %}
         <br>
@@ -88,15 +82,6 @@
         <!-- Кнопка "Записаться" -->
         <button type="submit" class="submit-button">Записаться</button>
     </form>
-</div>
-
-<!-- Добавляем логирование для отладки -->
-<div style="margin-top: 20px;">
-    <h3>Отладочная информация:</h3>
-    <pre>Сегодняшняя дата: {{ today }}</pre>
-    <pre>Выбранная дата: <span id="selectedDate">{{ selected_date }}</span></pre>
-    <pre>Доступные слоты для выбранной даты: <span id="availableSlots">{{ available_slots }}</span></pre>
-    <pre>Выбранные услуги: {{ selected_service_ids }}</pre>
 </div>
 
 <script>
