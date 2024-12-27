@@ -15,7 +15,6 @@ from io import BytesIO
 import os
 import logging
 
-# Настройка логирования
 logging.basicConfig(level=logging.DEBUG)
 
 STATUS_TRANSLATIONS = {
@@ -40,23 +39,19 @@ def generate_pdf(order):
     if not order.appointment_date or not order.appointment_time:
         raise ValueError("Время и дата записи не могут быть None")
 
-    # Регистрация шрифта с поддержкой кириллицы
-    pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))  # Убедитесь, что файл Arial.ttf доступен
+    pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
 
     buffer = BytesIO()
     pdf = canvas.Canvas(buffer, pagesize=letter)
-    pdf.setFont("Arial", 14)  # Используем зарегистрированный шрифт
+    pdf.setFont("Arial", 14)
 
-    # Добавление логотипа
-    logo_path = os.path.join(os.path.dirname(__file__), 'static', 'logo.png')  # Путь к логотипу
+    logo_path = os.path.join(os.path.dirname(__file__), 'static', 'logo.png')
     if os.path.exists(logo_path):
         pdf.drawImage(logo_path, 1 * inch, 10.5 * inch, width=1.5 * inch, height=0.75 * inch)
 
-    # Заголовок
     pdf.drawString(2.5 * inch, 10.75 * inch, "Автосервис SkodaExpert")
     pdf.setFont("Arial", 12)
 
-    # Информация о заказе
     pdf.drawString(1 * inch, 9.5 * inch, f"Номер заказ-наряда: {order.id}")
     pdf.drawString(1 * inch, 9 * inch, f"Имя заказчика: {order.client.name}")
     pdf.drawString(1 * inch, 8.5 * inch, f"Телефон: {order.client.phone}")
@@ -67,17 +62,15 @@ def generate_pdf(order):
     formatted_date = order.appointment_date.strftime("%d.%m.%Y")
     pdf.drawString(1 * inch, 6 * inch, f"Время записи: {formatted_date} {order.appointment_time}")
 
-    # Вывод списка услуг
     pdf.drawString(1 * inch, 5.5 * inch, "Выбранные услуги:")
-    y_position = 5 * inch  # Начальная позиция для списка услуг
-    total_price = 0  # Итоговая стоимость
+    y_position = 5 * inch
+    total_price = 0
 
     for service in order.services:
         pdf.drawString(1.5 * inch, y_position, f"- {service.service_name}: {service.price} руб.")
         total_price += service.price
-        y_position -= 0.25 * inch  # Смещение вниз для следующей услуги
+        y_position -= 0.25 * inch
 
-    # Итоговая стоимость
     pdf.drawString(1 * inch, y_position - 0.5 * inch, f"Итоговая стоимость: {total_price} руб.")
 
     pdf.save()
@@ -106,4 +99,3 @@ def calculate_statistics():
         'service_statistics': service_statistics,
         'employee_statistics': employee_statistics
     }
-    

@@ -18,13 +18,13 @@
                 <strong>Клиент:</strong> {{ task.order.client.name }}
             </p>
             <p class="card-text">
-                <strong>Машина:</strong> {{ task.order.car.model }} ({{ task.order.car.license_plate }})
+                <strong>Машина:</strong> {{ task.order.car.car_model.brand }} {{ task.order.car.car_model.model_name }} ({{ task.order.car.license_plate }})
             </p>
             <p class="card-text">
                 <strong>Услуги:</strong>
                 <ul>
                     {% for service in task.order.services %}
-                        <li>{{ service.service_name }} - {{ service.duration }} мин</li>
+                        <li>{{ service.service_name }} - {{ service.price }} руб.</li>
                     {% endfor %}
                 </ul>
             </p>

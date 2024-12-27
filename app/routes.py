@@ -69,9 +69,9 @@ def register():
                 email=email,
                 phone=phone,
                 password=hashed_password,
-                last_name=last_name,  # Передаем last_name
-                first_name=first_name,  # Передаем first_name
-                middle_name=middle_name  # Передаем middle_name
+                last_name=last_name,
+                first_name=first_name,
+                middle_name=middle_name
             )
             db.session.add(new_client)
         else:
@@ -104,17 +104,15 @@ def client_dashboard():
         flash("Доступ запрещен. Пожалуйста, войдите как клиент.", "error")
         return redirect(url_for('main.login'))
 
-# Панель механика
-@main.route('/mechanic_dashboard', methods=['GET'])
+@main.route('/mechanic_dashboard')
 def mechanic_dashboard():
     """Обрабатывает панель механика."""
     if 'role' in session and session['role'] == 'mechanic':
         mechanic_id = session['user_id']
-        tasks = get_mechanic_tasks(mechanic_id)
+        tasks = Task.query.filter_by(employee_id=mechanic_id).all()
         return render_template('employee/mechanic/mechanic_dashboard.html', tasks=tasks)
     return redirect(url_for('main.index'))
 
-# Создание задачи для заказа
 def create_task_for_order(order_id, employee_id):
     """Создает задачу для заказа."""
     new_task = Task(
@@ -125,7 +123,13 @@ def create_task_for_order(order_id, employee_id):
     db.session.add(new_task)
     db.session.commit()
 
-# Заказы механика за текущий месяц
+def get_available_mechanic():
+    """Возвращает доступного механика."""
+    mechanic = Employee.query.filter_by(role='mechanic').first()
+    if not mechanic:
+        raise ValueError("Нет доступных механиков")
+    return mechanic
+
 @main.route('/mechanic_orders_current_month')
 def mechanic_orders_current_month():
     """Обрабатывает заказы механика за текущий месяц."""
@@ -150,7 +154,6 @@ def mechanic_orders_current_month():
         return render_template('employee/mechanic/mechanic_tasks_current_month.html', orders=orders)
     return redirect(url_for('main.index'))
 
-# Подробности задачи
 @main.route('/task_details/<int:task_id>')
 def task_details(task_id):
     """Обрабатывает подробности задачи."""
@@ -162,7 +165,6 @@ def task_details(task_id):
         return render_template('employee/mechanic/task_details.html', task=task)
     return redirect(url_for('main.index'))
 
-# Генерация отчета
 @main.route('/generate_report')
 def generate_report():
     """Обрабатывает генерацию отчета."""
@@ -201,7 +203,6 @@ def generate_report():
         return render_template('employee/mechanic/report.html', report_data=report_data, total_revenue=total_revenue)
     return redirect(url_for('main.index'))
 
-# Обновление статуса задачи
 @main.route('/update_task_status/<int:task_id>', methods=['POST'])
 def update_task_status(task_id):
     """Обрабатывает обновление статуса задачи."""
@@ -209,25 +210,25 @@ def update_task_status(task_id):
         task = Task.query.get(task_id)
         if task:
             new_status = request.form.get('status')
+            logging.debug(f"Обновление статуса задачи {task_id} на {new_status}")
             task.status = new_status
             db.session.commit()
             flash("Статус задачи обновлен", "success")
         else:
+            logging.debug(f"Задача {task_id} не найдена")
             flash("Задача не найдена", "error")
         return redirect(url_for('main.mechanic_dashboard'))
     return redirect(url_for('main.index'))
 
-# Все задачи механика
 @main.route('/mechanic_all_orders')
 def mechanic_all_orders():
     """Обрабатывает все задачи механика."""
     if 'role' in session and session['role'] == 'mechanic':
-        user = Employee.query.get(session['user_id'])
-        tasks = Task.query.filter_by(employee_id=session['user_id']).all()
-        return render_template('employee/mechanic/tasks.html', user=user, tasks=tasks)
+        mechanic_id = session['user_id']
+        tasks = Task.query.filter_by(employee_id=mechanic_id).all()
+        return render_template('employee/mechanic/mechanic_all_orders.html', tasks=tasks)
     return redirect(url_for('main.index'))
 
-# Статистика механика
 @main.route('/mechanic_statistics')
 def mechanic_statistics():
     """Обрабатывает статистику механика."""
@@ -236,7 +237,6 @@ def mechanic_statistics():
         return render_template('employee/mechanic/mechanic_statistics.html', user=user)
     return redirect(url_for('main.index'))
 
-# Задачи механика за текущий месяц
 @main.route('/mechanic_tasks_current_month')
 def mechanic_tasks_current_month():
     """Обрабатывает задачи механика за текущий месяц."""
@@ -255,7 +255,6 @@ def mechanic_tasks_current_month():
         return render_template('employee/mechanic/mechanic_tasks_current_month.html', user=user, tasks=tasks)
     return redirect(url_for('main.index'))
 
-# Панель менеджера
 @main.route('/manager_dashboard')
 def manager_dashboard():
     """Обрабатывает панель менеджера."""
@@ -266,7 +265,6 @@ def manager_dashboard():
         return render_template('employee/manager/manager_dashboard.html', user=user, employees=employees, services=services)
     return redirect(url_for('main.index'))
 
-# Редактирование профиля
 @main.route('/edit_profile', methods=['GET', 'POST'])
 def edit_profile():
     """Обрабатывает редактирование профиля."""
@@ -306,47 +304,52 @@ def appointments():
             return redirect(url_for('main.select_services'))
 
         if request.method == 'POST' and car_form.validate_on_submit():
-            # Получаем выбранную модель автомобиля
-            car_model = CarModel.query.get(car_form.car_model.data)
-            if not car_model:
-                flash("Модель автомобиля не найдена", "error")
+            try:
+                car_model = CarModel.query.get(car_form.car_model.data)
+                if not car_model:
+                    flash("Модель автомобиля не найдена", "error")
+                    return redirect(url_for('main.appointments'))
+
+                new_car = Car(
+                    client_id=session['user_id'],
+                    car_model_id=car_model.id,
+                    car_year=car_form.car_year.data,
+                    vin=car_form.vin.data,
+                    license_plate=car_form.license_plate.data
+                )
+                db.session.add(new_car)
+                db.session.commit()
+
+                end_time = calculate_end_time(car_form.appointment_time.data, selected_service_ids)
+
+                new_order = Order(
+                    client_id=session['user_id'],
+                    car_id=new_car.id,
+                    car_brand=car_model.brand,
+                    car_model=car_model.model_name,
+                    appointment_date=car_form.appointment_date.data,
+                    appointment_time=car_form.appointment_time.data,
+                    end_time=end_time
+                )
+                db.session.add(new_order)
+                db.session.commit()
+
+                for service_id in selected_service_ids:
+                    service = Service.query.get(service_id)
+                    if service:
+                        new_order.services.append(service)
+
+                create_task_for_order(new_order.id, get_available_mechanic().id)
+
+                db.session.commit()
+
+                flash("Запись успешно создана!", "success")
+                return redirect(url_for('main.appointment_success', order_id=new_order.id))
+
+            except Exception as e:
+                db.session.rollback()
+                flash(f"Ошибка при создании записи: {str(e)}", "error")
                 return redirect(url_for('main.appointments'))
-
-            # Создаем новый автомобиль
-            new_car = Car(
-                client_id=session['user_id'],
-                car_model_id=car_model.id,
-                car_year=car_form.car_year.data,
-                vin=car_form.vin.data,
-                license_plate=car_form.license_plate.data
-            )
-            db.session.add(new_car)
-            db.session.commit()
-
-            # Рассчитываем время окончания заказа
-            end_time = calculate_end_time(car_form.appointment_time.data, selected_service_ids)
-
-            new_order = Order(
-                client_id=session['user_id'],
-                car_id=new_car.id,
-                car_brand=car_model.brand,
-                car_model=car_model.model_name,
-                appointment_date=car_form.appointment_date.data,
-                appointment_time=car_form.appointment_time.data,
-                end_time=end_time
-            )
-
-            # Добавляем выбранные услуги к заказу
-            for service_id in selected_service_ids:
-                service = Service.query.get(service_id)
-                if service:
-                    new_order.services.append(service)
-
-            db.session.add(new_order)
-            db.session.commit()
-
-            flash("Запись успешно создана!", "success")
-            return redirect(url_for('main.appointment_success', order_id=new_order.id))
 
         today = datetime.now().date()
         selected_date = request.form.get('appointment_date', today)
@@ -384,7 +387,6 @@ def order_details(order_id):
         return render_template('client/order_details.html', order=order)
     return redirect(url_for('main.index'))
 
-# Проверка валидности даты и времени
 def is_valid_appointment_date(date, appointment_time):
     """Проверяет валидность даты и времени записи."""
     current_time = datetime.now()
@@ -411,7 +413,6 @@ def get_available_slots_for_date(date_str, selected_service_ids):
 
     existing_orders = Order.query.filter_by(appointment_date=date_obj).all()
 
-    # Рассчитываем общую длительность выбранных услуг
     total_duration = sum(Service.query.get(service_id).duration for service_id in selected_service_ids)
 
     work_start = time(9, 0)
@@ -424,10 +425,9 @@ def get_available_slots_for_date(date_str, selected_service_ids):
         slot_start_str = current_time.strftime('%H:%M')
         slot_end_time = current_time + timedelta(minutes=total_duration)
 
-        # Проверяем, не пересекается ли слот с существующими заказами
         is_available = True
         for order in existing_orders:
-            if order.end_time is None:  # Пропускаем заказы с end_time = NULL
+            if order.end_time is None:
                 continue
 
             order_start = datetime.combine(date_obj, order.appointment_time)
@@ -447,16 +447,14 @@ def is_slot_available(slot_start_time, service_duration, booked_slots):
     slot_end_time = (datetime.combine(datetime.today(), slot_start_time) + timedelta(minutes=service_duration)).time()
 
     for booked_start, booked_end in booked_slots.values():
-        # Проверяем, что booked_start и booked_end не равны None
         if booked_start is None or booked_end is None:
-            continue  # Пропускаем записи с None
+            continue
 
         if slot_start_time < booked_end and slot_end_time > booked_start:
             return False
 
     return True
 
-# Просмотр заказов
 @main.route('/view_orders')
 def view_orders():
     """Обрабатывает просмотр заказов."""
@@ -465,7 +463,6 @@ def view_orders():
         return render_template('employee/manager/view_orders.html', orders=orders)
     return redirect(url_for('main.index'))
 
-# Генерация PDF заказа
 @main.route('/generate_order_pdf/<int:order_id>')
 def generate_order_pdf(order_id):
     """Обрабатывает генерацию PDF заказа."""
@@ -491,7 +488,7 @@ def get_mechanic_tasks(employee_id):
         .join(Order, Task.order_id == Order.id)
         .join(Car, Order.car_id == Car.id)
         .join(Client, Order.client_id == Client.id)
-        .join(Service, Order.services)  # Используем связь services
+        .join(Service, Order.services)
         .filter(Task.employee_id == employee_id)
         .order_by(Order.appointment_date, Order.appointment_time)
         .all()
@@ -508,7 +505,6 @@ def logout():
     session.pop('appointment_date', None)
     return redirect(url_for('main.index'))
 
-# Задачи механика
 @main.route('/tasks')
 def tasks():
     """Обрабатывает задачи механика."""
@@ -518,7 +514,6 @@ def tasks():
         return render_template('employee/mechanic/tasks.html', tasks=tasks)
     return redirect(url_for('main.index'))
 
-# Отчеты
 @main.route('/reports')
 def reports():
     """Обрабатывает отчеты."""
@@ -527,7 +522,6 @@ def reports():
         return render_template('employee/manager/reports.html', **stats)
     return redirect(url_for('main.index'))
 
-# Обработка ошибок
 @main.errorhandler(404)
 def page_not_found(e):
     """Обрабатывает ошибку 404."""
@@ -539,7 +533,6 @@ def internal_server_error(e):
     db.session.rollback()
     return render_template('500.html'), 500
 
-# Управление сотрудниками
 @main.route('/manage_employees', methods=['GET', 'POST'])
 def manage_employees():
     """Обрабатывает управление сотрудниками."""
@@ -600,7 +593,6 @@ def manage_employees():
         return render_template('employee/manager/manage_employees.html', employees=employees)
     return redirect(url_for('main.index'))
 
-# Управление услугами
 @main.route('/manage_services', methods=['GET', 'POST'])
 def manage_services():
     """Обрабатывает управление услугами."""
@@ -696,7 +688,39 @@ def manage_car_models():
         return render_template('manage_car_models.html', car_models=car_models)
     return redirect(url_for('main.index'))
 
-# Управление клиентами
+@main.route('/generate_full_report')
+def generate_full_report():
+    """Обрабатывает генерацию отчета за все время."""
+    if 'role' in session and session['role'] == 'mechanic':
+        mechanic_id = session['user_id']
+
+        completed_orders = (
+            Order.query
+            .join(Task, Order.id == Task.order_id)
+            .filter(
+                Task.employee_id == mechanic_id,
+                Task.status == 'completed'
+            )
+            .order_by(Order.appointment_date, Order.appointment_time)
+            .all()
+        )
+
+        report_data = []
+        total_revenue = 0
+        for order in completed_orders:
+            order_total = sum(service.price for service in order.services)
+            report_data.append({
+                'order_id': order.id,
+                'date': order.appointment_date,
+                'client': order.client.name,
+                'services': ', '.join([service.service_name for service in order.services]),
+                'total': order_total
+            })
+            total_revenue += order_total
+
+        return render_template('employee/mechanic/report.html', report_data=report_data, total_revenue=total_revenue)
+    return redirect(url_for('main.index'))
+
 @main.route('/manage_clients', methods=['GET', 'POST'])
 def manage_clients():
     """Обрабатывает управление клиентами."""
@@ -745,7 +769,6 @@ def manage_clients():
         return render_template('employee/manager/manage_clients.html', clients=clients)
     return redirect(url_for('main.index'))
 
-# Удаление записи
 @main.route('/delete_appointment/<int:appointment_id>', methods=['POST'])
 def delete_appointment(appointment_id):
     """Обрабатывает удаление записи."""
@@ -760,7 +783,6 @@ def delete_appointment(appointment_id):
         return redirect(url_for('main.manage_appointments'))
     return redirect(url_for('main.index'))
 
-# Управление записями
 @main.route('/manage_appointments')
 def manage_appointments():
     """Обрабатывает управление записями."""
@@ -777,7 +799,6 @@ def statistics():
         return render_template('statistics.html', **stats)
     return redirect(url_for('main.index'))
 
-# Запись на услугу
 @main.route('/book_service', methods=['POST'])
 def book_service():
     """Обрабатывает запись на услугу."""
@@ -790,7 +811,6 @@ def book_service():
         return redirect(url_for('main.client_dashboard'))
     return redirect(url_for('main.index'))
 
-# Выбор услуг
 @main.route('/select_services', methods=['GET', 'POST'])
 def select_services():
     """Обрабатывает выбор услуг."""
@@ -806,7 +826,6 @@ def select_services():
         return render_template('client/select_services.html', form=form)
     return redirect(url_for('main.index'))
 
-# История заказов
 @main.route('/order_history')
 def order_history():
     """Обрабатывает историю заказов."""
@@ -815,5 +834,3 @@ def order_history():
         order_history = OrderHistory.query.filter_by(client_id=user.id).all()
         return render_template('client/order_history.html', user=user, order_history=order_history)
     return redirect(url_for('main.index'))
-
-

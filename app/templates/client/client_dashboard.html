@@ -1,23 +1,35 @@
 {% extends "base.html" %}
 
+{% block title %}Панель механика{% endblock %}
+
 {% block content %}
-    <h1>Панель клиента</h1>
-    <p>Добро пожаловать, {{ user.name }}!</p>
-    <a href="{{ url_for('main.select_services') }}" class="button">Записаться на ремонт</a>
-    
-    <h2>Ваши заказы</h2>
-    {% if orders %}
-        <ul>
-            {% for order in orders %}
-                <li>
-                    <a href="{{ url_for('main.order_details', order_id=order.id) }}">
-                        Заказ №{{ order.id }}
-                    </a>
-                    <p>Дата записи: {{ order.appointment_date }} {{ order.appointment_time }}</p>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>У вас пока нет заказов.</p>
-    {% endif %}
+<div class="container">
+    <h1 class="text-center mb-4">Панель механика</h1>
+
+    <div class="d-flex justify-content-between mb-4">
+        <a href="{{ url_for('main.mechanic_orders_current_month') }}" class="btn btn-secondary">Заказы за текущий месяц</a>
+        <a href="{{ url_for('main.mechanic_all_orders') }}" class="btn btn-secondary">Все задачи</a>
+        <a href="{{ url_for('main.generate_report') }}" class="btn btn-primary">Отчет за текущий месяц</a>
+        <a href="{{ url_for('main.generate_full_report') }}" class="btn btn-primary">Отчет за все время</a>
+    </div>
+
+    <h2 class="mb-3">Задачи:</h2>
+    <div class="row">
+        {% for task in tasks %}
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title">
+                            <a href="{{ url_for('main.task_details', task_id=task.id) }}" class="text-decoration-none">Заказ №{{ task.order.id }}</a>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <p class="text-center">Нет доступных задач.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

@@ -1,9 +1,3 @@
-"""
-Модели базы данных.
-
-Этот файл содержит определения моделей SQLAlchemy, которые описывают структуру базы данных.
-"""
-
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, Float, Boolean, Text, ForeignKey, Date, Time
 from sqlalchemy.orm import relationship
@@ -29,9 +23,9 @@ class Client(db.Model):
     phone = db.Column(String(15), nullable=False, unique=True)
     password = db.Column(String(200), nullable=False)
     created_at = db.Column(DateTime, default=datetime.utcnow)
-    last_name = db.Column(String(100), nullable=False)  # Добавьте это поле
-    first_name = db.Column(String(100), nullable=False)  # Добавьте это поле
-    middle_name = db.Column(String(100))  # Добавьте это поле
+    last_name = db.Column(String(100), nullable=False)
+    first_name = db.Column(String(100), nullable=False)
+    middle_name = db.Column(String(100))
 
 class CarModel(db.Model):
     """Модель для хранения списка автомобилей."""
@@ -67,17 +61,17 @@ class Order(db.Model):
     id = db.Column(Integer, primary_key=True)
     client_id = db.Column(Integer, ForeignKey('clients.id'), nullable=False)
     car_id = db.Column(Integer, ForeignKey('cars.id'), nullable=False)
-    car_brand = db.Column(String(100), nullable=False)  # Марка автомобиля
-    car_model = db.Column(String(100), nullable=False)  # Модель автомобиля
+    car_brand = db.Column(String(100), nullable=False)
+    car_model = db.Column(String(100), nullable=False)
     created_at = db.Column(DateTime, default=datetime.utcnow)
     appointment_date = db.Column(Date, nullable=False)
     appointment_time = db.Column(Time, nullable=False)
     end_time = db.Column(Time, nullable=False)
+    services = db.relationship('Service', secondary='order_services', backref='orders')
+    car = db.relationship('Car', backref='orders')
+    client = db.relationship('Client', backref='orders')
+    tasks = db.relationship('Task', back_populates='order')
 
-    services = relationship('Service', secondary='order_services', backref='orders')
-    car = relationship('Car', backref='orders')
-    client = relationship('Client', backref='orders')
-                       
 class OrderService(db.Model):
     """Модель связи заказа и услуги."""
     __tablename__ = 'order_services'
@@ -85,7 +79,6 @@ class OrderService(db.Model):
     service_id = db.Column(Integer, ForeignKey('services.id'), primary_key=True)
 
 class Task(db.Model):
-    """Модель задачи для сотрудника."""
     __tablename__ = 'tasks'
     id = db.Column(Integer, primary_key=True)
     employee_id = db.Column(Integer, ForeignKey('employees.id'), nullable=False)
@@ -93,7 +86,7 @@ class Task(db.Model):
     status = db.Column(String(50), default='pending')
     created_at = db.Column(DateTime, default=datetime.utcnow)
     employee = db.relationship('Employee', backref='tasks')
-    order = db.relationship('Order', backref='tasks')
+    order = db.relationship('Order', back_populates='tasks')
 
 class Report(db.Model):
     """Модель отчета."""
