@@ -8,7 +8,9 @@
 
     <div class="d-flex justify-content-between mb-4">
         <a href="{{ url_for('main.mechanic_orders_current_month') }}" class="btn btn-secondary">Заказы за текущий месяц</a>
-        <a href="{{ url_for('main.generate_report') }}" class="btn btn-primary">Сгенерировать отчет</a>
+        <a href="{{ url_for('main.mechanic_all_orders') }}" class="btn btn-secondary">Все задачи</a>
+        <a href="{{ url_for('main.generate_report') }}" class="btn btn-primary">Отчет за текущий месяц</a>
+        <a href="{{ url_for('main.generate_full_report') }}" class="btn btn-primary">Отчет за все время</a>
     </div>
 
     <h2 class="mb-3">Задачи:</h2>

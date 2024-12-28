@@ -4,21 +4,62 @@
 
 {% block content %}
 <div class="container">
-    <h1>Отчеты</h1>
-    <h2>Общая статистика:</h2>
-    <p>Всего заказов: {{ total_orders }}</p>
+    <h1>Общий отчет</h1>
+
+    <!-- Форма для фильтрации по дате -->
+    <form method="GET" action="{{ url_for('main.reports') }}">
+        <label for="start_date">Начальная дата:</label>
+        <input type="date" id="start_date" name="start_date">
+
+        <label for="end_date">Конечная дата:</label>
+        <input type="date" id="end_date" name="end_date">
+
+        <button type="submit">Применить фильтр</button>
+    </form>
+
+    <!-- Общая информация -->
+    <h2>Общая информация</h2>
+    <p>Общее количество заказов: {{ total_orders }}</p>
     <p>Общий доход: {{ total_revenue }} руб.</p>
-    <h2>Статистика по услугам:</h2>
-    <ul>
-        {% for service in service_statistics %}
-            <li>{{ service.service_name }} - {{ service.count }} заказов, {{ service.total_price }} руб.</li>
-        {% endfor %}
-    </ul>
-    <h2>Статистика по сотрудникам:</h2>
-    <ul>
-        {% for employee in employee_statistics %}
-            <li>{{ employee.name }} - {{ employee.task_count }} задач, {{ employee.report_count }} отчетов</li>
-        {% endfor %}
-    </ul>
+
+    <!-- Отчет по моделям автомобилей -->
+    <h2>Статистика по моделям автомобилей</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Марка</th>
+                <th>Модель</th>
+                <th>Количество заказов</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in orders_by_model %}
+                <tr>
+                    <td>{{ item.brand }}</td>
+                    <td>{{ item.model_name }}</td>
+                    <td>{{ item.order_count }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Финансовые показатели по услугам -->
+    <h2>Финансовые показатели по услугам</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Услуга</th>
+                <th>Доход</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in revenue_by_service %}
+                <tr>
+                    <td>{{ item.service_name }}</td>
+                    <td>{{ item.revenue }} руб.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

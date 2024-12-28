@@ -31,7 +31,14 @@
     <ul>
         {% for employee in employees %}
             <li>
-                {{ employee.name }} - {{ employee.role }}
+                {{ employee.name }} - 
+                {% if employee.role == 'mechanic' %}
+                    Механик
+                {% elif employee.role == 'manager' %}
+                    Менеджер
+                {% else %}
+                    {{ employee.role }}  <!-- Если роль неизвестна, отображаем как есть -->
+                {% endif %}
                 <button onclick="editEmployee({{ employee.id }}, '{{ employee.name|e }}', '{{ employee.email|e }}', '{{ employee.phone|e }}', '{{ employee.role|e }}')" class="button">Редактировать</button>
                 <form method="post" style="display: inline;">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

@@ -24,13 +24,15 @@ def index():
     """Обрабатывает главную страницу."""
     if 'user_id' in session:
         role = session.get('role')
-        print(f"User role: {role}")  # Добавьте это для отладки
+        print(f"User role: {role}")  # Для отладки
+        
         if role == 'client':
             return redirect(url_for('main.client_dashboard'))
         elif role == 'mechanic':
             return redirect(url_for('main.mechanic_dashboard'))
         elif role == 'manager':
             return redirect(url_for('main.manager_dashboard'))
+    
     return redirect(url_for('main.login'))
 
 @main.route('/login', methods=['GET', 'POST'])
@@ -39,10 +41,24 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-        user = Employee.query.filter_by(email=email).first() or Client.query.filter_by(email=email).first()
+        
+        # Ищем пользователя в таблице сотрудников
+        user = Employee.query.filter_by(email=email).first()
+        
+        # Если пользователь не найден в таблице сотрудников, ищем в таблице клиентов
+        if not user:
+            user = Client.query.filter_by(email=email).first()
+        
+        # Проверяем, найден ли пользователь и совпадает ли пароль
         if user and check_password_hash(user.password, password):
             session['user_id'] = user.id
-            session['role'] = user.role if isinstance(user, Employee) else 'client'
+            
+            # Определяем роль пользователя
+            if isinstance(user, Employee):
+                session['role'] = user.role  # Роль из таблицы сотрудников
+            else:
+                session['role'] = 'client'  # Роль клиента
+            
             return redirect(url_for('main.index'))
         else:
             flash("Неверный email или пароль", "error")
@@ -516,11 +532,101 @@ def tasks():
 
 @main.route('/reports')
 def reports():
-    """Обрабатывает отчеты."""
+    """Обрабатывает генерацию отчетов."""
     if 'role' in session and session['role'] == 'manager':
-        stats = calculate_statistics()
-        return render_template('employee/manager/reports.html', **stats)
+        try:
+            start_date = request.args.get('start_date')
+            end_date = request.args.get('end_date')
+
+            report = generate_manager_report(start_date, end_date)
+            return render_template('employee/manager/reports.html', **report)
+        except Exception as e:
+            logging.error(f"Error in reports: {e}")
+            return render_template('500.html'), 500
     return redirect(url_for('main.index'))
+
+@main.route('/export_report')
+def export_report():
+    """Экспортирует отчет в PDF."""
+    try:
+        # Получаем данные для отчета
+        report = generate_manager_report()
+
+        # Создаем PDF
+        buffer = BytesIO()
+        pdf = canvas.Canvas(buffer, pagesize=letter)
+
+        # Заголовок отчета
+        pdf.setFont("Helvetica-Bold", 16)
+        pdf.drawString(50, 750, "Общий отчет менеджера")
+
+        # Общая информация
+        pdf.setFont("Helvetica", 12)
+        pdf.drawString(50, 720, f"Общее количество заказов: {report['total_orders']}")
+        pdf.drawString(50, 700, f"Общий доход: {report['total_revenue']} руб.")
+
+        # Статистика по моделям автомобилей
+        pdf.setFont("Helvetica-Bold", 14)
+        pdf.drawString(50, 670, "Статистика по моделям автомобилей")
+
+        # Таблица для статистики по моделям
+        data = [["Марка", "Модель", "Количество заказов"]]
+        for item in report['orders_by_model']:
+            data.append([item.brand, item.model_name, str(item.order_count)])
+
+        table = Table(data)
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ]))
+
+        # Размещаем таблицу на странице
+        table.wrapOn(pdf, 400, 200)
+        table.drawOn(pdf, 50, 550)
+
+        # Финансовые показатели по услугам
+        pdf.setFont("Helvetica-Bold", 14)
+        pdf.drawString(50, 500, "Финансовые показатели по услугам")
+
+        # Таблица для финансовых показателей
+        data = [["Услуга", "Доход (руб.)"]]
+        for item in report['revenue_by_service']:
+            data.append([item.service_name, str(item.revenue)])
+
+        table = Table(data)
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ]))
+
+        # Размещаем таблицу на странице
+        table.wrapOn(pdf, 400, 200)
+        table.drawOn(pdf, 50, 350)
+
+        # Завершаем создание PDF
+        pdf.showPage()
+        pdf.save()
+
+        # Возвращаем PDF как файл для скачивания
+        buffer.seek(0)
+        response = make_response(buffer.getvalue())
+        response.headers['Content-Type'] = 'application/pdf'
+        response.headers['Content-Disposition'] = 'attachment; filename=manager_report.pdf'
+        return response
+
+    except Exception as e:
+        logging.error(f"Error in export_report: {e}")
+        return render_template('500.html'), 500
 
 @main.errorhandler(404)
 def page_not_found(e):
@@ -545,6 +651,12 @@ def manage_employees():
                 password = request.form.get('password')
                 role = request.form.get('role')
 
+                # Проверка, существует ли сотрудник с таким email
+                existing_employee = Employee.query.filter_by(email=email).first()
+                if existing_employee:
+                    flash("Сотрудник с таким email уже существует", "error")
+                    return redirect(url_for('main.manage_employees'))
+
                 if password is None:
                     flash("Пароль не может быть пустым", "error")
                     return redirect(url_for('main.manage_employees'))
@@ -565,6 +677,13 @@ def manage_employees():
 
                 employee = Employee.query.get(employee_id)
                 if employee:
+                    # Проверка, существует ли другой сотрудник с таким email
+                    if email != employee.email:
+                        existing_employee = Employee.query.filter_by(email=email).first()
+                        if existing_employee:
+                            flash("Сотрудник с таким email уже существует", "error")
+                            return redirect(url_for('main.manage_employees'))
+
                     employee.name = name
                     employee.email = email
                     employee.phone = phone
@@ -727,34 +846,77 @@ def manage_clients():
     if 'role' in session and session['role'] == 'manager':
         if request.method == 'POST':
             if 'add_client' in request.form:
-                name = request.form.get('name')
+                last_name = request.form.get('last_name')
+                first_name = request.form.get('first_name')
+                middle_name = request.form.get('middle_name')
                 email = request.form.get('email')
                 phone = request.form.get('phone')
                 password = request.form.get('password')
+
+                # Проверка, заполнены ли обязательные поля
+                if not last_name or not first_name or not email or not phone or not password:
+                    flash("Все поля обязательны для заполнения", "error")
+                    return redirect(url_for('main.manage_clients'))
+
+                # Проверка, существует ли клиент с таким email
+                existing_client = Client.query.filter_by(email=email).first()
+                if existing_client:
+                    flash("Клиент с таким email уже существует", "error")
+                    return redirect(url_for('main.manage_clients'))
+
                 hashed_password = generate_password_hash(password)
-                new_client = Client(name=name, email=email, phone=phone, password=hashed_password)
+                new_client = Client(
+                    last_name=last_name,
+                    first_name=first_name,
+                    middle_name=middle_name,
+                    email=email,
+                    phone=phone,
+                    password=hashed_password,
+                    name=f"{last_name} {first_name} {middle_name}".strip()
+                )
                 db.session.add(new_client)
                 db.session.commit()
                 flash("Клиент успешно добавлен", "success")
+
             elif 'edit_client' in request.form:
                 client_id = request.form.get('client_id')
-                name = request.form.get('name')
+                last_name = request.form.get('last_name')
+                first_name = request.form.get('first_name')
+                middle_name = request.form.get('middle_name')
                 email = request.form.get('email')
                 phone = request.form.get('phone')
                 password = request.form.get('password')
 
                 client = Client.query.get(client_id)
                 if client:
-                    client.name = name
+                    # Проверка, заполнены ли обязательные поля
+                    if not last_name or not first_name or not email or not phone:
+                        flash("Все поля обязательны для заполнения", "error")
+                        return redirect(url_for('main.manage_clients'))
+
+                    # Проверка, существует ли другой клиент с таким email
+                    if email != client.email:
+                        existing_client = Client.query.filter_by(email=email).first()
+                        if existing_client:
+                            flash("Клиент с таким email уже существует", "error")
+                            return redirect(url_for('main.manage_clients'))
+
+                    client.last_name = last_name
+                    client.first_name = first_name
+                    client.middle_name = middle_name
                     client.email = email
                     client.phone = phone
-                    if password:
+                    client.name = f"{last_name} {first_name} {middle_name}".strip()
+
+                    if password is not None:
                         hashed_password = generate_password_hash(password)
                         client.password = hashed_password
+
                     db.session.commit()
                     flash("Клиент успешно отредактирован", "success")
                 else:
                     flash("Клиент не найден", "error")
+
             elif 'delete_client' in request.form:
                 client_id = request.form.get('client_id')
                 client = Client.query.get(client_id)

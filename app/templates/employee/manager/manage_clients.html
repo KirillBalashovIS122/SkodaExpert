@@ -7,8 +7,14 @@
     <h1>Управление клиентами</h1>
     <form method="post" class="form-container">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label>Фамилия:</label>
+        <input type="text" name="last_name" required>
+        <br>
         <label>Имя:</label>
-        <input type="text" name="name" required>
+        <input type="text" name="first_name" required>
+        <br>
+        <label>Отчество:</label>
+        <input type="text" name="middle_name">
         <br>
         <label>Email:</label>
         <input type="email" name="email" required>
@@ -17,7 +23,7 @@
         <input type="text" name="phone" required>
         <br>
         <label>Пароль:</label>
-        <input type="password" name="password">
+        <input type="password" name="password" required>
         <br>
         <button type="submit" name="add_client" class="submit-button">Добавить клиента</button>
     </form>
@@ -25,8 +31,8 @@
     <ul>
         {% for client in clients %}
             <li>
-                {{ client.name }} - {{ client.email }}
-                <button onclick="editClient({{ client.id }}, '{{ client.name|e }}', '{{ client.email|e }}', '{{ client.phone|e }}')" class="button">Редактировать</button>
+                {{ client.last_name }} {{ client.first_name }} {{ client.middle_name }} - {{ client.email }}
+                <button onclick="editClient({{ client.id }}, '{{ client.last_name|e }}', '{{ client.first_name|e }}', '{{ client.middle_name|e }}', '{{ client.email|e }}', '{{ client.phone|e }}')" class="button">Редактировать</button>
                 <form method="post" style="display: inline;">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="client_id" value="{{ client.id }}">
@@ -54,14 +60,20 @@
         <form method="post" id="editClientForm">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="hidden" name="client_id" id="editClientId">
+            <label>Фамилия:</label>
+            <input type="text" name="last_name" id="editClientLastName" required>
+            <br>
             <label>Имя:</label>
-            <input type="text" name="name" id="editClientName">
+            <input type="text" name="first_name" id="editClientFirstName" required>
+            <br>
+            <label>Отчество:</label>
+            <input type="text" name="middle_name" id="editClientMiddleName">
             <br>
             <label>Email:</label>
-            <input type="email" name="email" id="editClientEmail">
+            <input type="email" name="email" id="editClientEmail" required>
             <br>
             <label>Телефон:</label>
-            <input type="text" name="phone" id="editClientPhone">
+            <input type="text" name="phone" id="editClientPhone" required>
             <br>
             <label>Пароль:</label>
             <input type="password" name="password" id="editClientPassword">
