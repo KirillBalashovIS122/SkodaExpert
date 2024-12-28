@@ -47,6 +47,11 @@
 </div>
 
 <script>
+    /**
+     * Валидирует форму перед отправкой.
+     * Проверяет, что все поля заполнены.
+     * @returns {boolean} Возвращает false, если хотя бы одно поле не заполнено.
+     */
     function validateForm() {
         var last_name = document.forms["form"]["last_name"].value;
         var first_name = document.forms["form"]["first_name"].value;

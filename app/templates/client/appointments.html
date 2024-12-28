@@ -6,7 +6,6 @@
     <form method="POST" action="{{ url_for('main.appointments') }}" id="appointmentForm">
         {{ car_form.hidden_tag() }}
         
-        <!-- ФИО -->
         <label for="full_name">ФИО:</label>
         {{ car_form.full_name(required=True) }}
         {% for error in car_form.full_name.errors %}
@@ -14,7 +13,6 @@
         {% endfor %}
         <br>
         
-        <!-- Телефон -->
         <label for="phone">Телефон:</label>
         {{ car_form.phone(required=True) }}
         {% for error in car_form.phone.errors %}
@@ -22,15 +20,13 @@
         {% endfor %}
         <br>
         
-        <!-- Модель автомобиля -->
         <label for="car_model">Модель автомобиля:</label>
-        {{ car_form.car_model(required=True) }}  <!-- Используем правильное имя поля -->
+        {{ car_form.car_model(required=True) }}
         {% for error in car_form.car_model.errors %}
             <span style="color: red;">{{ error }}</span>
         {% endfor %}
         <br>
         
-        <!-- VIN номер -->
         <label for="vin">VIN номер:</label>
         {{ car_form.vin(required=True) }}
         {% for error in car_form.vin.errors %}
@@ -38,7 +34,6 @@
         {% endfor %}
         <br>
         
-        <!-- Гос номер -->
         <label for="license_plate">Гос номер:</label>
         {{ car_form.license_plate(required=True) }}
         {% for error in car_form.license_plate.errors %}
@@ -46,7 +41,6 @@
         {% endfor %}
         <br>
         
-        <!-- Год выпуска -->
         <label for="car_year">Год выпуска:</label>
         {{ car_form.car_year(required=True) }}
         {% for error in car_form.car_year.errors %}
@@ -54,7 +48,6 @@
         {% endfor %}
         <br>
         
-        <!-- Дата -->
         <label for="appointment_date">Дата:</label>
         <input type="text" id="appointment_date" name="appointment_date" value="{{ selected_date }}" required>
         {% for error in car_form.appointment_date.errors %}
@@ -62,7 +55,6 @@
         {% endfor %}
         <br>
         
-        <!-- Время -->
         <label for="appointment_time">Время:</label>
         <select id="appointment_time" name="appointment_time" required>
             {% for slot, is_available in available_slots %}
@@ -76,10 +68,8 @@
         {% endfor %}
         <br>
         
-        <!-- Сообщение об ошибке -->
         <div id="error-message" style="color: red; display: none;"></div>
         
-        <!-- Кнопка "Записаться" -->
         <button type="submit" class="submit-button">Записаться</button>
     </form>
 </div>
@@ -89,15 +79,13 @@
         flatpickr("#appointment_date", {
             locale: "ru",
             dateFormat: "Y-m-d",
-            minDate: "today",  // Отключаем прошедшие даты
+            minDate: "today",
             disable: [
                 function(date) {
-                    // Отключаем воскресенье (0 - воскресенье)
                     if (date.getDay() === 0) {
                         return true;
                     }
 
-                    // Отключаем сегодняшнюю дату после 17:00
                     const today = new Date();
                     const closingTime = new Date(today.setHours(17, 0, 0, 0));
                     if (date.toDateString() === today.toDateString() && new Date() >= closingTime) {
@@ -108,7 +96,6 @@
                 }
             ],
             onChange: function(selectedDates, dateStr, instance) {
-                // При изменении даты отправляем AJAX-запрос
                 const selectedDate = dateStr;
                 const selectedServiceIds = {{ selected_service_ids | tojson }};
 
@@ -125,7 +112,6 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    // Обновляем список слотов
                     const appointmentTimeSelect = document.getElementById('appointment_time');
                     appointmentTimeSelect.innerHTML = '';
 
@@ -140,7 +126,6 @@
                         appointmentTimeSelect.appendChild(option);
                     });
 
-                    // Обновляем отладочную информацию
                     document.getElementById('selectedDate').textContent = selectedDate;
                     document.getElementById('availableSlots').textContent = JSON.stringify(data);
                 });

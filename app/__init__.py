@@ -13,7 +13,12 @@ db = SQLAlchemy()
 csrf = CSRFProtect()
 
 def create_app():
-    """Создает и настраивает приложение Flask."""
+    """
+    Создает и настраивает приложение Flask.
+
+    Returns:
+        Flask: Настроенное приложение Flask.
+    """
     app = Flask(__name__)
     app.config.from_object('config.DevelopmentConfig')
 

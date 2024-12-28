@@ -1,39 +1,38 @@
-/* Основные стили */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #e0f7e0; /* Светло-зеленый фон */
-    color: #4caf50; /* Светло-зеленый текст */
+    background-color: #e0f7e0;
+    color: #4caf50;
 }
 
 header {
-    background-color: #4caf50; /* Светло-зеленый фон для верхней панели */
-    color: #ffffff; /* Белый текст */
-    padding: 20px 0; /* Увеличиваем отступы для верхней панели */
+    background-color: #4caf50;
+    color: #ffffff;
+    padding: 20px 0;
     text-align: center;
-    display: flex; /* Используем flexbox для выравнивания элементов */
-    align-items: center; /* Выравнивание по вертикали */
-    justify-content: space-between; /* Распределение пространства между элементами */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 header nav {
-    display: flex; /* Используем flexbox для выравнивания ссылок */
-    align-items: center; /* Выравнивание по вертикали */
+    display: flex;
+    align-items: center;
 }
 
 header nav a {
-    color: #ffffff; /* Белый текст для ссылок */
-    margin: 0 20px; /* Увеличиваем отступы между ссылками */
+    color: #ffffff;
+    margin: 0 20px;
     text-decoration: none;
-    font-size: 18px; /* Увеличиваем размер текста */
+    font-size: 18px;
 }
 
 .container {
     width: 80%;
     margin: 0 auto;
     padding: 20px;
-    background-color: #ffffff; /* Белый фон для контейнера */
+    background-color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
 }
@@ -42,7 +41,7 @@ header nav a {
     width: 50%;
     margin: 0 auto;
     padding: 20px;
-    background-color: #ffffff; /* Белый фон для форм */
+    background-color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
 }
@@ -50,67 +49,67 @@ header nav a {
 .form-container label {
     display: block;
     margin-bottom: 5px;
-    color: #4caf50; /* Светло-зеленый текст для меток */
+    color: #4caf50;
 }
 
 .form-container input, .form-container textarea, .form-container select {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
-    border: 1px solid #4caf50; /* Светло-зеленая рамка для полей ввода */
+    border: 1px solid #4caf50;
     border-radius: 4px;
-    color: #4caf50; /* Светло-зеленый текст для полей ввода */
+    color: #4caf50;
 }
 
 .form-container button {
     padding: 10px 20px;
-    background-color: #4caf50; /* Зеленый фон для кнопок */
-    color: #ffffff; /* Белый текст для кнопок */
+    background-color: #4caf50;
+    color: #ffffff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
 }
 
 .form-container button:hover {
-    background-color: #4caf50; /* Оставляем тот же зеленый фон */
+    background-color: #4caf50;
 }
 
 .success-container {
     text-align: center;
     padding: 50px;
-    background-color: #ffffff; /* Белый фон для сообщений об успехе */
-    color: #4caf50; /* Светло-зеленый текст для сообщений об успехе */
+    background-color: #ffffff;
+    color: #4caf50;
 }
 
 .success-container h1 {
-    color: #4caf50; /* Светло-зеленый текст для заголовков */
+    color: #4caf50;
 }
 
 .success-container p {
     margin-bottom: 20px;
-    color: #4caf50; /* Светло-зеленый текст для параграфов */
+    color: #4caf50;
 }
 
 .success-container .button {
     padding: 10px 20px;
-    background-color: #4caf50; /* Зеленый фон для кнопок */
-    color: #ffffff; /* Белый текст для кнопок */
+    background-color: #4caf50;
+    color: #ffffff;
     text-decoration: none;
     border-radius: 4px;
 }
 
 .success-container .button:hover {
-    background-color: #4caf50; /* Оставляем тот же зеленый фон */
+    background-color: #4caf50;
 }
 
 .tasks-container, .manage-employees-container, .manage-services-container, .manage-appointments-container, .statistics-container {
     width: 80%;
     margin: 0 auto;
     padding: 20px;
-    background-color: #ffffff; /* Белый фон для контейнеров */
+    background-color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
-    color: #4caf50; /* Светло-зеленый текст для контейнеров */
+    color: #4caf50;
 }
 
 .tasks-container ul, .manage-employees-container ul, .manage-services-container ul, .manage-appointments-container ul, .statistics-container ul {
@@ -120,11 +119,11 @@ header nav a {
 
 .tasks-container ul li, .manage-employees-container ul li, .manage-services-container ul li, .manage-appointments-container ul li, .statistics-container ul li {
     margin-bottom: 10px;
-    color: #4caf50; /* Светло-зеленый текст для элементов списка */
+    color: #4caf50;
 }
 
 .tasks-container ul li a, .manage-employees-container ul li a, .manage-services-container ul li a, .manage-appointments-container ul li a, .statistics-container ul li a {
-    color: #4caf50; /* Светло-зеленый текст для ссылок */
+    color: #4caf50;
     text-decoration: none;
 }
 
@@ -136,10 +135,10 @@ header nav a {
     width: 80%;
     margin: 0 auto;
     padding: 20px;
-    background-color: #ffffff; /* Белый фон для контейнеров */
+    background-color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
-    color: #4caf50; /* Светло-зеленый текст для контейнеров */
+    color: #4caf50;
 }
 
 .order-history-container ul, .order-details-container ul {
@@ -149,11 +148,11 @@ header nav a {
 
 .order-history-container ul li, .order-details-container ul li {
     margin-bottom: 10px;
-    color: #4caf50; /* Светло-зеленый текст для элементов списка */
+    color: #4caf50;
 }
 
 .order-history-container ul li a, .order-details-container ul li a {
-    color: #4caf50; /* Светло-зеленый текст для ссылок */
+    color: #4caf50;
     text-decoration: none;
 }
 
@@ -167,7 +166,6 @@ input[type="number"]::-webkit-outer-spin-button {
     margin: 0;
 }
 
-/* Добавляем стили для таблицы услуг */
 .service-table {
     width: 100%;
     border-collapse: collapse;
@@ -176,29 +174,28 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .service-table th, .service-table td {
     padding: 10px;
-    border: 1px solid #4caf50; /* Светло-зеленая рамка */
+    border: 1px solid #4caf50;
     text-align: left;
-    color: #4caf50; /* Светло-зеленый текст */
-    vertical-align: middle; /* Выравнивание по середине вертикально */
+    color: #4caf50;
+    vertical-align: middle;
 }
 
 .service-table th {
-    background-color: #f9fff9; /* Светлый зеленоватый фон */
+    background-color: #f9fff9;
 }
 
 .service-table td.checkbox-cell {
-    text-align: center; /* Центрирование по горизонтали */
+    text-align: center;
 }
 
 .service-table td.checkbox-cell input[type="checkbox"] {
-    margin: 0; /* Убираем отступы */
+    margin: 0;
 }
 
-/* Общие стили для кнопок */
 .button {
     padding: 10px 20px;
-    background-color: #4caf50; /* Зеленый фон для кнопок */
-    color: #ffffff; /* Белый текст для кнопок */
+    background-color: #4caf50;
+    color: #ffffff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -208,23 +205,22 @@ input[type="number"]::-webkit-outer-spin-button {
     margin-top: 20px;
 }
 
-/* Убираем изменение цвета при наведении */
 .button:hover {
-    background-color: #4caf50; /* Оставляем тот же зеленый фон */
+    background-color: #4caf50;
 }
 
 .selected-services {
     margin-bottom: 20px;
     padding: 10px;
-    border: 1px solid #4caf50; /* Светло-зеленая рамка для выбранных услуг */
+    border: 1px solid #4caf50;
     border-radius: 4px;
-    background-color: #ffffff; /* Белый фон для выбранных услуг */
-    color: #4caf50; /* Светло-зеленый текст для выбранных услуг */
+    background-color: #ffffff;
+    color: #4caf50;
 }
 
 .selected-services h2 {
     margin-top: 0;
-    color: #4caf50; /* Светло-зеленый текст для заголовков */
+    color: #4caf50;
 }
 
 .selected-services ul {
@@ -234,15 +230,14 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .selected-services li {
     margin-bottom: 5px;
-    color: #4caf50; /* Светло-зеленый текст для элементов списка */
+    color: #4caf50;
 }
 
-/* Добавляем стили для логотипа */
 .logo {
-    width: 100px; /* Установите нужную ширину */
-    height: auto; /* Автоматическая высота, чтобы сохранить пропорции */
-    vertical-align: middle; /* Выравнивание по центру */
-    margin-right: 20px; /* Отступ справа */
+    width: 100px;
+    height: auto;
+    vertical-align: middle;
+    margin-right: 20px;
 }
 
 .button-container {
@@ -255,17 +250,17 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .button-container .button {
     padding: 10px 20px;
-    background-color: #4caf50; /* Зеленый фон для кнопок */
-    color: #ffffff; /* Белый текст для кнопок */
+    background-color: #4caf50;
+    color: #ffffff;
     text-decoration: none;
     border-radius: 4px;
     display: inline-block;
     text-align: center;
-    flex: 1 1 200px; /* Растягиваем кнопки на всю ширину контейнера */
+    flex: 1 1 200px;
 }
 
 .button-container .button:hover {
-    background-color: #4caf50; /* Оставляем тот же зеленый фон */
+    background-color: #4caf50;
 }
 
 .manage-employees-container form button,
@@ -273,8 +268,8 @@ input[type="number"]::-webkit-outer-spin-button {
 .manage-clients-container form button,
 .manage-appointments-container form button {
     padding: 5px 10px;
-    background-color: #4caf50; /* Зеленый фон для кнопок */
-    color: #ffffff; /* Белый текст для кнопок */
+    background-color: #4caf50;
+    color: #ffffff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -294,22 +289,22 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .flashes .success {
-    background-color: #d4edda; /* Зеленый фон для успешных сообщений */
-    color: #155724; /* Темно-зеленый текст для успешных сообщений */
-    border: 1px solid #c3e6cb; /* Светло-зеленая рамка для успешных сообщений */
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
 }
 
 .flashes .error {
-    background-color: #f8d7da; /* Красный фон для ошибок */
-    color: #721c24; /* Темно-красный текст для ошибок */
-    border: 1px solid #f5c6cb; /* Светло-красная рамка для ошибок */
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
 }
 
 .manage-employees-container form button:hover,
 .manage-services-container form button:hover,
 .manage-clients-container form button:hover,
 .manage-appointments-container form button:hover {
-    background-color: #4caf50; /* Оставляем тот же зеленый фон */
+    background-color: #4caf50;
 }
 
 .modal {
@@ -347,7 +342,6 @@ input[type="number"]::-webkit-outer-spin-button {
     cursor: pointer;
 }
 
-/* Стили для модальных окон */
 .modal {
     display: none;
     position: fixed;
@@ -384,7 +378,6 @@ input[type="number"]::-webkit-outer-spin-button {
     cursor: pointer;
 }
 
-/* Стили для форм внутри модальных окон */
 .modal-content form {
     display: flex;
     flex-direction: column;
@@ -408,8 +401,8 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .modal-content button {
     padding: 10px 20px;
-    background-color: #4caf50; /* Зеленый фон для кнопок */
-    color: #ffffff; /* Белый текст для кнопок */
+    background-color: #4caf50;
+    color: #ffffff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -417,10 +410,9 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .modal-content button:hover {
-    background-color: #4caf50; /* Оставляем тот же зеленый фон */
+    background-color: #4caf50;
 }
 
-/* Стили для отчета механика */
 .report-container {
     max-width: 1000px;
     margin: 0 auto;
@@ -475,9 +467,6 @@ input[type="number"]::-webkit-outer-spin-button {
     font-style: italic;
 }
 
-/* Новые стили для клиентской части механика */
-
-/* Стили для панели механика */
 .mechanic-dashboard {
     max-width: 1200px;
     margin: 0 auto;
@@ -514,7 +503,6 @@ input[type="number"]::-webkit-outer-spin-button {
     background-color: #45a049;
 }
 
-/* Стили для задач механика */
 .task-card {
     background-color: #f9f9f9;
     padding: 15px;
@@ -547,7 +535,6 @@ input[type="number"]::-webkit-outer-spin-button {
     background-color: #45a049;
 }
 
-/* Стили для деталей задачи */
 .task-details {
     max-width: 800px;
     margin: 0 auto;
@@ -591,7 +578,6 @@ input[type="number"]::-webkit-outer-spin-button {
     background-color: #45a049;
 }
 
-/* Стили для статистики механика */
 .statistics-container {
     max-width: 800px;
     margin: 0 auto;
